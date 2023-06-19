@@ -16,6 +16,8 @@ public class DBConnect {
             String url = "jdbc:sqlserver://10.8.10.160:1433;databaseName=Supermarket023;integratedSecurity=false; user=sa; password=polman";
             //laptop anggun
 
+            //ini dari rizky
+
             //laptop jilbran
             //ini dari Branda
             //String url = "jdbc:sqlserver://10.8.10.160:1433;databaseName=Supermarket023;integratedSecurity=false; user=sa; password=polman";
