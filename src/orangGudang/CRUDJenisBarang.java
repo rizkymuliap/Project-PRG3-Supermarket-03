@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 
 public class CRUDJenisBarang extends JFrame{
@@ -35,6 +37,9 @@ public class CRUDJenisBarang extends JFrame{
         setUndecorated(true);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
+
+        updateButton.setEnabled(false);
+        deleteButton.setEnabled(false);
 
         model = new DefaultTableModel();
         tbJenisBarang.setModel(model);
@@ -102,6 +107,9 @@ public class CRUDJenisBarang extends JFrame{
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                saveButton.setEnabled(true);
+                updateButton.setEnabled(false);
+                deleteButton.setEnabled(false);
                 clear();
                 loadData();
             }
@@ -110,6 +118,79 @@ public class CRUDJenisBarang extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+            }
+        });
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                namaJenis  = txtJenisBarang.getText();
+                boolean found = false;
+                // validasi tidak boleh sama
+                Object[] obj = new Object[2];
+                obj[0] = id;
+                obj[1] = namaJenis;
+
+                int j = tbJenisBarang.getModel().getRowCount();
+                for(int k=0; k<j; k++){
+                    if(obj[1].toString().toLowerCase().equals((model.getValueAt(k, 1).toString().toLowerCase()))){
+                        found = true;
+                    }
+                }
+                if(found) {
+                    JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
+                            , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
+                } else{
+                    try {
+                        if (txtJenisBarang.getText().equals(""))
+                            JOptionPane.showMessageDialog(null, "Please, fill in all data!");
+                        else {
+                            try {
+                                int i = tbJenisBarang.getSelectedRow();
+                                if (i == -1) return;
+                                id = String.valueOf(model.getValueAt(i, 0));
+                                namaJenis = txtJenisBarang.getText();
+
+                                String query = "EXEC sp_UpdatetblJenisBarang @id_jenis=?, @nama_jenis=?";
+                                connection.pstat = connection.conn.prepareStatement(query);
+                                connection.pstat.setString(1, id);
+                                connection.pstat.setString(2, namaJenis);
+
+                                connection.stat.close();
+                                connection.pstat.executeUpdate();
+                                connection.pstat.close();
+
+                                clear();
+                                JOptionPane.showMessageDialog(null, "Data updated successfully!");
+                                loadData();
+                                updateButton.setEnabled(false);
+                                deleteButton.setEnabled(false);
+                                saveButton.setEnabled(true);
+
+                            } catch (NumberFormatException nex) {
+                                JOptionPane.showMessageDialog(null, "Please, enter the valid number.");
+                            } catch (Exception e1) {
+                                JOptionPane.showMessageDialog(null, "an error occurred while updating data into the database.\n" + e1);
+                            }
+                        }
+                    } catch(Exception e1){
+
+                    }
+                }
+            }
+        });
+
+        tbJenisBarang.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int i = tbJenisBarang.getSelectedRow();
+                if(i == -1){
+                    return;
+                }
+                txtJenisBarang.setText((String) model.getValueAt(i,1));
+                saveButton.setEnabled(false);
+                updateButton.setEnabled(true);
+                deleteButton.setEnabled(true);
             }
         });
     }
