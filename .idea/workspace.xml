@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Ini Baru" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Paling baru pokok nya">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -119,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687155531876</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Paling baru pokok nya">
+      <created>1687155840103</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1687155840103</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -139,6 +149,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Connection DB sql" />
     <MESSAGE value="Ini Baru" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ini Baru" />
+    <MESSAGE value="Paling baru pokok nya" />
+    <option name="LAST_COMMIT_MESSAGE" value="Paling baru pokok nya" />
   </component>
 </project>
