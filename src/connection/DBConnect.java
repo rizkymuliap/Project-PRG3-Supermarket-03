@@ -10,9 +10,9 @@ public class DBConnect {
 
     public DBConnect() {
         try{
-            //Laptop-Pribadi
+            //Laptop rizky
             //String url = "jdbc:sqlserver://LAPTOP-H6F615RS:1433;databaseName=Apotek;integratedSecurity=true;";
-            //Laptop-rizky-Kampus
+            //Database Utama
             String url = "jdbc:sqlserver://10.8.10.160:1433;databaseName=Supermarket023;integratedSecurity=false; user=sa; password=polman";
             //laptop anggun
 
