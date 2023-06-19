@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Update Connection">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,12 +19,13 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/anggun_temporary" />
+  </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="master" />
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="master" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -97,7 +100,6 @@
       <workItem from="1686485994578" duration="179000" />
       <workItem from="1687135743360" duration="482000" />
       <workItem from="1687139525595" duration="57000" />
-      <workItem from="1687154561891" duration="679000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -106,21 +108,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687135875572</updated>
     </task>
-    <task id="LOCAL-00002" summary=" Anggun nyoba">
-      <created>1687154821833</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1687154821833</updated>
-    </task>
-    <task id="LOCAL-00003" summary=" Anggun nyoba2">
-      <created>1687155007488</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1687155007488</updated>
-    </task>
-    <option name="localTasksCounter" value="4" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -139,8 +127,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Connection DB sql" />
-    <MESSAGE value=" Anggun nyoba" />
-    <MESSAGE value=" Anggun nyoba2" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Anggun nyoba2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Connection DB sql" />
   </component>
 </project>
