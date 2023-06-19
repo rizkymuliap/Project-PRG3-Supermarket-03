@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Connection DB sql">
-      <change afterPath="$PROJECT_DIR$/library/sqljdbc4.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
-    </list>
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Connection DB sql" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -94,7 +90,7 @@
       <workItem from="1686271615920" duration="1432000" />
       <workItem from="1686464420546" duration="1802000" />
       <workItem from="1686485994578" duration="179000" />
-      <workItem from="1687135743360" duration="482000" />
+      <workItem from="1687135743360" duration="1131000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -103,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687135875572</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Connection DB sql">
+      <created>1687136273944</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1687136273944</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
