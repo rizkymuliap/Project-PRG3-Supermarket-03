@@ -17,6 +17,7 @@ public class DBConnect {
             //laptop anggun
 
             //laptop jilbran
+            //String url = "jdbc:sqlserver://10.8.10.160:1433;databaseName=Supermarket023;integratedSecurity=false; user=sa; password=polman";
 
             conn = DriverManager.getConnection(url);
             stat = conn.createStatement();
