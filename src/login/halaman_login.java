@@ -53,6 +53,12 @@ public class halaman_login extends JFrame{
                 }
             }
         });
+        keluarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
     }
 
     public String[] validasi(){
@@ -90,6 +96,7 @@ public class halaman_login extends JFrame{
     }
 
     public static void main(String[] args) {
+
         new halaman_login().setVisible(true);
     }
 }
