@@ -107,17 +107,54 @@ public class CRUDJenisBarang extends JFrame{
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //mengaktifkan dan menonakt
                 saveButton.setEnabled(true);
                 updateButton.setEnabled(false);
                 deleteButton.setEnabled(false);
-                clear();
-                loadData();
+                clear(); //Mengosongkan semua textbox
+                loadData(); //melakukan refresh data table
             }
         });
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Menampilkan kotak dialog konfirmasi
+                int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data?", "Konfirmasi Penghapusan Data", JOptionPane.YES_NO_OPTION);
 
+                // Menggunakan hasil pilihan dari kotak dialog
+                if (option == JOptionPane.YES_OPTION) {
+                    // Proses penghapusan data
+                    try {
+                        int i = tbJenisBarang.getSelectedRow();
+                        if (i == -1) return; //Jika tidak ada data dari table yang dipilih
+                        id = String.valueOf(model.getValueAt(i, 0)); //mengambil nilai id dari kolom pertama daribaris yang dipilih
+
+
+                        String query = "EXEC sp_HapusJenisBarang @id_jenis_barang=?";
+                        connection.pstat = connection.conn.prepareStatement(query);
+                        connection.pstat.setString(1, id); //variabel id dari
+
+                        connection.stat.close();
+                        connection.pstat.executeUpdate();
+                        connection.pstat.close();
+
+                        clear();
+                        JOptionPane.showMessageDialog(null, "Hapus Jenis Barang Berhasil!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                        loadData();
+
+                        updateButton.setEnabled(false);
+                        deleteButton.setEnabled(false);
+                        saveButton.setEnabled(true);
+
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "an error occurred while updating data into the database.\n" + e1);
+                    }
+
+
+                } else {
+                    // Tidak melakukan penghapusan data
+                    JOptionPane.showMessageDialog(null, "Jenis Barang batal dihapus", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                }
             }
         });
         updateButton.addActionListener(new ActionListener() {
