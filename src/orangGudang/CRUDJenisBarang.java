@@ -41,7 +41,6 @@ public class CRUDJenisBarang extends JFrame{
         updateButton.setEnabled(false);
         deleteButton.setEnabled(false);
 
-        model = new DefaultTableModel();
         tbJenisBarang.setModel(model);
 
         addColumn(); //Menambahkan header dari table

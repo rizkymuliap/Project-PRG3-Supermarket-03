@@ -24,6 +24,7 @@ public class CRUDSupplier extends JFrame {
     private JTextField txtEmail;
     private JButton btnRefresh;
     private final int MAX_CHARACTERS = 50;
+
     private DefaultTableModel model;
 
     //variabel yang akan digunakan di kodingan
@@ -166,7 +167,7 @@ public class CRUDSupplier extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                if (txtEmail.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari Max char
+                if (txtAlamat.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari Max char
                     e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50
                 }
             }
