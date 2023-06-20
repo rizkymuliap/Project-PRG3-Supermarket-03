@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="694" height="412"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-8590472"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="5e08c" binding="Panel_Tengah" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -13,7 +15,9 @@
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-8590472"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="ffe11" class="javax.swing.JLabel" binding="label_nama">
@@ -46,7 +50,9 @@
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-8590472"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="79283" class="javax.swing.JLabel" binding="Label_Gambar_2">
@@ -64,6 +70,8 @@
               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <background color="-16777216"/>
+              <enabled value="true"/>
               <font name="Century Gothic" size="12" style="2"/>
               <foreground color="-1"/>
               <text value="Nama"/>
@@ -91,21 +99,34 @@
           </vspacer>
         </children>
       </grid>
-      <grid id="ba3d2" binding="PanelFrom" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="ba3d2" binding="PanelFrom" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="1" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
-        <children/>
+        <children>
+          <hspacer id="f6a02">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </hspacer>
+          <vspacer id="ed46c">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+          </vspacer>
+        </children>
       </grid>
       <grid id="81f36" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-8590472"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="da797" class="javax.swing.JButton" binding="transaksiPengadaanButton" default-binding="true">
@@ -115,23 +136,10 @@
               </grid>
             </constraints>
             <properties>
-              <background color="-14146253"/>
+              <background color="-8728878"/>
               <font name="Century Gothic" size="16" style="2"/>
               <foreground color="-1"/>
               <text value="Transaksi Pengadaan"/>
-            </properties>
-          </component>
-          <component id="effa3" class="javax.swing.JButton" binding="transaksiPenjualanButton" default-binding="true">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="-1" height="50"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-14146253"/>
-              <font name="Century Gothic" size="16" style="2"/>
-              <foreground color="-1"/>
-              <text value="Transaksi Penjualan"/>
             </properties>
           </component>
           <component id="7138e" class="javax.swing.JButton" binding="dataKaryawanButton">
@@ -141,10 +149,23 @@
               </grid>
             </constraints>
             <properties>
-              <background color="-14146253"/>
+              <background color="-8728878"/>
               <font name="Century Gothic" size="16" style="2"/>
               <foreground color="-1"/>
               <text value="Data Karyawan"/>
+            </properties>
+          </component>
+          <component id="effa3" class="javax.swing.JButton" binding="transaksiPenjualanButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <minimum-size width="-1" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <background color="-8728878"/>
+              <font name="Century Gothic" size="16" style="2"/>
+              <foreground color="-1"/>
+              <text value="Transaksi Penjualan"/>
             </properties>
           </component>
         </children>
@@ -161,7 +182,7 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-14146253"/>
+          <background color="-8728878"/>
           <font name="Century Gothic" size="16" style="2"/>
           <foreground color="-1"/>
           <text value="LOG OUT"/>
@@ -172,7 +193,9 @@
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-8590472"/>
+        </properties>
         <border type="none"/>
         <children/>
       </grid>
