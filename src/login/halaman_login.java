@@ -4,6 +4,7 @@ import connection.DBConnect;
 import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -98,5 +99,11 @@ public class halaman_login extends JFrame{
     public static void main(String[] args) {
 
         new halaman_login().setVisible(true);
+
+        JTextField txtUsername = new JTextField();
+        txtUsername.setSize(500, 100000); // Mengatur lebar: 200px, tinggi: 30px
+// atau
+        //textField.setPreferredSize(new Dimension(200, 30));
+
     }
 }

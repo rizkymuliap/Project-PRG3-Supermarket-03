@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Halaman_loading/halaman_loading.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Halaman_loading/halaman_loading.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/login/halaman_login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/login/halaman_login.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/login/halaman_login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/login/halaman_login.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +144,7 @@
       <workItem from="1687135743360" duration="482000" />
       <workItem from="1687139525595" duration="57000" />
       <workItem from="1687154561891" duration="679000" />
-      <workItem from="1687228179199" duration="3955000" />
+      <workItem from="1687228179199" duration="5253000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -174,7 +174,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687230935767</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="ganti warna">
+      <created>1687232277768</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1687232277768</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -196,6 +203,7 @@
     <MESSAGE value=" Anggun nyoba" />
     <MESSAGE value=" Anggun nyoba2" />
     <MESSAGE value="Nambahin loading" />
-    <option name="LAST_COMMIT_MESSAGE" value="Nambahin loading" />
+    <MESSAGE value="ganti warna" />
+    <option name="LAST_COMMIT_MESSAGE" value="ganti warna" />
   </component>
 </project>
