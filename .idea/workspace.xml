@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="CRUD Member">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_12_32__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_12_32__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_17_13__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_17_13__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_20_46__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_20_46__Changes_.xml" afterDir="false" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/kasir/CRUDMember.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +44,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/PROJEKAN/Project-PRG3-Supermarket-03/src/orangGudang&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/Projekan/Project-Semester2/PRG3/Project-PRG3-Supermarket-03/library/sqljdbc4.jar&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -61,53 +57,13 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\PROJEKAN\Project-PRG3-Supermarket-03\src\orangGudang" />
       <recent name="F:\Projekan\Project-Semester2\PRG3\Project-PRG3-Supermarket-03\Library" />
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CRUDRak">
-    <configuration name="CRUDBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDBarang" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="orangGudang.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.CRUDJenisBarang">
     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="orangGudang.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CRUDRak" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Admin.CRUDRak" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Admin.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CRUDSupplier" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDSupplier" />
       <module name="Project" />
       <extension name="coverage">
         <pattern>
@@ -132,13 +88,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CRUDRak" />
-        <item itemvalue="Application.CRUDBarang" />
-        <item itemvalue="Application.CRUDSupplier" />
         <item itemvalue="Application.CRUDJenisBarang" />
         <item itemvalue="Application.DBConnect" />
+        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -178,14 +139,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687155007488</updated>
     </task>
-    <task id="LOCAL-00004" summary="CRUD Supplier">
-      <created>1687237587786</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1687237587786</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,7 +160,6 @@
     <MESSAGE value="Connection DB sql" />
     <MESSAGE value=" Anggun nyoba" />
     <MESSAGE value=" Anggun nyoba2" />
-    <MESSAGE value="CRUD Supplier" />
-    <option name="LAST_COMMIT_MESSAGE" value="CRUD Supplier" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Anggun nyoba2" />
   </component>
 </project>

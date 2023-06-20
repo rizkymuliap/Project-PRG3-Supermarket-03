@@ -155,9 +155,77 @@ public class CRUDRak extends JFrame {
                     }
                     else
                     {
+                        try {
+                            int i = tblRak.getSelectedRow();
+                            if (i == -1) return;
+                            id_rak = String.valueOf(Model.getValueAt(i, 0));
+                            Nama = txtNamaKaryawan.getText();
+                            Huruf = txtKodeRak.getText();
+                            Jumlah = Integer.parseInt(txtJumlah.getText());
 
+                            DBConnect connection = new DBConnect();
+
+                            String query = "EXEC sp_UpdateRak @id_rak=?, @nama=?, @huruf=?, @jumlah=?, @status=1";
+                            connection.pstat = connection.conn.prepareStatement(query);
+                            connection.pstat.setString(1, id_rak);  // Memasukkan nilai id_rak
+                            connection.pstat.setString(2, Nama);  // Memasukkan nilai Nama
+                            connection.pstat.setString(3, Huruf);  // Memasukkan nilai Huruf
+                            connection.pstat.setInt(4, Jumlah);  // Memasukkan nilai Jumlah
+
+                            connection.pstat.executeUpdate();
+                            connection.stat.close();
+                            connection.pstat.close();
+
+                            clear();
+                            JOptionPane.showMessageDialog(null, "Data updated successfully!");
+                            loadDataRak();
+
+                            btnUpdate.setEnabled(false);
+                            btnDelete.setEnabled(false);
+                            btnSave.setEnabled(true);
+
+                        }
+                        catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "Please, enter the valid number.");
+                        }
                     }
 
+                }
+            }
+        });
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int opsi;
+                if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
+                {
+                    JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!",
+                            JOptionPane.WARNING_MESSAGE);
+                }
+                else
+                {
+                    try
+                    {
+                        int kode = tblRak.getSelectedRow();
+                        opsi = JOptionPane.showConfirmDialog(null, "Are you sure delete this data?",
+                                "Confirmation", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
+                        if (opsi != 0) {
+                            JOptionPane.showMessageDialog(null, "Data failed to delete");
+                        } else {
+                            id_rak = String.valueOf(Model.getValueAt(kode, 0));
+                            String query = "EXEC sp_DeleteRak @id_rak=?";
+                            connect.pstat = connect.conn.prepareStatement(query);
+                            connect.pstat.setString(1, id_rak);
+                            connect.pstat.executeUpdate();
+                            connect.pstat.close();
+                        }
+                    }
+                    catch (SQLException ex)
+                    {
+                        JOptionPane.showMessageDialog(null, "Please, enter the valid number ."+ ex.getMessage());
+                    }
+                    JOptionPane.showMessageDialog(null, "Data deleted successfully!");
+                    LoadDataKaryawan();
                 }
             }
         });
