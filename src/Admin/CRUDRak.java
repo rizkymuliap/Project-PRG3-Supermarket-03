@@ -49,9 +49,9 @@ public class CRUDRak extends JFrame {
         tblRak.setModel(Model);
         FrameConfig();
 
-        addColumn();
-        loadDataRak();
-        LoadDataKaryawan();
+        //addColumn();
+        //loadDataRak();
+        //LoadDataKaryawan();
 
         btnSearch.addActionListener(new ActionListener() {
             @Override
@@ -84,7 +84,7 @@ public class CRUDRak extends JFrame {
 
                 if(found) //Jika menemukan data yang sama pada tabel
                 {
-                    JOptionPane.showMessageDialog(null, "Data Rak sudah ada!", "Information!",
+                    JOptionPane.showMessageDialog(null, "Karyawan Sudah memegang Rak!", "Information!",
                             JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan
 
                 }else{
@@ -94,6 +94,20 @@ public class CRUDRak extends JFrame {
                                 , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
 
                     } else {
+                        // Pencarian ID Karyawan
+                        try {
+                            DBConnect connection = new DBConnect();
+                            connection.pstat = connection.conn.prepareStatement("SELECT id_karyawan FROM tblKaryawan WHERE nama_karyawan=?");
+                            connection.pstat.setString(1, txtNamaKaryawan.getText());
+                            connection.result = connection.pstat.executeQuery();
+
+                            if (connection.result.next()) {
+                                id_karyawan = connection.result.getString("id_karyawan");
+                            }
+                        } catch (SQLException ex) {
+                            System.out.println("Terjadi error saat memeriksa id_karyawan terakhir: " + ex);
+                        }
+
                         try {
                             DBConnect connection = new DBConnect();
                             String sql = "EXEC sp_InserttblRak @id_rak=?, @id_karyawan=?, @huruf=?, @jumlah=? ,@status=1";
@@ -102,22 +116,7 @@ public class CRUDRak extends JFrame {
 
                             connection.pstat.setString(1, generateNextRakID()); //generate id supplier sebagai PK
 
-
-                            //Pencarian ID Karyawan
-                            try {
-                                connection.pstat = connection.conn.prepareStatement("SELECT id_karyawan FROM tblKaryawan WHERE nama_karyawan=?");
-                                connection.result = connection.pstat.executeQuery();
-                                connection.pstat.setString(1, txtNamaKaryawan.getText());
-
-                                if (connection.result.next()) {
-                                    connection.pstat.setString(2, connection.result.getString("id_karyawan")); //namasupplier sebagai parameter kedua
-
-                                }
-                            } catch (Exception ex) {
-                                System.out.println("Terjadi error saat memeriksa id_rak terakhir: " + ex);
-                            }
-
-
+                            connection.pstat.setString(2,id_karyawan);
                             connection.pstat.setString(3, Huruf); //alamat sebagai parameter ketiga
                             connection.pstat.setInt(4, Jumlah); //notelp sebagai parameter keempat
                             connection.pstat.executeUpdate();
@@ -128,7 +127,7 @@ public class CRUDRak extends JFrame {
 
                             JOptionPane.showMessageDialog(null, "Data Supplier berhasil disimpan!", "Informasi",
                                     JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
-                            loadDataRak();
+                           // loadDataRak();
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }

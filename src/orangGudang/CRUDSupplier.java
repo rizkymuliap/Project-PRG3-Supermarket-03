@@ -336,6 +336,7 @@ public class CRUDSupplier extends JFrame {
                 showByNama(model);
             }
         });
+
     }
 
     public void showByNama(DefaultTableModel model) {
