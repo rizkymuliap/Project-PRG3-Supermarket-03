@@ -5,22 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Gambar/img.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Halaman_loading/halaman_loading.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Halaman_loading/halaman_loading.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_06_2023_23_42__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_06_2023_23_42__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_19_2023_11_47_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_19_2023_11_47_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_19_2023_2_03_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_19_2023_2_03_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_19_2023_2_15_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_19_2023_2_15_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_3.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_3.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_4.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_5.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_5.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_6.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_6.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/login/halaman_login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/login/halaman_login.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Halaman_loading/halaman_loading.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Halaman_loading/halaman_loading.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/login/halaman_login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/login/halaman_login.form" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +60,7 @@
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.halaman_loading">
+  <component name="RunManager" selected="Application.halaman_login">
     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
       <module name="Project" />
@@ -135,8 +122,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.halaman_loading" />
         <item itemvalue="Application.halaman_login" />
+        <item itemvalue="Application.halaman_loading" />
         <item itemvalue="Application.DBConnect" />
         <item itemvalue="Application.CRUDJenisBarang" />
         <item itemvalue="Application.Main" />
@@ -157,7 +144,7 @@
       <workItem from="1687135743360" duration="482000" />
       <workItem from="1687139525595" duration="57000" />
       <workItem from="1687154561891" duration="679000" />
-      <workItem from="1687228179199" duration="2563000" />
+      <workItem from="1687228179199" duration="3955000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -180,7 +167,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687155007488</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Nambahin loading">
+      <created>1687230935767</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1687230935767</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -201,6 +195,7 @@
     <MESSAGE value="Connection DB sql" />
     <MESSAGE value=" Anggun nyoba" />
     <MESSAGE value=" Anggun nyoba2" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Anggun nyoba2" />
+    <MESSAGE value="Nambahin loading" />
+    <option name="LAST_COMMIT_MESSAGE" value="Nambahin loading" />
   </component>
 </project>
