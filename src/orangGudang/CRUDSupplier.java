@@ -328,6 +328,45 @@ public class CRUDSupplier extends JFrame {
                 loadData();
             }
         });
+
+        btnSearch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                txtSearch.setText("");
+                showByNama(model);
+            }
+        });
+    }
+
+    public void showByNama(DefaultTableModel model) {
+        model.getDataVector().removeAllElements();
+        model.fireTableDataChanged();
+
+        DBConnect connection = new DBConnect();
+        try {
+            connection.stat = connection.conn.createStatement();
+            String query = "SELECT * FROM tblSupplier WHERE nama_supplier LIKE '%" + txtSearch.getText() + "%'";
+            connection.result = connection.stat.executeQuery(query);
+
+            while (connection.result.next()) {
+                if (connection.result.getInt("status") == 1) {
+                    Object[] obj = new Object[5];
+
+                    obj[0] = connection.result.getString("id_supplier");
+                    obj[1] = connection.result.getString("nama_supplier");
+                    obj[2] = connection.result.getString("alamat");
+                    obj[3] = connection.result.getString("no_telp");
+                    obj[4] = connection.result.getString("email");
+                    model.addRow(obj);
+                }
+            }
+
+            connection.result.close();
+            connection.stat.close();
+
+        } catch (Exception e) {
+            System.out.println("Terjadi error saat load data item: " + e);
+        }
     }
 
         public String generateNextSupplierID() {
