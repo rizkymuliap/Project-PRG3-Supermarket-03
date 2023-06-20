@@ -1,0 +1,863 @@
+Index: src/Admin/CRUDRak.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Admin/CRUDRak.form b/src/Admin/CRUDRak.form
+new file mode 100644
+--- /dev/null	(date 1687266951161)
++++ b/src/Admin/CRUDRak.form	(date 1687266951161)
+@@ -0,0 +1,402 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Admin.CRUDRak">
++  <grid id="27dc6" binding="JPRak" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++    <margin top="0" left="0" bottom="0" right="0"/>
++    <constraints>
++      <xy x="20" y="20" width="848" height="566"/>
++    </constraints>
++    <properties>
++      <background color="-14146253"/>
++      <enabled value="true"/>
++    </properties>
++    <border type="none"/>
++    <children>
++      <grid id="7aa4b" layout-manager="GridLayoutManager" row-count="10" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++        <margin top="0" left="0" bottom="0" right="0"/>
++        <constraints>
++          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <background color="-14146253"/>
++        </properties>
++        <border type="none">
++          <color color="-1"/>
++        </border>
++        <children>
++          <grid id="997cd" layout-manager="GridLayoutManager" row-count="10" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="1" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="line">
++              <color color="-1"/>
++            </border>
++            <children>
++              <hspacer id="668c7">
++                <constraints>
++                  <grid row="5" column="3" row-span="3" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <vspacer id="6bf57">
++                <constraints>
++                  <grid row="8" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </vspacer>
++              <hspacer id="3e9b7">
++                <constraints>
++                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <component id="5c50" class="javax.swing.JToolBar$Separator">
++                <constraints>
++                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties/>
++              </component>
++              <component id="2e534" class="javax.swing.JToolBar$Separator">
++                <constraints>
++                  <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties/>
++              </component>
++              <grid id="bae80" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="1" column="2" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties/>
++                <border type="none"/>
++                <children>
++                  <component id="9de33" class="javax.swing.JTextField" binding="txtNamaKaryawan">
++                    <constraints>
++                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
++                        <preferred-size width="150" height="-1"/>
++                      </grid>
++                    </constraints>
++                    <properties>
++                      <background color="-1"/>
++                    </properties>
++                  </component>
++                  <component id="d94a4" class="javax.swing.JTextField" binding="txtKodeRak">
++                    <constraints>
++                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
++                        <preferred-size width="150" height="-1"/>
++                      </grid>
++                    </constraints>
++                    <properties>
++                      <background color="-1"/>
++                    </properties>
++                  </component>
++                  <component id="dc99c" class="javax.swing.JTextField" binding="txtJumlah">
++                    <constraints>
++                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++                        <preferred-size width="150" height="-1"/>
++                      </grid>
++                    </constraints>
++                    <properties>
++                      <background color="-1"/>
++                    </properties>
++                  </component>
++                  <component id="1c48e" class="javax.swing.JLabel">
++                    <constraints>
++                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++                    </constraints>
++                    <properties>
++                      <font name="Century Gothic" size="12"/>
++                      <foreground color="-1"/>
++                      <text value="Nama Karyawan"/>
++                    </properties>
++                  </component>
++                  <component id="976bc" class="javax.swing.JLabel">
++                    <constraints>
++                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++                    </constraints>
++                    <properties>
++                      <font name="Century Gothic" size="12"/>
++                      <foreground color="-1"/>
++                      <text value="Kode Rak"/>
++                    </properties>
++                  </component>
++                  <component id="89e88" class="javax.swing.JLabel">
++                    <constraints>
++                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++                    </constraints>
++                    <properties>
++                      <font name="Century Gothic" size="12"/>
++                      <foreground color="-1"/>
++                      <text value="Jumlah"/>
++                    </properties>
++                  </component>
++                </children>
++              </grid>
++              <grid id="744bb" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="1" column="4" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties/>
++                <border type="none"/>
++                <children>
++                  <component id="21cc" class="javax.swing.JTextField" binding="txtCariKaryawan">
++                    <constraints>
++                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++                        <preferred-size width="150" height="-1"/>
++                      </grid>
++                    </constraints>
++                    <properties/>
++                  </component>
++                  <scrollpane id="57b8">
++                    <constraints>
++                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                    </constraints>
++                    <properties/>
++                    <border type="none"/>
++                    <children>
++                      <component id="8da54" class="javax.swing.JTable" binding="TableKaryawan">
++                        <constraints/>
++                        <properties/>
++                      </component>
++                    </children>
++                  </scrollpane>
++                </children>
++              </grid>
++            </children>
++          </grid>
++          <grid id="c6dcd" layout-manager="GridLayoutManager" row-count="1" column-count="11" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="line">
++              <color color="-1"/>
++            </border>
++            <children>
++              <component id="a99f4" class="javax.swing.JButton" binding="btnSave">
++                <constraints>
++                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="12" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Save"/>
++                </properties>
++              </component>
++              <hspacer id="7b0d">
++                <constraints>
++                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <hspacer id="2dc3e">
++                <constraints>
++                  <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <component id="f2e7a" class="javax.swing.JButton" binding="btnUpdate">
++                <constraints>
++                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Update"/>
++                </properties>
++              </component>
++              <component id="f15ca" class="javax.swing.JButton" binding="btnDelete">
++                <constraints>
++                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Delete"/>
++                </properties>
++              </component>
++              <component id="8b552" class="javax.swing.JButton" binding="btnCancel">
++                <constraints>
++                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Cancel"/>
++                </properties>
++              </component>
++              <component id="2683a" class="javax.swing.JTextField" binding="txtSearch">
++                <constraints>
++                  <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++                    <preferred-size width="150" height="-1"/>
++                  </grid>
++                </constraints>
++                <properties>
++                  <enabled value="true"/>
++                </properties>
++              </component>
++              <grid id="a400c" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <grid id="1a8a3" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <grid id="945e7" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <component id="979ab" class="javax.swing.JButton" binding="btnSearch">
++                <constraints>
++                  <grid row="0" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Search"/>
++                </properties>
++              </component>
++            </children>
++          </grid>
++          <grid id="31f1c" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="line">
++              <color color="-1"/>
++            </border>
++            <children>
++              <scrollpane id="fa84a">
++                <constraints>
++                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children>
++                  <component id="241ad" class="javax.swing.JTable" binding="tblRak">
++                    <constraints/>
++                    <properties/>
++                  </component>
++                </children>
++              </scrollpane>
++            </children>
++          </grid>
++          <grid id="77cc5" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="0" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="9cfb1" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="0" column="0" row-span="2" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="e764b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="3" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="c3573" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="8" column="0" row-span="2" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="f49c9" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties/>
++            <border type="none"/>
++            <children>
++              <component id="7242b" class="javax.swing.JButton" binding="btnRefresh">
++                <constraints>
++                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Refresh"/>
++                </properties>
++              </component>
++              <hspacer id="f5c2b">
++                <constraints>
++                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++            </children>
++          </grid>
++          <grid id="2d9e4" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties/>
++            <border type="none"/>
++            <children/>
++          </grid>
++        </children>
++      </grid>
++    </children>
++  </grid>
++</form>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_06_2023_23_42__Changes_.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_06_2023_23_42__Changes_.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/uiDesigner.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/uiDesigner.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/connection/DBConnect.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/connection/DBConnect.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2Qwjbch1gT8YerdhsllLZQLmkJu\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;F:/Projekan/Project-Semester2/PRG3/Project-PRG3-Supermarket-03/library/sqljdbc4.jar&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"F:\\Projekan\\Project-Semester2\\PRG3\\Project-PRG3-Supermarket-03\\Library\" />\r\n      <recent name=\"D:\\SEMESTER 2\\Project-Akhir-Semester\\PRG3\\Project\\src\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.CRUDJenisBarang\">\r\n    <configuration name=\"CRUDJenisBarang\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"orangGudang.CRUDJenisBarang\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"orangGudang.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"DBConnect\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"connection.DBConnect\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"connection.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"Project\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.CRUDJenisBarang\" />\r\n        <item itemvalue=\"Application.DBConnect\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2\" name=\"Changes\" comment=\"\" />\r\n      <created>1686271614569</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1686271614569</updated>\r\n      <workItem from=\"1686271615920\" duration=\"1432000\" />\r\n      <workItem from=\"1686464420546\" duration=\"1802000\" />\r\n      <workItem from=\"1686485994578\" duration=\"179000\" />\r\n      <workItem from=\"1687135743360\" duration=\"482000\" />\r\n      <workItem from=\"1687139525595\" duration=\"57000\" />\r\n      <workItem from=\"1687154561891\" duration=\"679000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Connection DB sql\">\r\n      <created>1687135875572</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687135875572</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\" Anggun nyoba\">\r\n      <created>1687154821833</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687154821833</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\" Anggun nyoba2\">\r\n      <created>1687155007488</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687155007488</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"4\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Connection DB sql\" />\r\n    <MESSAGE value=\" Anggun nyoba\" />\r\n    <MESSAGE value=\" Anggun nyoba2\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\" Anggun nyoba2\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision dec3e12742880759c70d5a8ca335b9eba6101a22)
++++ b/.idea/workspace.xml	(date 1687268593501)
+@@ -4,12 +4,10 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_06_2023_23_42__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_19_06_2023_23_42__Changes_.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
++    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Nambahin Karyawan">
++      <change afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.form" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -45,7 +43,7 @@
+     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+-    &quot;last_opened_file_path&quot;: &quot;F:/Projekan/Project-Semester2/PRG3/Project-PRG3-Supermarket-03/library/sqljdbc4.jar&quot;,
++    &quot;last_opened_file_path&quot;: &quot;F:/MJ/Kampus/Semester 2/Project-PRG3-Supermarket-03/src/Admin&quot;,
+     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+@@ -57,12 +55,17 @@
+   }
+ }</component>
+   <component name="RecentsManager">
++    <key name="CreateClassDialog.RecentsKey">
++      <recent name="CRUDRak" />
++      <recent name="Admin" />
++    </key>
+     <key name="CopyFile.RECENT_KEYS">
++      <recent name="F:\MJ\Kampus\Semester 2\Project-PRG3-Supermarket-03\src\Admin" />
+       <recent name="F:\Projekan\Project-Semester2\PRG3\Project-PRG3-Supermarket-03\Library" />
+       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Application.CRUDJenisBarang">
++  <component name="RunManager" selected="Application.CRUDRak">
+     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
+       <module name="Project" />
+@@ -76,6 +79,19 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
++    <configuration name="CRUDRak" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="Admin.CRUDRak" />
++      <module name="Project" />
++      <extension name="coverage">
++        <pattern>
++          <option name="PATTERN" value="Admin.*" />
++          <option name="ENABLED" value="true" />
++        </pattern>
++      </extension>
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
+     <configuration name="DBConnect" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="connection.DBConnect" />
+       <module name="Project" />
+@@ -98,8 +114,9 @@
+     </configuration>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="Application.CRUDJenisBarang" />
++        <item itemvalue="Application.CRUDRak" />
+         <item itemvalue="Application.DBConnect" />
++        <item itemvalue="Application.CRUDJenisBarang" />
+         <item itemvalue="Application.Main" />
+       </list>
+     </recent_temporary>
+@@ -118,6 +135,8 @@
+       <workItem from="1687135743360" duration="482000" />
+       <workItem from="1687139525595" duration="57000" />
+       <workItem from="1687154561891" duration="679000" />
++      <workItem from="1687255993706" duration="401000" />
++      <workItem from="1687256407142" duration="8874000" />
+     </task>
+     <task id="LOCAL-00001" summary="Connection DB sql">
+       <created>1687135875572</created>
+@@ -140,7 +159,21 @@
+       <option name="project" value="LOCAL" />
+       <updated>1687155007488</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="Nambahin Karyawan">
++      <created>1687256063991</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1687256063991</updated>
++    </task>
++    <task id="LOCAL-00005" summary="Nambahin Karyawan">
++      <created>1687256070143</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1687256070143</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -161,6 +194,7 @@
+     <MESSAGE value="Connection DB sql" />
+     <MESSAGE value=" Anggun nyoba" />
+     <MESSAGE value=" Anggun nyoba2" />
+-    <option name="LAST_COMMIT_MESSAGE" value=" Anggun nyoba2" />
++    <MESSAGE value="Nambahin Karyawan" />
++    <option name="LAST_COMMIT_MESSAGE" value="Nambahin Karyawan" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: src/Admin/CRUDRak.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Admin/CRUDRak.java b/src/Admin/CRUDRak.java
+new file mode 100644
+--- /dev/null	(date 1687268593311)
++++ b/src/Admin/CRUDRak.java	(date 1687268593311)
+@@ -0,0 +1,314 @@
++package Admin;
++
++import connection.DBConnect;
++
++import javax.swing.*;
++import javax.swing.table.DefaultTableModel;
++import java.awt.event.ActionEvent;
++import java.awt.event.ActionListener;
++import java.sql.SQLException;
++
++public class CRUDRak extends JFrame {
++    private JPanel JPRak;
++    private JTextField txtNamaKaryawan;
++    private JTextField txtKodeRak;
++    private JTextField txtJumlah;
++    private JButton btnSave;
++    private JButton btnUpdate;
++    private JButton btnDelete;
++    private JButton btnCancel;
++    private JTextField txtSearch;
++    private JButton btnSearch;
++    private JTable tblRak;
++    private JButton btnRefresh;
++    private JTextField txtCariKaryawan;
++    private JTable TableKaryawan;
++
++    private DefaultTableModel Model;
++
++    DBConnect connect = new DBConnect();
++
++    String id_karyawan, id_rak, Huruf, Nama;
++    int Jumlah;
++
++    public static void main(String[] args) {
++        new CRUDRak().setVisible(true);
++    }
++
++    public void FrameConfig(){ //Con
++        add(this.JPRak);
++        setExtendedState(JFrame.MAXIMIZED_BOTH);
++        setUndecorated(true);
++        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
++        setVisible(true);
++    }
++
++    public CRUDRak()
++    {
++        Model = new DefaultTableModel();
++        tblRak.setModel(Model);
++        FrameConfig();
++
++        addColumn();
++        loadDataRak();
++        LoadDataKaryawan();
++
++        btnSearch.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                showByNama(Model);
++            }
++        });
++        btnSave.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                Nama = txtNamaKaryawan.getText();
++                Jumlah = Integer.parseInt(txtJumlah.getText());
++                Huruf = txtKodeRak.getText();
++
++
++                //Validasi agar tidak ada nama jenis barang yang sama
++                boolean found = false; //inisiasi awal kalau nama yang di input tidak sama
++
++                //Mengambil jumlah baris pada table
++                int baris = tblRak.getModel().getRowCount();
++
++                for(int awal = 0; awal < baris; awal++) //Mengulang pengecekan dari awal sampai jumlah baris
++                {
++                    //Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
++                    if(Nama.toLowerCase().equals(Model.getValueAt(awal, 1).toString().toLowerCase()))
++                    {
++                        found = true; //Menemukan data yang sama
++                    }
++                }
++
++                if(found) //Jika menemukan data yang sama pada tabel
++                {
++                    JOptionPane.showMessageDialog(null, "Data Rak sudah ada!", "Information!",
++                            JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan
++
++                }else{
++                    if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
++                    {
++                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
++                                , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
++
++                    } else {
++                        try {
++                            DBConnect connection = new DBConnect();
++                            String sql = "EXEC sp_InserttblRak @id_rak=?, @id_karyawan=?, @huruf=?, @jumlah=? ,@status=1";
++
++                            connection.pstat = connection.conn.prepareStatement(sql);
++
++                            connection.pstat.setString(1, generateNextRakID()); //generate id supplier sebagai PK
++
++
++                            //Pencarian ID Karyawan
++                            try {
++                                connection.pstat = connection.conn.prepareStatement("SELECT id_karyawan FROM tblKaryawan WHERE nama_karyawan=?");
++                                connection.result = connection.pstat.executeQuery();
++                                connection.pstat.setString(1, txtNamaKaryawan.getText());
++
++                                if (connection.result.next()) {
++                                    connection.pstat.setString(2, connection.result.getString("id_karyawan")); //namasupplier sebagai parameter kedua
++
++                                }
++                            } catch (Exception ex) {
++                                System.out.println("Terjadi error saat memeriksa id_rak terakhir: " + ex);
++                            }
++
++
++                            connection.pstat.setString(3, Huruf); //alamat sebagai parameter ketiga
++                            connection.pstat.setInt(4, Jumlah); //notelp sebagai parameter keempat
++                            connection.pstat.executeUpdate();
++                            connection.pstat.close();
++
++
++                            clear(); //Mengosongkan semua textbox
++
++                            JOptionPane.showMessageDialog(null, "Data Supplier berhasil disimpan!", "Informasi",
++                                    JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
++                            loadDataRak();
++                        } catch (SQLException ex) {
++                            throw new RuntimeException(ex);
++                        }
++                    }
++                }
++            }
++        });
++        btnUpdate.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                boolean found = false;
++                // validasi tidak boleh sama
++                Object[] obj = new Object[1];
++                obj[0] = txtNamaKaryawan.getText();
++
++                if(found) {
++                    JOptionPane.showMessageDialog(null, "Data Rak sudah ada!", "Information"
++                            , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput
++                }else
++                {
++                    if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
++                    {
++                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!",
++                                JOptionPane.WARNING_MESSAGE);
++                    }
++                    else
++                    {
++
++                    }
++
++                }
++            }
++        });
++    }
++
++    public void addColumn(){
++        Model.addColumn("ID Rak");
++        Model.addColumn("ID Karyawan");
++        Model.addColumn("Huruf");
++        Model.addColumn("Jumlah");
++        Model.addColumn("Status");
++    }
++
++    public void clear()
++    {
++        txtJumlah.setText("");
++        txtCariKaryawan.setText("");
++        txtKodeRak.setText("");
++        txtNamaKaryawan.setText("");
++        txtSearch.setText("");
++    }
++
++    public void loadDataRak()
++    {
++        Model.getDataVector().removeAllElements();
++        Model.fireTableDataChanged();
++
++        try{
++            DBConnect connection = new DBConnect();
++            connection.stat = connection.conn.createStatement();
++            String query = "EXEC sp_LoadRak";
++            connection.result = connection.stat.executeQuery(query);
++
++            while(connection.result.next()){
++                if(connection.result.getInt("status") == 1) { //Mengecek apakah Rak masih tersedia
++                    Object[] obj = new Object[5];
++                    obj[0] = connection.result.getString("id_rak"); //Mengambil ID
++                    obj[1] = connection.result.getString("id_karyawan"); //Mengambil nama
++                    obj[2] = connection.result.getString("huruf"); //Mengambil nama
++                    obj[3] = connection.result.getString("jumlah"); //Mengambil nama
++                    obj[4] = connection.result.getString("status");
++                    Model.addRow(obj);
++                }
++            }
++            connection.stat.close();
++            connection.result.close();
++        }catch (Exception ex){
++            JOptionPane.showMessageDialog(null, "Eror while loading for data : "+ex);
++        }
++    }
++
++    public void showByNama(DefaultTableModel model) {
++        model.getDataVector().removeAllElements();
++        model.fireTableDataChanged();
++
++        DBConnect connection = new DBConnect();
++        try {
++            connection.stat = connection.conn.createStatement();
++            String query = "SELECT * FROM tblKaryawan WHERE nama_karyawan LIKE '%" + txtSearch.getText() + "%'";
++            connection.result = connection.stat.executeQuery(query);
++
++            while (connection.result.next()) {
++                if (connection.result.getInt("status") == 1) {
++                    Object[] obj = new Object[2];
++
++                    obj[0] = connection.result.getString("id_karyawan");
++                    obj[1] = connection.result.getString("nama_karyawan");
++
++                    model.addRow(obj);
++                }
++            }
++
++            connection.result.close();
++            connection.stat.close();
++
++        } catch (Exception e) {
++            System.out.println("Terjadi error saat load data item: " + e);
++        }
++    }
++
++    public void LoadDataKaryawan(){
++        Model.getDataVector().removeAllElements();
++        Model.fireTableDataChanged();
++
++        try{
++            connect.stat = connect.conn.createStatement();
++            String query = "EXEC sp_LoadKaryawan";
++            connect.result = connect.stat.executeQuery(query);
++
++            while(connect.result.next()){
++                String temp = connect.result.getString("password");
++
++                Object[] obj = new Object[8];
++                obj[0] = connect.result.getString("id_karyawan");
++                obj[1] = connect.result.getString("nama_karyawan");
++                obj[2] = connect.result.getString("jenis_kelamin");
++                obj[3] = connect.result.getString("no_telp");
++                obj[4] = connect.result.getString("email");
++                obj[5] = connect.result.getString("alamat");
++                obj[6] = connect.result.getString("username");
++                obj[7] = connect.result.getString("password");
++
++                Model.addRow(obj);
++            }
++            connect.stat.close();
++            connect.result.close();
++            btnSave.setEnabled(true);
++            btnUpdate.setEnabled(false);
++            btnDelete.setEnabled(false);
++        }
++        catch(Exception e){
++            JOptionPane.showMessageDialog(null, "an error occurred while loading data.\n" + e);
++        }
++    }
++
++    public String generateNextRakID() {
++        DBConnect connection = new DBConnect();
++        try {
++            connection.pstat = connection.conn.prepareStatement("SELECT TOP 1 id_rak FROM tblRak ORDER BY id_rak DESC");
++            connection.result = connection.pstat.executeQuery();
++
++            if (connection.result.next()) {
++                String lastItemID = connection.result.getString("id_rak");
++                int lastNumber = Integer.parseInt(lastItemID.substring(2));
++                int nextNumber = lastNumber + 1;
++
++                String nextItemID = "RK" + String.format("%03d", nextNumber);
++                return nextItemID;
++            } else {
++                return "RK001";
++            }
++        } catch (Exception e) {
++            System.out.println("Terjadi error saat memeriksa id_rak terakhir: " + e);
++        } finally {
++            try {
++                if (connection.result != null) {
++                    connection.result.close();
++                }
++                if (connection.pstat != null) {
++                    connection.pstat.close();
++                }
++                if (connection.conn != null) {
++                    connection.conn.close();
++                }
++            } catch (SQLException ex) {
++                System.out.println("Terjadi error saat menutup koneksi: " + ex);
++            }
++        }
++
++        return null;
++    }
++
++}
