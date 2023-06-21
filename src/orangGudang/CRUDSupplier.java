@@ -332,11 +332,23 @@ public class CRUDSupplier extends JFrame {
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String searchQuery = txtSearch.getText().trim();
+
+                if (searchQuery.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Masukkan nama supplier yang ingin dicari");
+                } else {
+                    showByNama(model);
+                }
                 txtSearch.setText("");
-                showByNama(model);
             }
         });
 
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
     }
 
     public void showByNama(DefaultTableModel model) {
@@ -348,6 +360,8 @@ public class CRUDSupplier extends JFrame {
             connection.stat = connection.conn.createStatement();
             String query = "SELECT * FROM tblSupplier WHERE nama_supplier LIKE '%" + txtSearch.getText() + "%'";
             connection.result = connection.stat.executeQuery(query);
+
+            boolean found = false;
 
             while (connection.result.next()) {
                 if (connection.result.getInt("status") == 1) {
@@ -362,6 +376,11 @@ public class CRUDSupplier extends JFrame {
                 }
             }
 
+            if(!found)
+            {
+                JOptionPane.showMessageDialog(null, "Nama Tidak Ada!!");
+            }
+
             connection.result.close();
             connection.stat.close();
 
@@ -369,6 +388,7 @@ public class CRUDSupplier extends JFrame {
             System.out.println("Terjadi error saat load data item: " + e);
         }
     }
+
 
         public String generateNextSupplierID() {
             DBConnect connection = new DBConnect();

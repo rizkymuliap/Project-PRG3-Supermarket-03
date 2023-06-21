@@ -49,7 +49,7 @@ public class CRUDRak extends JFrame {
         tblRak.setModel(Model);
         FrameConfig();
 
-        //addColumn();
+        addColumn();
         //loadDataRak();
         //LoadDataKaryawan();
 
