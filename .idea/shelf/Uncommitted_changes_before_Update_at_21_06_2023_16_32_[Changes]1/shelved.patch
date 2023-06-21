@@ -1,0 +1,154 @@
+Index: src/Admin/CRUDKaryawan.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Admin;\r\n\r\nimport connection.DBConnect;\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.table.DefaultTableModel;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.awt.event.KeyAdapter;\r\nimport java.awt.event.KeyEvent;\r\nimport java.sql.SQLException;\r\nimport java.util.Objects;\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\npublic class CRUDKaryawan extends JFrame {\r\n    private JPanel JPKaryawan;\r\n    private JTextField txtTelp;\r\n    private JTextField txtEmail;\r\n    private JTextField txtUsername;\r\n    private JPasswordField txtPassword;\r\n    //private JTextField cbjeniskelamin;\r\n    private JTextField txtAlamat;\r\n    private JButton btnSave;\r\n    private JButton btnUpdate;\r\n    private JButton btnDelete;\r\n    private JButton btnClear;\r\n    private JTextField txtSearch;\r\n    private JTable TabelData;\r\n    private JTextField txtNama;\r\n    private JButton btnRefresh;\r\n    private JComboBox cbjk;\r\n    private final int MAX_CHARACTERS = 50;\r\n\r\n    private DefaultTableModel Model;\r\n\r\n    DBConnect connect = new DBConnect();\r\n\r\n    String Nama;\r\n    String JenisKelamin;\r\n    String Notelp;\r\n    String Alamat;\r\n    String Email;\r\n    String Username;\r\n    String Password;\r\n    String id_karyawan;\r\n\r\n    public static void main(String[] args) {\r\n        JFrame frame = new JFrame(\"CRUDKaryawan\");\r\n        frame.setContentPane(new CRUDKaryawan().JPKaryawan);\r\n        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        frame.setLocationRelativeTo(null);\r\n        frame.setSize(500, 500);\r\n        frame.setVisible(true);\r\n    }\r\n\r\n    public CRUDKaryawan()\r\n    {\r\n        Model = new DefaultTableModel();\r\n        TabelData.setModel(Model);\r\n        addColomn();\r\n        loadData();\r\n\r\n\r\n        txtNama.addKeyListener(new KeyAdapter() {\r\n            @Override\r\n            public void keyTyped(KeyEvent e) {\r\n                super.keyTyped(e);\r\n                char c = e.getKeyChar();\r\n                if (((c < 'a') || (c > 'z')) && ((c < 'A') || (c > 'Z')) && (c != KeyEvent.VK_BACK_SPACE)\r\n                        && (c != KeyEvent.VK_SPACE) && (c != KeyEvent.VK_PERIOD)) {\r\n                    e.consume();\r\n                }\r\n            }\r\n        });\r\n        btnUpdate.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                if (Objects.equals(txtNama.getText(), \"\") || cbjk.getSelectedItem().equals(\"\") || (txtTelp.getText().equals(\"\")) || (txtAlamat.getText().equals(\"\")) || (txtEmail.getText().equals(\"\")) || Objects.equals(txtUsername.getText(), \"\") || Objects.equals(txtTelp.getText(), \"\") || Objects.equals(txtPassword.getText(), \"\")){\r\n                    JOptionPane.showMessageDialog(null, \"Please, fill in all data!\");\r\n                }\r\n                else\r\n                {\r\n                    Nama = txtNama.getText();\r\n                    JenisKelamin = cbjk.getSelectedItem().toString();\r\n                    Notelp = txtTelp.getText();\r\n                    boolean valid = validateInput(Notelp);\r\n                    if (!valid)\r\n                    {\r\n                        JOptionPane.showMessageDialog(null, \"No telp harus 628XXX\");\r\n                        txtTelp.setText(\"\");\r\n                        txtTelp.requestFocus();\r\n                        return;\r\n                    }\r\n                    Alamat = txtAlamat.getText();\r\n                    Email = txtEmail.getText();\r\n                    boolean valid2 = validateEmail(Email);\r\n                    if(!valid2)\r\n                    {\r\n                        JOptionPane.showMessageDialog(null, \"No Email Harus Menggunakan a@b.c\");\r\n                        txtEmail.setText(\"\");\r\n                        txtEmail.requestFocus();\r\n                        return;\r\n                    }\r\n                    Username = txtUsername.getText();\r\n                    Password = txtPassword.getText();\r\n\r\n                    try\r\n                    {\r\n                        String sql1 =\"UPDATE tblKaryawan SET Nama = ?, JenisKelamin = ?, Notelp = ?, Alamat = ?,\" +\r\n                                \"Email = ?, Username = ?, Password = ? WHERE id_karyawan = ?\";\r\n                        connect.result = connect.stat.executeQuery(sql1);\r\n                        connect.pstat.setString(1, Nama);\r\n                        connect.pstat.setString(2, JenisKelamin);\r\n                        connect.pstat.setString(3, Notelp);\r\n                        connect.pstat.setString(4, Alamat);\r\n                        connect.pstat.setString(5, Email);\r\n                        connect.pstat.setString(6, Username);\r\n                        connect.pstat.setString(7, Password);\r\n                        connect.pstat.setString(8, id_karyawan);\r\n\r\n\r\n                        connect.pstat.executeUpdate();\r\n                        connect.pstat.close();\r\n                    }\r\n                    catch (Exception ex)\r\n                    {\r\n                        System.out.println(\"Error saat Update Karyawan : \" + ex);\r\n                    }\r\n\r\n                    JOptionPane.showMessageDialog(null, \"Update Data Karyawan berhasil !!\");\r\n                }\r\n            }\r\n        });\r\n        btnDelete.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                int opsi;\r\n                if (Objects.equals(txtNama.getText(), \"\") || cbjk.getSelectedItem().equals(\"\") || (txtTelp.getText().equals(\"\")) || (txtAlamat.getText().equals(\"\")) || (txtEmail.getText().equals(\"\")) || Objects.equals(txtUsername.getText(), \"\") || Objects.equals(txtTelp.getText(), \"\") || Objects.equals(txtPassword.getText(), \"\")){\r\n                    JOptionPane.showMessageDialog(null, \"Please, fill in all data!\");\r\n                }else{\r\n                    try {\r\n                        int kode = TabelData.getSelectedRow();\r\n                        opsi = JOptionPane.showConfirmDialog(null, \"Are you sure delete this data?\",\r\n                                \"Confirmation\", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);\r\n                        if (opsi != 0) {\r\n                            JOptionPane.showMessageDialog(null, \"Data failed to delete\");\r\n                        } else {\r\n                            id_karyawan = String.valueOf(Model.getValueAt(kode, 0));\r\n                            String query = \"EXEC sp_DeleteKaryawan @id_karyawan=?\";\r\n                            connect.pstat = connect.conn.prepareStatement(query);\r\n                            connect.pstat.setString(1, id_karyawan);\r\n                            connect.pstat.executeUpdate();\r\n                            connect.pstat.close();\r\n                        }\r\n                    } catch (NumberFormatException nex){\r\n                        JOptionPane.showMessageDialog(null, \"Please, enter the valid number .\"+nex.getMessage());\r\n                    } catch (Exception e1){\r\n                        JOptionPane.showMessageDialog(null, \"an error occurred while deleting data into the database.\\n\" + e1);\r\n                    }\r\n\r\n                    JOptionPane.showMessageDialog(null, \"Data deleted successfully!\");\r\n                    loadData();\r\n                }\r\n            }\r\n        });\r\n        txtNama.addKeyListener(new KeyAdapter() {\r\n            @Override\r\n            public void keyTyped(KeyEvent e) {\r\n                super.keyTyped(e);\r\n                if (txtNama.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari max char > 50\r\n                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50\r\n                }\r\n\r\n                char c = e.getKeyChar(); //Mengambil huruf yang saat ini diinput\r\n                if (Character.isDigit(c)) { //cek apakah inputan angka\r\n                    e.consume(); // Jika iya Mengkonsumsi event jika karakter yang diketik adalah angka\r\n                }\r\n            }\r\n        });\r\n\r\n        txtTelp.addKeyListener(new KeyAdapter() {\r\n            @Override\r\n            public void keyTyped(KeyEvent e) {\r\n                super.keyTyped(e);\r\n                char c = e.getKeyChar(); //Mengambil huruf yang saat ini diinput\r\n                if (!Character.isDigit(c)) { //cek apakah inputan angka\r\n                    e.consume(); // Jika iya Mengkonsumsi event jika karakter yang diketik adalah angka\r\n                }\r\n            }\r\n        });\r\n        txtEmail.addKeyListener(new KeyAdapter() {\r\n            @Override\r\n            public void keyReleased(KeyEvent e) {\r\n                super.keyReleased(e);\r\n                if (txtEmail.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari Max char\r\n                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50\r\n                }\r\n            }\r\n        });\r\n        btnSave.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                if (txtNama.getText().equals(\"\") || cbjk.getSelectedItem().equals(\"\") || txtTelp.getText().equals(\"\") || txtAlamat.getText().equals(\"\") || txtEmail.getText().equals(\"\") || txtUsername.getText().equals(\"\") || txtTelp.getText().equals(\"\") || txtPassword.getText().equals(\"\")) {\r\n                    JOptionPane.showMessageDialog(null, \"Please fill in all data!\");\r\n                }\r\n                else\r\n                {\r\n                    Nama = txtNama.getText();\r\n                    JenisKelamin = cbjk.getSelectedItem().toString();\r\n                    Notelp = txtTelp.getText();\r\n                    boolean valid = validateInput(Notelp);\r\n                    if (!valid)\r\n                    {\r\n                        JOptionPane.showMessageDialog(null, \"No telp harus 628XXX\");\r\n                        txtTelp.setText(\"\");\r\n                        txtTelp.requestFocus();\r\n                        return;\r\n                    }\r\n                    Alamat = txtAlamat.getText();\r\n                    Email = txtEmail.getText();\r\n                    boolean valid2 = validateEmail(Email);\r\n                    if(!valid2)\r\n                    {\r\n                        JOptionPane.showMessageDialog(null, \"No Email Harus Menggunakan a@b.c\");\r\n                        txtEmail.setText(\"\");\r\n                        txtEmail.requestFocus();\r\n                        return;\r\n                    }\r\n                    Username = txtUsername.getText();\r\n                    Password = txtPassword.getText();\r\n\r\n                    try\r\n                    {\r\n                        String sql = \"INSERT tblKaryawan VALUE (?,?,?,?,?,?,?,?)\";\r\n                        connect.pstat = connect.conn.prepareStatement(sql);\r\n                        connect.pstat.setString(0, generateNextSupplierID());\r\n                        connect.pstat.setString(1, Nama);\r\n                        connect.pstat.setString(2, JenisKelamin);\r\n                        connect.pstat.setString(3, Notelp);\r\n                        connect.pstat.setString(4, Alamat);\r\n                        connect.pstat.setString(5, Email);\r\n                        connect.pstat.setString(6, Username);\r\n                        connect.pstat.setString(7, Password);\r\n\r\n                        connect.stat.close();\r\n                        connect.pstat.executeUpdate();\r\n                        connect.pstat.close();\r\n\r\n\r\n                        JOptionPane.showMessageDialog(null, \"Data Berhasil ditambahkan!!\");\r\n                        loadData();\r\n                    }\r\n                    catch (Exception ex)\r\n                    {\r\n                        JOptionPane.showMessageDialog(null, \"Eror saat Menyimpan kedalam database.\\n\" + ex);\r\n                    }\r\n                }\r\n            }\r\n        });\r\n    }\r\n\r\n    public void addColomn(){\r\n        Model.addColumn(\"ID Karyawan\");\r\n        Model.addColumn(\"Nama Karyawan\");\r\n        Model.addColumn(\"No Telp\");\r\n        Model.addColumn(\"Alamat\");\r\n        Model.addColumn(\"Email\");\r\n        Model.addColumn(\"Username\");\r\n        Model.addColumn(\"Password\");\r\n    }\r\n\r\n    public String generateNextSupplierID() {\r\n        DBConnect connection = new DBConnect();\r\n        try {\r\n            connection.pstat = connection.conn.prepareStatement(\"SELECT TOP 1 id_karyawan FROM tblKaryawan ORDER BY id_karyawan DESC\");\r\n            connection.result = connection.pstat.executeQuery();\r\n\r\n            if (connection.result.next()) {\r\n                String lastItemID = connection.result.getString(\"id_karyawan\");\r\n                int lastNumber = Integer.parseInt(lastItemID.substring(3));\r\n                int nextNumber = lastNumber + 1;\r\n\r\n                String nextItemID = \"KRW\" + String.format(\"%03d\", nextNumber);\r\n                return nextItemID;\r\n            } else {\r\n                return \"KRW001\";\r\n            }\r\n        } catch (Exception e) {\r\n            System.out.println(\"Terjadi error saat memeriksa id_supplier terakhir: \" + e);\r\n        } finally {\r\n            try {\r\n                if (connect.result != null) {\r\n                    connect.result.close();\r\n                }\r\n                if (connect.pstat != null) {\r\n                    connect.pstat.close();\r\n                }\r\n                if (connect.conn != null) {\r\n                    connect.conn.close();\r\n                }\r\n            } catch (SQLException ex) {\r\n                System.out.println(\"Terjadi error saat menutup koneksi: \" + ex);\r\n            }\r\n        }\r\n\r\n        return null;\r\n    }\r\n\r\n    public void loadData(){\r\n        Model.getDataVector().removeAllElements();\r\n        Model.fireTableDataChanged();\r\n\r\n        try{\r\n            connect.stat = connect.conn.createStatement();\r\n            String query = \"EXEC sp_LoadKaryawan\";\r\n            connect.result = connect.stat.executeQuery(query);\r\n\r\n            while(connect.result.next()){\r\n                String temp = connect.result.getString(\"password\");\r\n\r\n                Object[] obj = new Object[8];\r\n                obj[0] = connect.result.getString(\"id_karyawan\");\r\n                obj[1] = connect.result.getString(\"nama_karyawan\");\r\n                obj[2] = connect.result.getString(\"jenis_kelamin\");\r\n                obj[3] = connect.result.getString(\"no_telp\");\r\n                obj[4] = connect.result.getString(\"email\");\r\n                obj[5] = connect.result.getString(\"alamat\");\r\n                obj[6] = connect.result.getString(\"username\");\r\n                obj[7] = connect.result.getString(\"password\");\r\n\r\n                Model.addRow(obj);\r\n            }\r\n            connect.stat.close();\r\n            connect.result.close();\r\n            btnSave.setEnabled(true);\r\n            btnUpdate.setEnabled(false);\r\n            btnDelete.setEnabled(false);\r\n        }\r\n        catch(Exception e){\r\n            JOptionPane.showMessageDialog(null, \"an error occurred while loading data.\\n\" + e);\r\n        }\r\n    }\r\n\r\n    public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628\r\n        // Regex pattern untuk memvalidasi format input\r\n        String regexPattern = \"^628\\\\d{1,14}$\";\r\n\r\n        // Membuat objek Pattern dari regex pattern\r\n        Pattern pattern = Pattern.compile(regexPattern);\r\n\r\n        // Mencocokkan input dengan pattern menggunakan Matcher\r\n        Matcher matcher = pattern.matcher(input);\r\n\r\n        // Mengembalikan true jika input cocok dengan pattern, false jika tidak cocok\r\n        return matcher.matches();\r\n    }\r\n\r\n    public static boolean validateEmail(String email) {\r\n        // Regex pattern untuk validasi email\r\n        String regexPattern = \"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$\";\r\n\r\n        // Membuat objek Pattern dari regex pattern\r\n        Pattern pattern = Pattern.compile(regexPattern);\r\n\r\n        // Mencocokkan email dengan pattern menggunakan Matcher\r\n        Matcher matcher = pattern.matcher(email);\r\n\r\n        // Mengembalikan true jika email cocok dengan pattern, false jika tidak cocok\r\n        return matcher.matches();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Admin/CRUDKaryawan.java b/src/Admin/CRUDKaryawan.java
+--- a/src/Admin/CRUDKaryawan.java	
++++ b/src/Admin/CRUDKaryawan.java	
+@@ -230,31 +230,49 @@
+                     Username = txtUsername.getText();
+                     Password = txtPassword.getText();
+ 
+-                    try
+-                    {
++                    try {
+                         String sql = "INSERT tblKaryawan VALUE (?,?,?,?,?,?,?,?)";
+                         connect.pstat = connect.conn.prepareStatement(sql);
+-                        connect.pstat.setString(0, generateNextSupplierID());
+-                        connect.pstat.setString(1, Nama);
+-                        connect.pstat.setString(2, JenisKelamin);
+-                        connect.pstat.setString(3, Notelp);
+-                        connect.pstat.setString(4, Alamat);
+-                        connect.pstat.setString(5, Email);
+-                        connect.pstat.setString(6, Username);
+-                        connect.pstat.setString(7, Password);
++                        connect.pstat.setString(1, generateNextSupplierID());
++                        connect.pstat.setString(2, Nama);
++                        connect.pstat.setString(3, JenisKelamin);
++                        connect.pstat.setString(4, Notelp);
++                        connect.pstat.setString(5, Alamat);
++                        connect.pstat.setString(6, Email);
++                        connect.pstat.setString(7, Username);
++                        connect.pstat.setString(8, Password);
+ 
+-                        connect.stat.close();
+                         connect.pstat.executeUpdate();
+-                        connect.pstat.close();
+-
+-
+                         JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
+                         loadData();
+-                    }
+-                    catch (Exception ex)
+-                    {
+-                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database.\n" + ex);
+-                    }
++                    } catch (Exception ex) {
++                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database." + ex);
++                    } finally {
++                        try {
++                            if (connect.pstat != null) {
++                                connect.pstat.close();
++                            }
++                            if (connect.stat != null) {
++                                connect.stat.close();
++                            }
++                        } catch (SQLException ex) {
++                            ex.printStackTrace();
++                        }
++                    }
++                }
++            }
++        });
++        btnRefresh.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                String namaKaryawan = txtSearch.getText().trim();
++                if(!namaKaryawan.isEmpty())
++                {
++                    searchKaryawan(namaKaryawan);
++                }
++                else
++                {
++                    loadData();
+                 }
+             }
+         });
+@@ -307,18 +325,48 @@
+         return null;
+     }
+ 
+-    public void loadData(){
++    private void searchKaryawan(String nama) {
++        Model.getDataVector().removeAllElements();
++        Model.fireTableDataChanged();
++
++        try {
++            String query = "EXEC sp_SearchKaryawan ?";
++            connect.pstat = connect.conn.prepareStatement(query);
++            connect.pstat.setString(1, nama);
++            connect.result = connect.pstat.executeQuery();
++
++            while (connect.result.next()) {
++                Object[] obj = new Object[8];
++                obj[0] = connect.result.getString("id_karyawan");
++                obj[1] = connect.result.getString("nama_karyawan");
++                obj[2] = connect.result.getString("jenis_kelamin");
++                obj[3] = connect.result.getString("no_telp");
++                obj[4] = connect.result.getString("email");
++                obj[5] = connect.result.getString("alamat");
++                obj[6] = connect.result.getString("username");
++                obj[7] = connect.result.getString("password");
++
++                Model.addRow(obj);
++            }
++
++            connect.pstat.close();
++            connect.result.close();
++        } catch (Exception e) {
++            JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + e);
++        }
++    }
++
++
++    public void loadData() {
+         Model.getDataVector().removeAllElements();
+         Model.fireTableDataChanged();
+ 
+-        try{
++        try {
+             connect.stat = connect.conn.createStatement();
+             String query = "EXEC sp_LoadKaryawan";
+             connect.result = connect.stat.executeQuery(query);
+ 
+-            while(connect.result.next()){
+-                String temp = connect.result.getString("password");
+-
++            while (connect.result.next()) {
+                 Object[] obj = new Object[8];
+                 obj[0] = connect.result.getString("id_karyawan");
+                 obj[1] = connect.result.getString("nama_karyawan");
+@@ -331,16 +379,17 @@
+ 
+                 Model.addRow(obj);
+             }
++
+             connect.stat.close();
+             connect.result.close();
+             btnSave.setEnabled(true);
+             btnUpdate.setEnabled(false);
+             btnDelete.setEnabled(false);
++        } catch (Exception e) {
++            JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e);
+         }
+-        catch(Exception e){
+-            JOptionPane.showMessageDialog(null, "an error occurred while loading data.\n" + e);
+-        }
+     }
++
+ 
+     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628
+         // Regex pattern untuk memvalidasi format input
