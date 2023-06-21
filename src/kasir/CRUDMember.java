@@ -1,5 +1,6 @@
 package kasir;
 
+<<<<<<< HEAD
 import connection.DBConnect;
 
 import javax.swing.*;
@@ -13,6 +14,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CRUDMember extends JFrame{
+=======
+import javax.swing.*;
+
+public class CRUDMember {
+>>>>>>> origin/master
     private JPanel JPMember;
     private JTextField txtNamaMember;
     private JTextField txtNotelp;
@@ -25,6 +31,7 @@ public class CRUDMember extends JFrame{
     private JButton btnSearch;
     private JTable tblMember;
     private JButton btnRefresh;
+<<<<<<< HEAD
     DefaultTableModel model = new DefaultTableModel(){
         @Override
         public boolean isCellEditable(int row, int column){
@@ -434,4 +441,6 @@ public class CRUDMember extends JFrame{
         new CRUDMember().setVisible(true);
     }
 
+=======
+>>>>>>> origin/master
 }
