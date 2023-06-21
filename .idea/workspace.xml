@@ -4,16 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Rak udah beres, cobain dulu">
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/kasir/CRUDMember.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gambar/Group 4 (1).png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gambar/dShoes (7).png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Gambar/dSshoes (8).png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,48 +61,9 @@
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CRUDKaryawan">
-    <configuration name="CRUDBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDBarang" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="orangGudang.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.CRUDJenisBarang">
     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="orangGudang.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CRUDKaryawan" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Admin.CRUDKaryawan" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Admin.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CRUDSupplier" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDSupplier" />
       <module name="Project" />
       <extension name="coverage">
         <pattern>
@@ -132,13 +88,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="Project" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CRUDKaryawan" />
-        <item itemvalue="Application.DBConnect" />
-        <item itemvalue="Application.CRUDSupplier" />
-        <item itemvalue="Application.CRUDBarang" />
         <item itemvalue="Application.CRUDJenisBarang" />
+        <item itemvalue="Application.DBConnect" />
+        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -156,7 +117,6 @@
       <workItem from="1687135743360" duration="482000" />
       <workItem from="1687139525595" duration="57000" />
       <workItem from="1687154561891" duration="679000" />
-      <workItem from="1687309238300" duration="10159000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -179,21 +139,7 @@
       <option name="project" value="LOCAL" />
       <updated>1687155007488</updated>
     </task>
-    <task id="LOCAL-00004" summary="Rak udah beres, cobain dulu">
-      <created>1687277154478</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1687277154478</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Rak udah beres, cobain dulu">
-      <created>1687277160807</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1687277160807</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,7 +160,6 @@
     <MESSAGE value="Connection DB sql" />
     <MESSAGE value=" Anggun nyoba" />
     <MESSAGE value=" Anggun nyoba2" />
-    <MESSAGE value="Rak udah beres, cobain dulu" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rak udah beres, cobain dulu" />
+    <option name="LAST_COMMIT_MESSAGE" value=" Anggun nyoba2" />
   </component>
 </project>
