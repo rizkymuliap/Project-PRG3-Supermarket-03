@@ -230,31 +230,49 @@ public class CRUDKaryawan extends JFrame {
                     Username = txtUsername.getText();
                     Password = txtPassword.getText();
 
-                    try
-                    {
+                    try {
                         String sql = "INSERT tblKaryawan VALUE (?,?,?,?,?,?,?,?)";
                         connect.pstat = connect.conn.prepareStatement(sql);
-                        connect.pstat.setString(0, generateNextSupplierID());
-                        connect.pstat.setString(1, Nama);
-                        connect.pstat.setString(2, JenisKelamin);
-                        connect.pstat.setString(3, Notelp);
-                        connect.pstat.setString(4, Alamat);
-                        connect.pstat.setString(5, Email);
-                        connect.pstat.setString(6, Username);
-                        connect.pstat.setString(7, Password);
+                        connect.pstat.setString(1, generateNextSupplierID());
+                        connect.pstat.setString(2, Nama);
+                        connect.pstat.setString(3, JenisKelamin);
+                        connect.pstat.setString(4, Notelp);
+                        connect.pstat.setString(5, Alamat);
+                        connect.pstat.setString(6, Email);
+                        connect.pstat.setString(7, Username);
+                        connect.pstat.setString(8, Password);
 
-                        connect.stat.close();
                         connect.pstat.executeUpdate();
-                        connect.pstat.close();
-
-
                         JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
                         loadData();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database." + ex);
+                    } finally {
+                        try {
+                            if (connect.pstat != null) {
+                                connect.pstat.close();
+                            }
+                            if (connect.stat != null) {
+                                connect.stat.close();
+                            }
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database.\n" + ex);
-                    }
+                }
+            }
+        });
+        btnRefresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String namaKaryawan = txtSearch.getText().trim();
+                if(!namaKaryawan.isEmpty())
+                {
+                    searchKaryawan(namaKaryawan);
+                }
+                else
+                {
+                    loadData();
                 }
             }
         });
@@ -307,18 +325,17 @@ public class CRUDKaryawan extends JFrame {
         return null;
     }
 
-    public void loadData(){
+    private void searchKaryawan(String nama) {
         Model.getDataVector().removeAllElements();
         Model.fireTableDataChanged();
 
-        try{
-            connect.stat = connect.conn.createStatement();
-            String query = "EXEC sp_LoadKaryawan";
-            connect.result = connect.stat.executeQuery(query);
+        try {
+            String query = "EXEC sp_SearchKaryawan ?";
+            connect.pstat = connect.conn.prepareStatement(query);
+            connect.pstat.setString(1, nama);
+            connect.result = connect.pstat.executeQuery();
 
-            while(connect.result.next()){
-                String temp = connect.result.getString("password");
-
+            while (connect.result.next()) {
                 Object[] obj = new Object[8];
                 obj[0] = connect.result.getString("id_karyawan");
                 obj[1] = connect.result.getString("nama_karyawan");
@@ -331,16 +348,48 @@ public class CRUDKaryawan extends JFrame {
 
                 Model.addRow(obj);
             }
+
+            connect.pstat.close();
+            connect.result.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + e);
+        }
+    }
+
+
+    public void loadData() {
+        Model.getDataVector().removeAllElements();
+        Model.fireTableDataChanged();
+
+        try {
+            connect.stat = connect.conn.createStatement();
+            String query = "EXEC sp_LoadKaryawan";
+            connect.result = connect.stat.executeQuery(query);
+
+            while (connect.result.next()) {
+                Object[] obj = new Object[8];
+                obj[0] = connect.result.getString("id_karyawan");
+                obj[1] = connect.result.getString("nama_karyawan");
+                obj[2] = connect.result.getString("jenis_kelamin");
+                obj[3] = connect.result.getString("no_telp");
+                obj[4] = connect.result.getString("email");
+                obj[5] = connect.result.getString("alamat");
+                obj[6] = connect.result.getString("username");
+                obj[7] = connect.result.getString("password");
+
+                Model.addRow(obj);
+            }
+
             connect.stat.close();
             connect.result.close();
             btnSave.setEnabled(true);
             btnUpdate.setEnabled(false);
             btnDelete.setEnabled(false);
-        }
-        catch(Exception e){
-            JOptionPane.showMessageDialog(null, "an error occurred while loading data.\n" + e);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e);
         }
     }
+
 
     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628
         // Regex pattern untuk memvalidasi format input
