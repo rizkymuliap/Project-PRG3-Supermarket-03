@@ -1,0 +1,608 @@
+Index: src/orangGudang/CRUDSupplier.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package orangGudang;\r\n\r\nimport connection.DBConnect;\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.table.DefaultTableModel;\r\nimport java.awt.event.*;\r\nimport java.sql.SQLException;\r\nimport java.util.regex.Matcher;\r\nimport java.util.regex.Pattern;\r\n\r\npublic class CRUDSupplier extends JFrame {\r\n    private JPanel JPSupplier;\r\n    private JTextField txtNamaSupplier;\r\n    private JTextField txtNotelp;\r\n    private JButton btnSave;\r\n    private JButton btnUpdate;\r\n    private JButton btnDelete;\r\n    private JButton btnCancel;\r\n    private JTextField txtSearch;\r\n    private JButton btnSearch;\r\n    private JTable tblSupplier;\r\n    private JTextArea txtAlamat;\r\n    private JTextField txtEmail;\r\n    private JButton btnRefresh;\r\n    private final int MAX_CHARACTERS = 50;\r\n\r\n    private DefaultTableModel model;\r\n\r\n    //variabel yang akan digunakan di kodingan\r\n    String namaSupplier, email, alamat, notelp, id_supplier;\r\n\r\n    public void FrameConfig(){ //Con\r\n        add(this.JPSupplier);\r\n        setExtendedState(JFrame.MAXIMIZED_BOTH);\r\n        setUndecorated(true);\r\n        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);\r\n        setVisible(true);\r\n    }\r\n\r\n    public CRUDSupplier() {\r\n        FrameConfig(); //Menggunakan konfigurasi panel\r\n\r\n        model = new DefaultTableModel();\r\n        tblSupplier.setModel(model);\r\n\r\n        //Menetapkan beberapa button di nonaktifkan\r\n        btnDelete.setEnabled(false);\r\n        btnUpdate.setEnabled(false);\r\n\r\n        addColumn();\r\n        loadData();\r\n\r\n        btnSave.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                //mengambil nilai variabel dari textbox\r\n                namaSupplier = txtNamaSupplier.getText();\r\n                email = txtEmail.getText();\r\n                notelp = txtNotelp.getText();\r\n                alamat = txtAlamat.getText();\r\n\r\n\r\n                //Validasi agar tidak ada nama jenis barang yang sama\r\n                boolean found = false; //inisiasi awal kalau nama yang di input tidak sama\r\n\r\n                //Mengambil jumlah baris pada table\r\n                int baris = tblSupplier.getModel().getRowCount();\r\n\r\n                for(int awal = 0; awal < baris; awal++) //Mengulang pengecekan dari awal sampai jumlah baris\r\n                {\r\n                    //Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu\r\n                    if(namaSupplier.toLowerCase().equals(model.getValueAt(awal, 1).toString().toLowerCase()))\r\n                    {\r\n                        found = true; //Menemukan data yang sama\r\n                    }\r\n                }\r\n\r\n                if(found) //Jika menemukan data yang sama pada tabel\r\n                {\r\n                    JOptionPane.showMessageDialog(null, \"Data Supplier sudah ada!\", \"Information!\",\r\n                            JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan\r\n\r\n                }else{\r\n                    if (txtNamaSupplier.getText().equals(\"\") || txtAlamat.getText().equals(\"\") || txtEmail.getText().equals(\"\") || txtNotelp.getText().equals(\"\")) //Mengecek apakah txtbox kosong agar tidak ada data kosong\r\n                    {\r\n                        JOptionPane.showMessageDialog(null, \"Tolong, isikan semua data!\", \"Warning!\"\r\n                                , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong\r\n\r\n                    } else {\r\n                        try {\r\n\r\n                            Boolean valid_no_telp = validateInput(notelp);\r\n\r\n                            if(!valid_no_telp){  //Melakukan cek apakah inputan no_telp valid\r\n                                JOptionPane.showMessageDialog(null, \"Nomor telepon harus dalam format 628xxx\"\r\n                                        , \"Warning!\", JOptionPane.WARNING_MESSAGE);\r\n                                txtNotelp.setText(\"\");\r\n                                txtNotelp.requestFocus();\r\n                                return;\r\n                            }\r\n\r\n                            Boolean valid_email = validateEmail(email);\r\n\r\n                            if(!valid_email){  //Melakukan cek apakah inputan email valid\r\n                                JOptionPane.showMessageDialog(null, \"Inputan email tidak sesuai dengan format\"\r\n                                        , \"Warning!\", JOptionPane.WARNING_MESSAGE);\r\n                                txtEmail.setText(\"\");\r\n                                txtEmail.requestFocus();\r\n                                return;\r\n                            }\r\n\r\n                            DBConnect connection = new DBConnect();\r\n                            String sql = \"EXEC sp_InserttblSupplier @id_supplier=?, @nama_supplier=?, @alamat=?, @no_telp=?, @email=? ,@status=1\";\r\n\r\n                            connection.pstat = connection.conn.prepareStatement(sql);\r\n\r\n                            connection.pstat.setString(1, generateNextSupplierID()); //generate id supplier sebagai PK\r\n                            connection.pstat.setString(2, namaSupplier); //namasupplier sebagai parameter kedua\r\n                            connection.pstat.setString(3, alamat); //alamat sebagai parameter ketiga\r\n                            connection.pstat.setString(4, notelp); //notelp sebagai parameter keempat\r\n                            connection.pstat.setString(5, email); //email sebagai parameter kelima\r\n\r\n                            connection.pstat.executeUpdate();\r\n                            connection.pstat.close();\r\n\r\n                            clear(); //Mengosongkan semua textbox\r\n\r\n                            JOptionPane.showMessageDialog(null, \"Data Supplier berhasil disimpan!\", \"Informasi\",\r\n                                    JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier\r\n                            loadData();\r\n                        } catch (SQLException ex) {\r\n                            throw new RuntimeException(ex);\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        });\r\n\r\n\r\n        txtNamaSupplier.addKeyListener(new KeyAdapter() { //Beertujuan untuk cek inputan pada textbox nama supplier\r\n            @Override\r\n            public void keyReleased(KeyEvent e) {\r\n                super.keyReleased(e);\r\n                if (txtNamaSupplier.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari max char > 50\r\n                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50\r\n                }\r\n\r\n                char c = e.getKeyChar(); //Mengambil huruf yang saat ini diinput\r\n                if (Character.isDigit(c)) { //cek apakah inputan angka\r\n                    e.consume(); // Jika iya Mengkonsumsi event jika karakter yang diketik adalah angka\r\n                }\r\n            }\r\n        });\r\n\r\n        txtAlamat.addKeyListener(new KeyAdapter() { //Melakukan cek inputan Alamat supplier\r\n            @Override\r\n            public void keyReleased(KeyEvent e) {\r\n                super.keyReleased(e);\r\n                if (txtAlamat.getText().length() > 100) { //Jika inputan lebih dari 100\r\n                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 100\r\n                }\r\n            }\r\n        });\r\n\r\n        txtEmail.addKeyListener(new KeyAdapter() { //Melakukan cek inputan Alamat supplier\r\n            @Override\r\n            public void keyReleased(KeyEvent e) {\r\n                super.keyReleased(e);\r\n                if (txtAlamat.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari Max char\r\n                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50\r\n                }\r\n            }\r\n        });\r\n\r\n        tblSupplier.addMouseListener(new MouseAdapter() { //Untuk mengatur agar saat di klik\r\n            @Override\r\n            public void mouseClicked(MouseEvent e) {\r\n                super.mouseClicked(e);\r\n                int i = tblSupplier.getSelectedRow();\r\n                if(i == -1){\r\n                    return;\r\n                }\r\n                txtNamaSupplier.setText((String) model.getValueAt(i,1));\r\n                txtAlamat.setText((String) model.getValueAt(i,2));\r\n                txtNotelp.setText((String) model.getValueAt(i,3));\r\n                txtEmail.setText((String) model.getValueAt(i,4));\r\n\r\n                //Mengatur agar beberapa button diaktifkan\r\n                btnSave.setEnabled(false); //dimatikan\r\n                btnUpdate.setEnabled(true); //diaktifkan\r\n                btnDelete.setEnabled(true); //diaktifkan\r\n            }\r\n        });\r\n        btnCancel.addActionListener(new ActionListener() { //Event saat mengklik btncancel\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                loadData(); //melakukan load data\r\n                clear(); //Melakukan Clear kepada seluruh textbox\r\n\r\n                //Mengatur agar beberapa button diaktifkan\r\n                btnSave.setEnabled(true);\r\n                btnUpdate.setEnabled(false);\r\n                btnDelete.setEnabled(false);\r\n            }\r\n        });\r\n\r\n        btnUpdate.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                boolean found = false;\r\n                // validasi tidak boleh sama\r\n                Object[] obj = new Object[1];\r\n                obj[0] = txtNamaSupplier.getText();\r\n\r\n\r\n                if(found) {\r\n                    JOptionPane.showMessageDialog(null, \"Data supplier sudah ada!\", \"Information\"\r\n                            , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput\r\n                } else{\r\n                    try {\r\n                        if (txtNamaSupplier.getText().equals(\"\") || txtAlamat.getText().equals(\"\") || txtEmail.getText().equals(\"\") || txtNotelp.getText().equals(\"\"))\r\n                            JOptionPane.showMessageDialog(null, \"Tolong, isikan semua data!\", \"Warning!\",\r\n                                    JOptionPane.WARNING_MESSAGE);\r\n                        else {\r\n                            try {\r\n                                int i = tblSupplier.getSelectedRow();\r\n                                if (i == -1) return;\r\n                                id_supplier = String.valueOf(model.getValueAt(i, 0));\r\n                                namaSupplier = txtNamaSupplier.getText();\r\n                                alamat = txtAlamat.getText();\r\n                                notelp = txtNotelp.getText();\r\n\r\n                                //validasi inputan no telp\r\n                                Boolean valid_no_telp = validateInput(notelp);\r\n                                if(!valid_no_telp){  //Melakukan cek apakah inputan no_telp valid\r\n                                    JOptionPane.showMessageDialog(null, \"Nomor telepon harus dalam format 628xxx\"\r\n                                            , \"Warning!\", JOptionPane.WARNING_MESSAGE);\r\n                                    txtNotelp.setText(\"\");\r\n                                    txtNotelp.requestFocus();\r\n                                    return;\r\n                                }\r\n\r\n                                email = txtEmail.getText();\r\n\r\n                                DBConnect connection = new DBConnect();\r\n\r\n                                String query = \"EXEC sp_UpdatetblSupplier @id_supplier=?, @nama_supplier=?, @alamat=?, @no_telp=?, @email=?\";\r\n                                connection.pstat = connection.conn.prepareStatement(query);\r\n                                connection.pstat.setString(1, id_supplier);\r\n                                connection.pstat.setString(2, namaSupplier);\r\n                                connection.pstat.setString(3, alamat);\r\n                                connection.pstat.setString(4, notelp);\r\n                                connection.pstat.setString(5, email);\r\n\r\n                                connection.stat.close();\r\n                                connection.pstat.executeUpdate();\r\n                                connection.pstat.close();\r\n\r\n                                clear();\r\n                                JOptionPane.showMessageDialog(null, \"Data updated successfully!\");\r\n                                loadData();\r\n\r\n                                btnUpdate.setEnabled(false);\r\n                                btnDelete.setEnabled(false);\r\n                                btnSave.setEnabled(true);\r\n\r\n                            } catch (NumberFormatException nex) {\r\n                                JOptionPane.showMessageDialog(null, \"Please, enter the valid number.\");\r\n                            } catch (Exception e1) {\r\n                                JOptionPane.showMessageDialog(null, \"an error occurred while updating data into the database.\\n\" + e1);\r\n                            }\r\n                        }\r\n                    } catch(Exception e1){\r\n\r\n                    }\r\n                }\r\n            }\r\n        });\r\n        btnDelete.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                // Menampilkan kotak dialog konfirmasi\r\n                int option = JOptionPane.showConfirmDialog(null, \"Apakah Anda yakin ingin menghapus data?\", \"Konfirmasi Penghapusan Data\", JOptionPane.YES_NO_OPTION);\r\n\r\n                // Menggunakan hasil pilihan dari kotak dialog\r\n                if (option == JOptionPane.YES_OPTION) {\r\n                    // Proses penghapusan data\r\n                    try {\r\n                        DBConnect connection = new DBConnect(); //Membuat object koneksi baru\r\n\r\n                        int i = tblSupplier.getSelectedRow(); //mengambil nilai baris yang di klik\r\n\r\n                        if (i == -1) return; //Jika tidak ada data dari table yang dipilih\r\n                        id_supplier = String.valueOf(model.getValueAt(i, 0)); //mengambil nilai id dari kolom pertama daribaris yang dipilih\r\n\r\n\r\n                        String query = \"EXEC sp_HapusSupplier @id_supplier=?\";\r\n                        connection.pstat = connection.conn.prepareStatement(query);\r\n                        connection.pstat.setString(1, id_supplier); //variabel id dari\r\n\r\n                        connection.stat.close();\r\n                        connection.pstat.executeUpdate();\r\n                        connection.pstat.close();\r\n\r\n                        clear();\r\n                        JOptionPane.showMessageDialog(null, \"Hapus Supplier Berhasil!\", \"Informasi\", JOptionPane.INFORMATION_MESSAGE);\r\n                        loadData();\r\n\r\n                        btnUpdate.setEnabled(false);\r\n                        btnDelete.setEnabled(false);\r\n                        btnSave.setEnabled(true);\r\n\r\n                    } catch (Exception e1) {\r\n                        JOptionPane.showMessageDialog(null, \"an error occurred while updating data into the database.\\n\" + e1);\r\n                    }\r\n\r\n\r\n                } else {\r\n                    // Tidak melakukan penghapusan data\r\n                    JOptionPane.showMessageDialog(null, \"Supplier batal dihapus!\", \"Informasi\", JOptionPane.INFORMATION_MESSAGE);\r\n                }\r\n            }\r\n        });\r\n        btnRefresh.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                loadData();\r\n            }\r\n        });\r\n\r\n        btnSearch.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                txtSearch.setText(\"\");\r\n                showByNama(model);\r\n            }\r\n        });\r\n    }\r\n\r\n    public void showByNama(DefaultTableModel model) {\r\n        model.getDataVector().removeAllElements();\r\n        model.fireTableDataChanged();\r\n\r\n        DBConnect connection = new DBConnect();\r\n        try {\r\n            connection.stat = connection.conn.createStatement();\r\n            String query = \"SELECT * FROM tblSupplier WHERE nama_supplier LIKE '%\" + txtSearch.getText() + \"%'\";\r\n            connection.result = connection.stat.executeQuery(query);\r\n\r\n            while (connection.result.next()) {\r\n                if (connection.result.getInt(\"status\") == 1) {\r\n                    Object[] obj = new Object[5];\r\n\r\n                    obj[0] = connection.result.getString(\"id_supplier\");\r\n                    obj[1] = connection.result.getString(\"nama_supplier\");\r\n                    obj[2] = connection.result.getString(\"alamat\");\r\n                    obj[3] = connection.result.getString(\"no_telp\");\r\n                    obj[4] = connection.result.getString(\"email\");\r\n                    model.addRow(obj);\r\n                }\r\n            }\r\n\r\n            connection.result.close();\r\n            connection.stat.close();\r\n\r\n        } catch (Exception e) {\r\n            System.out.println(\"Terjadi error saat load data item: \" + e);\r\n        }\r\n    }\r\n\r\n        public String generateNextSupplierID() {\r\n            DBConnect connection = new DBConnect();\r\n            try {\r\n                connection.pstat = connection.conn.prepareStatement(\"SELECT TOP 1 id_supplier FROM tblSupplier ORDER BY id_supplier DESC\");\r\n                connection.result = connection.pstat.executeQuery();\r\n\r\n                if (connection.result.next()) {\r\n                    String lastItemID = connection.result.getString(\"id_supplier\");\r\n                    int lastNumber = Integer.parseInt(lastItemID.substring(3));\r\n                    int nextNumber = lastNumber + 1;\r\n\r\n                    String nextItemID = \"SPL\" + String.format(\"%03d\", nextNumber);\r\n                    return nextItemID;\r\n                } else {\r\n                    return \"SPL001\";\r\n                }\r\n            } catch (Exception e) {\r\n                System.out.println(\"Terjadi error saat memeriksa id_supplier terakhir: \" + e);\r\n            } finally {\r\n                try {\r\n                    if (connection.result != null) {\r\n                        connection.result.close();\r\n                    }\r\n                    if (connection.pstat != null) {\r\n                        connection.pstat.close();\r\n                    }\r\n                    if (connection.conn != null) {\r\n                        connection.conn.close();\r\n                    }\r\n                } catch (SQLException ex) {\r\n                    System.out.println(\"Terjadi error saat menutup koneksi: \" + ex);\r\n                }\r\n            }\r\n\r\n            return null;\r\n        }\r\n    public void clear()\r\n    {\r\n        txtNamaSupplier.setText(\"\");\r\n        txtAlamat.setText(\"\");\r\n        txtEmail.setText(\"\");\r\n        txtNotelp.setText(\"\");\r\n    }\r\n\r\n    public void addColumn(){\r\n        model.addColumn(\"ID Supplier\");\r\n        model.addColumn(\"Nama Supplier\");\r\n        model.addColumn(\"Alamat\");\r\n        model.addColumn(\"No. Telepon\");\r\n        model.addColumn(\"Email\");\r\n    }\r\n\r\n    public void loadData()\r\n    {\r\n        model.getDataVector().removeAllElements();\r\n        model.fireTableDataChanged();\r\n\r\n        try{\r\n            DBConnect connection = new DBConnect();\r\n            connection.stat = connection.conn.createStatement();\r\n            String query = \"EXEC sp_LoadSupplier\";\r\n            connection.result = connection.stat.executeQuery(query);\r\n\r\n            while(connection.result.next()){\r\n                if(connection.result.getInt(\"status\") == 1) { //Mengecek apakah jenis barang masih tersedia\r\n                    Object[] obj = new Object[5];\r\n                    obj[0] = connection.result.getString(\"id_supplier\"); //Mengambil ID\r\n                    obj[1] = connection.result.getString(\"nama_supplier\"); //Mengambil nama\r\n                    obj[2] = connection.result.getString(\"alamat\"); //Mengambil nama\r\n                    obj[3] = connection.result.getString(\"no_telp\"); //Mengambil nama\r\n                    obj[4] = connection.result.getString(\"email\"); //Mengambil nama\r\n                    model.addRow(obj);\r\n                }\r\n            }\r\n            connection.stat.close();\r\n            connection.result.close();\r\n        }catch (Exception ex){\r\n            JOptionPane.showMessageDialog(null, \"Eror while loading for data : \"+ex);\r\n        }\r\n    }\r\n\r\n\r\n\r\n    public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628\r\n        // Regex pattern untuk memvalidasi format input\r\n        String regexPattern = \"^628\\\\d{1,14}$\";\r\n\r\n        // Membuat objek Pattern dari regex pattern\r\n        Pattern pattern = Pattern.compile(regexPattern);\r\n\r\n        // Mencocokkan input dengan pattern menggunakan Matcher\r\n        Matcher matcher = pattern.matcher(input);\r\n\r\n        // Mengembalikan true jika input cocok dengan pattern, false jika tidak cocok\r\n        return matcher.matches();\r\n    }\r\n\r\n    public static boolean validateEmail(String email) {\r\n        // Regex pattern untuk validasi email\r\n        String regexPattern = \"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,}$\";\r\n\r\n        // Membuat objek Pattern dari regex pattern\r\n        Pattern pattern = Pattern.compile(regexPattern);\r\n\r\n        // Mencocokkan email dengan pattern menggunakan Matcher\r\n        Matcher matcher = pattern.matcher(email);\r\n\r\n        // Mengembalikan true jika email cocok dengan pattern, false jika tidak cocok\r\n        return matcher.matches();\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        new CRUDSupplier().setVisible(true);\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/orangGudang/CRUDSupplier.java b/src/orangGudang/CRUDSupplier.java
+--- a/src/orangGudang/CRUDSupplier.java	(revision b2af09ece15038fdc1c3e8c570758959fb4f864b)
++++ b/src/orangGudang/CRUDSupplier.java	(date 1687258824472)
+@@ -25,7 +25,12 @@
+     private JButton btnRefresh;
+     private final int MAX_CHARACTERS = 50;
+ 
+-    private DefaultTableModel model;
++    DefaultTableModel model = new DefaultTableModel(){
++        @Override
++        public boolean isCellEditable(int row, int column){
++            return false;
++        }
++    };
+ 
+     //variabel yang akan digunakan di kodingan
+     String namaSupplier, email, alamat, notelp, id_supplier;
+@@ -41,7 +46,6 @@
+     public CRUDSupplier() {
+         FrameConfig(); //Menggunakan konfigurasi panel
+ 
+-        model = new DefaultTableModel();
+         tblSupplier.setModel(model);
+ 
+         //Menetapkan beberapa button di nonaktifkan
+@@ -138,37 +142,31 @@
+         });
+ 
+ 
+-        txtNamaSupplier.addKeyListener(new KeyAdapter() { //Beertujuan untuk cek inputan pada textbox nama supplier
++        txtNamaSupplier.addKeyListener(new KeyAdapter() {
+             @Override
+-            public void keyReleased(KeyEvent e) {
+-                super.keyReleased(e);
+-                if (txtNamaSupplier.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari max char > 50
+-                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50
+-                }
+-
+-                char c = e.getKeyChar(); //Mengambil huruf yang saat ini diinput
+-                if (Character.isDigit(c)) { //cek apakah inputan angka
+-                    e.consume(); // Jika iya Mengkonsumsi event jika karakter yang diketik adalah angka
++            public void keyTyped(KeyEvent e) {
++                super.keyTyped(e);
++                if (txtNamaSupplier.getText().length() >= MAX_CHARACTERS) {
++                    e.consume();
+                 }
+             }
+         });
+ 
+-        txtAlamat.addKeyListener(new KeyAdapter() { //Melakukan cek inputan Alamat supplier
++        txtAlamat.addKeyListener(new KeyAdapter() {
+             @Override
+-            public void keyReleased(KeyEvent e) {
+-                super.keyReleased(e);
+-                if (txtAlamat.getText().length() > 100) { //Jika inputan lebih dari 100
+-                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 100
++            public void keyTyped(KeyEvent e) {
++                super.keyTyped(e);
++                if (txtAlamat.getText().length() >= 100) {
++                    e.consume();
+                 }
+             }
+         });
+-
+-        txtEmail.addKeyListener(new KeyAdapter() { //Melakukan cek inputan Alamat supplier
++        txtEmail.addKeyListener(new KeyAdapter() {
+             @Override
+-            public void keyReleased(KeyEvent e) {
+-                super.keyReleased(e);
+-                if (txtAlamat.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari Max char
+-                    e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50
++            public void keyTyped(KeyEvent e) {
++                super.keyTyped(e);
++                if (txtEmail.getText().length() >= MAX_CHARACTERS) {
++                    e.consume();
+                 }
+             }
+         });
+@@ -192,6 +190,7 @@
+                 btnDelete.setEnabled(true); //diaktifkan
+             }
+         });
++
+         btnCancel.addActionListener(new ActionListener() { //Event saat mengklik btncancel
+             @Override
+             public void actionPerformed(ActionEvent e) {
+@@ -214,6 +213,7 @@
+                 obj[0] = txtNamaSupplier.getText();
+ 
+ 
++
+                 if(found) {
+                     JOptionPane.showMessageDialog(null, "Data supplier sudah ada!", "Information"
+                             , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput
+Index: src/orangGudang/CRUDJenisBarang.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package orangGudang;\r\n\r\nimport connection.DBConnect;\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.table.DefaultTableModel;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.awt.event.MouseAdapter;\r\nimport java.awt.event.MouseEvent;\r\nimport java.sql.SQLException;\r\n\r\npublic class CRUDJenisBarang extends JFrame{\r\n    private JTable tbJenisBarang;\r\n    private JButton cancelButton;\r\n    private JButton saveButton;\r\n    private JButton updateButton;\r\n    private JButton deleteButton;\r\n    private JTextField txtJenisBarang;\r\n    private JButton refreshButton;\r\n    private JPanel panel1;\r\n\r\n    DefaultTableModel model = new DefaultTableModel(){\r\n        @Override\r\n        public boolean isCellEditable(int row, int column){\r\n            return false;\r\n        }\r\n    };\r\n    DBConnect connection = new DBConnect();\r\n\r\n    //Variabel\r\n    String id, namaJenis;  //Untuk menampung nama jenis yang diinput\r\n\r\n    public CRUDJenisBarang() {\r\n        add(this.panel1);\r\n        setExtendedState(JFrame.MAXIMIZED_BOTH);\r\n        setUndecorated(true);\r\n        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);\r\n        setVisible(true);\r\n\r\n        updateButton.setEnabled(false);\r\n        deleteButton.setEnabled(false);\r\n\r\n        model = new DefaultTableModel();\r\n        tbJenisBarang.setModel(model);\r\n\r\n        addColumn(); //Menambahkan header dari table\r\n        loadData(); //Memasukkan data dari database ke table\r\n\r\n        saveButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                //mengambil nama jenis dari text pada txtJenisBarang\r\n                namaJenis = txtJenisBarang.getText();\r\n\r\n                //Validasi agar tidak ada nama jenis barang yang sama\r\n                boolean found = false; //inisiasi awal kalau nama yang di input tidak sama\r\n\r\n                //Mengambil jumlah baris pada table\r\n                int baris = tbJenisBarang.getModel().getRowCount();\r\n\r\n                for(int awal = 0; awal < baris; awal++) //Mengulang pengecekan dari awal sampai jumlah baris\r\n                {\r\n                    //Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu\r\n                    if(namaJenis.toLowerCase().equals(model.getValueAt(awal, 1).toString().toLowerCase()))\r\n                    {\r\n                        found = true; //Menemukan data yang sama\r\n                    }\r\n                }\r\n\r\n                if(found) //Jika menemukan data yang sama pada tabel\r\n                {\r\n                    JOptionPane.showMessageDialog(null, \"Jenis Barang sudah ada!\", \"Warning!\",\r\n                            JOptionPane.WARNING_MESSAGE); //Menampilkan pesan\r\n                    txtJenisBarang.setText(\"\"); //Mensetting agar textbox kosong\r\n                }else{\r\n                        if (txtJenisBarang.getText().equals(\"\")) //Mengecek apakah txtbox kosong\r\n                        {\r\n                            JOptionPane.showMessageDialog(null, \"Tolong, isikan semua data!\", \"Warning!\"\r\n                                    , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong\r\n                        } else {\r\n                            try {\r\n                                String sql = \"EXEC sp_InserttblJenisBarang @nama_jenis=?, @status=1\";\r\n                                connection.pstat = connection.conn.prepareStatement(sql);\r\n                                connection.pstat.setString(1, namaJenis);\r\n                                connection.pstat.executeUpdate();\r\n                                connection.pstat.close();\r\n\r\n                                clear(); //Mengosongkan semua textbox\r\n                                JOptionPane.showMessageDialog(null, \"Data jenis barang berhasil disimpan!\", \"Informasi\",\r\n                                        JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data jenis barang\r\n                                loadData();\r\n                            } catch (SQLException ex) {\r\n                                throw new RuntimeException(ex);\r\n                            }\r\n                        }\r\n                }\r\n\r\n            }\r\n        });\r\n        refreshButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                loadData();\r\n            }\r\n        });\r\n        cancelButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                //mengaktifkan dan menonakt\r\n                saveButton.setEnabled(true);\r\n                updateButton.setEnabled(false);\r\n                deleteButton.setEnabled(false);\r\n                clear(); //Mengosongkan semua textbox\r\n                loadData(); //melakukan refresh data table\r\n            }\r\n        });\r\n        deleteButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                // Menampilkan kotak dialog konfirmasi\r\n                int option = JOptionPane.showConfirmDialog(null, \"Apakah Anda yakin ingin menghapus data?\", \"Konfirmasi Penghapusan Data\", JOptionPane.YES_NO_OPTION);\r\n\r\n                // Menggunakan hasil pilihan dari kotak dialog\r\n                if (option == JOptionPane.YES_OPTION) {\r\n                    // Proses penghapusan data\r\n                    try {\r\n                        int i = tbJenisBarang.getSelectedRow();\r\n                        if (i == -1) return; //Jika tidak ada data dari table yang dipilih\r\n                        id = String.valueOf(model.getValueAt(i, 0)); //mengambil nilai id dari kolom pertama daribaris yang dipilih\r\n\r\n\r\n                        String query = \"EXEC sp_HapusJenisBarang @id_jenis_barang=?\";\r\n                        connection.pstat = connection.conn.prepareStatement(query);\r\n                        connection.pstat.setString(1, id); //variabel id dari\r\n\r\n                        connection.stat.close();\r\n                        connection.pstat.executeUpdate();\r\n                        connection.pstat.close();\r\n\r\n                        clear();\r\n                        JOptionPane.showMessageDialog(null, \"Hapus Jenis Barang Berhasil!\", \"Informasi\", JOptionPane.INFORMATION_MESSAGE);\r\n                        loadData();\r\n\r\n                        updateButton.setEnabled(false);\r\n                        deleteButton.setEnabled(false);\r\n                        saveButton.setEnabled(true);\r\n\r\n                    } catch (Exception e1) {\r\n                        JOptionPane.showMessageDialog(null, \"an error occurred while updating data into the database.\\n\" + e1);\r\n                    }\r\n\r\n\r\n                } else {\r\n                    // Tidak melakukan penghapusan data\r\n                    JOptionPane.showMessageDialog(null, \"Jenis Barang batal dihapus\", \"Informasi\", JOptionPane.INFORMATION_MESSAGE);\r\n                }\r\n            }\r\n        });\r\n        updateButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                namaJenis  = txtJenisBarang.getText();\r\n                boolean found = false;\r\n                // validasi tidak boleh sama\r\n                Object[] obj = new Object[2];\r\n                obj[0] = id;\r\n                obj[1] = namaJenis;\r\n\r\n                int j = tbJenisBarang.getModel().getRowCount();\r\n                for(int k=0; k<j; k++){\r\n                    if(obj[1].toString().toLowerCase().equals((model.getValueAt(k, 1).toString().toLowerCase()))){\r\n                        found = true;\r\n                    }\r\n                }\r\n                if(found) {\r\n                    JOptionPane.showMessageDialog(null, \"Tolong, isikan semua data!\", \"Warning!\"\r\n                            , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong\r\n                } else{\r\n                    try {\r\n                        if (txtJenisBarang.getText().equals(\"\"))\r\n                            JOptionPane.showMessageDialog(null, \"Please, fill in all data!\");\r\n                        else {\r\n                            try {\r\n                                int i = tbJenisBarang.getSelectedRow();\r\n                                if (i == -1) return;\r\n                                id = String.valueOf(model.getValueAt(i, 0));\r\n                                namaJenis = txtJenisBarang.getText();\r\n\r\n                                String query = \"EXEC sp_UpdatetblJenisBarang @id_jenis=?, @nama_jenis=?\";\r\n                                connection.pstat = connection.conn.prepareStatement(query);\r\n                                connection.pstat.setString(1, id);\r\n                                connection.pstat.setString(2, namaJenis);\r\n\r\n                                connection.stat.close();\r\n                                connection.pstat.executeUpdate();\r\n                                connection.pstat.close();\r\n\r\n                                clear();\r\n                                JOptionPane.showMessageDialog(null, \"Data updated successfully!\");\r\n                                loadData();\r\n                                updateButton.setEnabled(false);\r\n                                deleteButton.setEnabled(false);\r\n                                saveButton.setEnabled(true);\r\n\r\n                            } catch (NumberFormatException nex) {\r\n                                JOptionPane.showMessageDialog(null, \"Please, enter the valid number.\");\r\n                            } catch (Exception e1) {\r\n                                JOptionPane.showMessageDialog(null, \"an error occurred while updating data into the database.\\n\" + e1);\r\n                            }\r\n                        }\r\n                    } catch(Exception e1){\r\n\r\n                    }\r\n                }\r\n            }\r\n        });\r\n\r\n        tbJenisBarang.addMouseListener(new MouseAdapter() {\r\n            @Override\r\n            public void mouseClicked(MouseEvent e) {\r\n                super.mouseClicked(e);\r\n                int i = tbJenisBarang.getSelectedRow();\r\n                if(i == -1){\r\n                    return;\r\n                }\r\n                txtJenisBarang.setText((String) model.getValueAt(i,1));\r\n                saveButton.setEnabled(false);\r\n                updateButton.setEnabled(true);\r\n                deleteButton.setEnabled(true);\r\n            }\r\n        });\r\n    }\r\n\r\n    public void loadData(){\r\n        model.getDataVector().removeAllElements();\r\n        model.fireTableDataChanged();\r\n\r\n        try{\r\n            connection.stat = connection.conn.createStatement();\r\n            String query = \"EXEC sp_LoadJenisBarang\";\r\n            connection.result = connection.stat.executeQuery(query);\r\n\r\n            while(connection.result.next()){\r\n                if(connection.result.getInt(\"status\") == 1) { //Mengecek apakah jenis barang masih tersedia\r\n                    Object[] obj = new Object[2];\r\n                    obj[0] = connection.result.getString(\"id_jenis_barang\"); //Mengambil ID\r\n                    obj[1] = connection.result.getString(\"nama_jenis\"); //Mengambil nama\r\n                    model.addRow(obj);\r\n                }\r\n            }\r\n            connection.stat.close();\r\n            connection.result.close();\r\n//            btSave.setEnabled(true);\r\n//            btnHapus.setEnabled(false);\r\n//            btUpdate.setEnabled(false);\r\n        }catch (Exception ex){\r\n            JOptionPane.showMessageDialog(null, \"Eror while loading for data : \"+ex);\r\n        }\r\n    }\r\n\r\n    public void addColumn(){\r\n        model.addColumn(\"ID Jenis Barang\");\r\n        model.addColumn(\"Nama Jenis Barang\");\r\n    }\r\n\r\n    public void clear()\r\n    {\r\n        txtJenisBarang.setText(\"\");\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        new CRUDJenisBarang().setVisible(true);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/orangGudang/CRUDJenisBarang.java b/src/orangGudang/CRUDJenisBarang.java
+--- a/src/orangGudang/CRUDJenisBarang.java	(revision b2af09ece15038fdc1c3e8c570758959fb4f864b)
++++ b/src/orangGudang/CRUDJenisBarang.java	(date 1687257572647)
+@@ -41,7 +41,6 @@
+         updateButton.setEnabled(false);
+         deleteButton.setEnabled(false);
+ 
+-        model = new DefaultTableModel();
+         tbJenisBarang.setModel(model);
+ 
+         addColumn(); //Menambahkan header dari table
+Index: src/kasir/CRUDMember.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/kasir/CRUDMember.form b/src/kasir/CRUDMember.form
+new file mode 100644
+--- /dev/null	(date 1687249329716)
++++ b/src/kasir/CRUDMember.form	(date 1687249329716)
+@@ -0,0 +1,368 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="kasir.CRUDMember">
++  <grid id="27dc6" binding="JPMember" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++    <margin top="0" left="0" bottom="0" right="0"/>
++    <constraints>
++      <xy x="20" y="20" width="828" height="550"/>
++    </constraints>
++    <properties>
++      <background color="-14146253"/>
++      <enabled value="true"/>
++    </properties>
++    <border type="none"/>
++    <children>
++      <grid id="7aa4b" layout-manager="GridLayoutManager" row-count="10" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++        <margin top="0" left="0" bottom="0" right="0"/>
++        <constraints>
++          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <background color="-14146253"/>
++        </properties>
++        <border type="none">
++          <color color="-1"/>
++        </border>
++        <children>
++          <grid id="997cd" layout-manager="GridLayoutManager" row-count="7" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="line">
++              <color color="-1"/>
++            </border>
++            <children>
++              <component id="11411" class="javax.swing.JLabel">
++                <constraints>
++                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <font name="Century Gothic" size="12"/>
++                  <foreground color="-1"/>
++                  <text value="Nama Member"/>
++                </properties>
++              </component>
++              <hspacer id="668c7">
++                <constraints>
++                  <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <vspacer id="6bf57">
++                <constraints>
++                  <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </vspacer>
++              <grid id="cbdcf" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <component id="9de33" class="javax.swing.JTextField" binding="txtNamaMember">
++                <constraints>
++                  <grid row="2" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
++                    <preferred-size width="150" height="-1"/>
++                  </grid>
++                </constraints>
++                <properties>
++                  <background color="-1"/>
++                </properties>
++              </component>
++              <hspacer id="3e9b7">
++                <constraints>
++                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <vspacer id="b0da4">
++                <constraints>
++                  <grid row="1" column="3" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </vspacer>
++              <component id="976bc" class="javax.swing.JLabel">
++                <constraints>
++                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <font name="Century Gothic" size="12"/>
++                  <foreground color="-1"/>
++                  <text value="No. Telepon"/>
++                </properties>
++              </component>
++              <component id="d94a4" class="javax.swing.JTextField" binding="txtNotelp">
++                <constraints>
++                  <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="1" fill="1" indent="0" use-parent-layout="false">
++                    <preferred-size width="150" height="-1"/>
++                  </grid>
++                </constraints>
++                <properties>
++                  <background color="-1"/>
++                </properties>
++              </component>
++              <component id="89e88" class="javax.swing.JLabel">
++                <constraints>
++                  <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <font name="Century Gothic" size="12"/>
++                  <foreground color="-1"/>
++                  <text value="Point"/>
++                </properties>
++              </component>
++              <component id="dc99c" class="javax.swing.JTextField" binding="txtPoint">
++                <constraints>
++                  <grid row="4" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++                    <preferred-size width="150" height="-1"/>
++                  </grid>
++                </constraints>
++                <properties>
++                  <background color="-1"/>
++                </properties>
++              </component>
++              <component id="5c50" class="javax.swing.JToolBar$Separator">
++                <constraints>
++                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties/>
++              </component>
++              <component id="2e534" class="javax.swing.JToolBar$Separator">
++                <constraints>
++                  <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties/>
++              </component>
++            </children>
++          </grid>
++          <grid id="c6dcd" layout-manager="GridLayoutManager" row-count="1" column-count="11" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="line">
++              <color color="-1"/>
++            </border>
++            <children>
++              <component id="a99f4" class="javax.swing.JButton" binding="btnSave">
++                <constraints>
++                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="12" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Save"/>
++                </properties>
++              </component>
++              <hspacer id="7b0d">
++                <constraints>
++                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <hspacer id="2dc3e">
++                <constraints>
++                  <grid row="0" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++              <component id="f2e7a" class="javax.swing.JButton" binding="btnUpdate">
++                <constraints>
++                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Update"/>
++                </properties>
++              </component>
++              <component id="f15ca" class="javax.swing.JButton" binding="btnDelete">
++                <constraints>
++                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Delete"/>
++                </properties>
++              </component>
++              <component id="8b552" class="javax.swing.JButton" binding="btnCancel">
++                <constraints>
++                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Cancel"/>
++                </properties>
++              </component>
++              <component id="2683a" class="javax.swing.JTextField" binding="txtSearch">
++                <constraints>
++                  <grid row="0" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
++                    <preferred-size width="150" height="-1"/>
++                  </grid>
++                </constraints>
++                <properties>
++                  <enabled value="true"/>
++                </properties>
++              </component>
++              <grid id="a400c" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <grid id="1a8a3" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <grid id="945e7" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++                <margin top="0" left="0" bottom="0" right="0"/>
++                <constraints>
++                  <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children/>
++              </grid>
++              <component id="979ab" class="javax.swing.JButton" binding="btnSearch">
++                <constraints>
++                  <grid row="0" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Search"/>
++                </properties>
++              </component>
++            </children>
++          </grid>
++          <grid id="31f1c" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="line">
++              <color color="-1"/>
++            </border>
++            <children>
++              <scrollpane id="fa84a">
++                <constraints>
++                  <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                </properties>
++                <border type="none"/>
++                <children>
++                  <component id="241ad" class="javax.swing.JTable" binding="tblMember">
++                    <constraints/>
++                    <properties/>
++                  </component>
++                </children>
++              </scrollpane>
++            </children>
++          </grid>
++          <grid id="77cc5" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="0" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="9cfb1" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="0" column="0" row-span="2" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="e764b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="2" column="2" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="c3573" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="8" column="0" row-span="2" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-14146253"/>
++            </properties>
++            <border type="none"/>
++            <children/>
++          </grid>
++          <grid id="f49c9" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++            <margin top="0" left="0" bottom="0" right="0"/>
++            <constraints>
++              <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties/>
++            <border type="none"/>
++            <children>
++              <component id="7242b" class="javax.swing.JButton" binding="btnRefresh">
++                <constraints>
++                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++                <properties>
++                  <background color="-14146253"/>
++                  <font name="Century Gothic" size="11" style="1"/>
++                  <foreground color="-1"/>
++                  <text value="Refresh"/>
++                </properties>
++              </component>
++              <hspacer id="f5c2b">
++                <constraints>
++                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++                </constraints>
++              </hspacer>
++            </children>
++          </grid>
++        </children>
++      </grid>
++    </children>
++  </grid>
++</form>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2\" name=\"Changes\" comment=\"CRUD Supplier\">\r\n      <change afterPath=\"$PROJECT_DIR$/src/orangGudang/CRUDBarang.form\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/src/orangGudang/CRUDBarang.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_07_49__Changes_.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_07_49__Changes_.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/orangGudang/CRUDSupplier.form\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/orangGudang/CRUDSupplier.form\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2Qwjbch1gT8YerdhsllLZQLmkJu\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"last_opened_file_path\": \"D:/PROJEKAN/Project-PRG3-Supermarket-03/src/orangGudang\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"project.structure.last.edited\": \"Modules\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"D:\\PROJEKAN\\Project-PRG3-Supermarket-03\\src\\orangGudang\" />\r\n      <recent name=\"F:\\Projekan\\Project-Semester2\\PRG3\\Project-PRG3-Supermarket-03\\Library\" />\r\n      <recent name=\"D:\\SEMESTER 2\\Project-Akhir-Semester\\PRG3\\Project\\src\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.CRUDBarang\">\r\n    <configuration name=\"CRUDBarang\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"orangGudang.CRUDBarang\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"orangGudang.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"CRUDJenisBarang\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"orangGudang.CRUDJenisBarang\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"orangGudang.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"CRUDSupplier\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"orangGudang.CRUDSupplier\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"orangGudang.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"DBConnect\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"connection.DBConnect\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"connection.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"Project\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.CRUDBarang\" />\r\n        <item itemvalue=\"Application.CRUDSupplier\" />\r\n        <item itemvalue=\"Application.CRUDJenisBarang\" />\r\n        <item itemvalue=\"Application.DBConnect\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2\" name=\"Changes\" comment=\"\" />\r\n      <created>1686271614569</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1686271614569</updated>\r\n      <workItem from=\"1686271615920\" duration=\"1432000\" />\r\n      <workItem from=\"1686464420546\" duration=\"1802000\" />\r\n      <workItem from=\"1686485994578\" duration=\"179000\" />\r\n      <workItem from=\"1687135743360\" duration=\"482000\" />\r\n      <workItem from=\"1687139525595\" duration=\"57000\" />\r\n      <workItem from=\"1687154561891\" duration=\"679000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Connection DB sql\">\r\n      <created>1687135875572</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687135875572</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\" Anggun nyoba\">\r\n      <created>1687154821833</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687154821833</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\" Anggun nyoba2\">\r\n      <created>1687155007488</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687155007488</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"CRUD Supplier\">\r\n      <created>1687237587786</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687237587786</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"5\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Connection DB sql\" />\r\n    <MESSAGE value=\" Anggun nyoba\" />\r\n    <MESSAGE value=\" Anggun nyoba2\" />\r\n    <MESSAGE value=\"CRUD Supplier\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"CRUD Supplier\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision b2af09ece15038fdc1c3e8c570758959fb4f864b)
++++ b/.idea/workspace.xml	(date 1687257573102)
+@@ -5,11 +5,9 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="CRUD Supplier">
+-      <change afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.form" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_07_49__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_07_49__Changes_.xml" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/src/kasir/CRUDMember.form" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.form" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+@@ -45,8 +43,9 @@
+   "keyToString": {
+     "RunOnceActivity.OpenProjectViewOnStart": "true",
+     "RunOnceActivity.ShowReadmeOnStart": "true",
++    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "362",
+     "WebServerToolWindowFactoryState": "false",
+-    "last_opened_file_path": "D:/PROJEKAN/Project-PRG3-Supermarket-03/src/orangGudang",
++    "last_opened_file_path": "D:/PROJEKAN/Project-PRG3-Supermarket-03/src/kasir",
+     "node.js.detected.package.eslint": "true",
+     "node.js.detected.package.tslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+@@ -59,12 +58,16 @@
+ }]]></component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
++      <recent name="D:\PROJEKAN\Project-PRG3-Supermarket-03\src\kasir" />
+       <recent name="D:\PROJEKAN\Project-PRG3-Supermarket-03\src\orangGudang" />
+       <recent name="F:\Projekan\Project-Semester2\PRG3\Project-PRG3-Supermarket-03\Library" />
+       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
++    </key>
++    <key name="ExtractSuperBase.RECENT_KEYS">
++      <recent name="orangGudang" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Application.CRUDBarang">
++  <component name="RunManager" selected="Application.CRUDMember">
+     <configuration name="CRUDBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDBarang" />
+       <module name="Project" />
+@@ -84,6 +87,19 @@
+       <extension name="coverage">
+         <pattern>
+           <option name="PATTERN" value="orangGudang.*" />
++          <option name="ENABLED" value="true" />
++        </pattern>
++      </extension>
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
++    <configuration name="CRUDMember" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="kasir.CRUDMember" />
++      <module name="Project" />
++      <extension name="coverage">
++        <pattern>
++          <option name="PATTERN" value="kasir.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+@@ -117,20 +133,13 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+-      <option name="MAIN_CLASS_NAME" value="Main" />
+-      <module name="Project" />
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+     <recent_temporary>
+       <list>
++        <item itemvalue="Application.CRUDMember" />
+         <item itemvalue="Application.CRUDBarang" />
+         <item itemvalue="Application.CRUDSupplier" />
+         <item itemvalue="Application.CRUDJenisBarang" />
+         <item itemvalue="Application.DBConnect" />
+-        <item itemvalue="Application.Main" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -177,7 +186,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1687237587786</updated>
+     </task>
+-    <option name="localTasksCounter" value="5" />
++    <task id="LOCAL-00005" summary="CRUD Supplier">
++      <created>1687248268171</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1687248268171</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
