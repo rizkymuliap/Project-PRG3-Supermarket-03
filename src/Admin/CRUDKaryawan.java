@@ -1,9 +1,7 @@
 package Admin;
 
 import connection.DBConnect;
-import sun.security.pkcs11.Secmod;
 
-import javax.jws.soap.SOAPBinding;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
@@ -15,13 +13,13 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CRUDKaryawan {
+public class CRUDKaryawan extends JFrame {
     private JPanel JPKaryawan;
     private JTextField txtTelp;
     private JTextField txtEmail;
     private JTextField txtUsername;
     private JPasswordField txtPassword;
-    private JTextField txtJenisKelamin;
+    //private JTextField cbjeniskelamin;
     private JTextField txtAlamat;
     private JButton btnSave;
     private JButton btnUpdate;
@@ -31,9 +29,8 @@ public class CRUDKaryawan {
     private JTable TabelData;
     private JTextField txtNama;
     private JButton btnRefresh;
-    private JComboBox comboBox1;
+    private JComboBox cbjk;
     private final int MAX_CHARACTERS = 50;
-
 
     private DefaultTableModel Model;
 
@@ -64,65 +61,7 @@ public class CRUDKaryawan {
         addColomn();
         loadData();
 
-        btnSave.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (Objects.equals(txtNama.getText(), "") || txtJenisKelamin.getText().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
-                    JOptionPane.showMessageDialog(null, "Please, fill in all data!");
-                }
-                else
-                {
-                    Nama = txtNama.getText();
-                    JenisKelamin = txtJenisKelamin.getText();
-                    Notelp = txtTelp.getText();
-                    boolean valid = validateInput(Notelp);
-                    if (!valid)
-                    {
-                        JOptionPane.showMessageDialog(null, "No telp harus 628XXX");
-                        txtTelp.setText("");
-                        txtTelp.requestFocus();
-                        return;
-                    }
-                    Alamat = txtAlamat.getText();
-                    Email = txtEmail.getText();
-                    boolean valid2 = validateEmail(Email);
-                    if(!valid2)
-                    {
-                        JOptionPane.showMessageDialog(null, "No Email Harus Menggunakan a@b.c");
-                        txtEmail.setText("");
-                        txtEmail.requestFocus();
-                        return;
-                    }
-                    Username = txtUsername.getText();
-                    Password = txtPassword.getText();
 
-                    try
-                    {
-                        String sql = "INSERT tblKaryawan VALUE (?,?,?,?,?,?,?,?)";
-                        connect.pstat = connect.conn.prepareStatement(sql);
-                        connect.pstat.setString(0, generateNextSupplierID());
-                        connect.pstat.setString(1, Nama);
-                        connect.pstat.setString(2, JenisKelamin);
-                        connect.pstat.setString(3, Notelp);
-                        connect.pstat.setString(4, Alamat);
-                        connect.pstat.setString(5, Email);
-                        connect.pstat.setString(6, Username);
-                        connect.pstat.setString(7, Password);
-
-                        connect.stat.close();
-                        connect.pstat.executeUpdate();
-                        connect.pstat.close();
-
-                        JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
-                        loadData();
-                    }
-                    catch (Exception ex)
-                    {
-                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database.\n" + ex);
-                    }
-                }
-            }
-        });
         txtNama.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -137,13 +76,13 @@ public class CRUDKaryawan {
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (Objects.equals(txtNama.getText(), "") || txtJenisKelamin.getText().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
+                if (Objects.equals(txtNama.getText(), "") || cbjk.getSelectedItem().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
                     JOptionPane.showMessageDialog(null, "Please, fill in all data!");
                 }
                 else
                 {
                     Nama = txtNama.getText();
-                    JenisKelamin = txtJenisKelamin.getText();
+                    JenisKelamin = cbjk.getSelectedItem().toString();
                     Notelp = txtTelp.getText();
                     boolean valid = validateInput(Notelp);
                     if (!valid)
@@ -197,7 +136,7 @@ public class CRUDKaryawan {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int opsi;
-                if (Objects.equals(txtNama.getText(), "") || txtJenisKelamin.getText().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
+                if (Objects.equals(txtNama.getText(), "") || cbjk.getSelectedItem().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
                     JOptionPane.showMessageDialog(null, "Please, fill in all data!");
                 }else{
                     try {
@@ -256,6 +195,66 @@ public class CRUDKaryawan {
                 super.keyReleased(e);
                 if (txtEmail.getText().length() > MAX_CHARACTERS) { //Jika inputan lebih dari Max char
                     e.consume(); // Mengkonsumsi event jika jumlah karakter lebih dari 50
+                }
+            }
+        });
+        btnSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (txtNama.getText().equals("") || cbjk.getSelectedItem().equals("") || txtTelp.getText().equals("") || txtAlamat.getText().equals("") || txtEmail.getText().equals("") || txtUsername.getText().equals("") || txtTelp.getText().equals("") || txtPassword.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all data!");
+                }
+                else
+                {
+                    Nama = txtNama.getText();
+                    JenisKelamin = cbjk.getSelectedItem().toString();
+                    Notelp = txtTelp.getText();
+                    boolean valid = validateInput(Notelp);
+                    if (!valid)
+                    {
+                        JOptionPane.showMessageDialog(null, "No telp harus 628XXX");
+                        txtTelp.setText("");
+                        txtTelp.requestFocus();
+                        return;
+                    }
+                    Alamat = txtAlamat.getText();
+                    Email = txtEmail.getText();
+                    boolean valid2 = validateEmail(Email);
+                    if(!valid2)
+                    {
+                        JOptionPane.showMessageDialog(null, "No Email Harus Menggunakan a@b.c");
+                        txtEmail.setText("");
+                        txtEmail.requestFocus();
+                        return;
+                    }
+                    Username = txtUsername.getText();
+                    Password = txtPassword.getText();
+
+                    try
+                    {
+                        String sql = "INSERT tblKaryawan VALUE (?,?,?,?,?,?,?,?)";
+                        connect.pstat = connect.conn.prepareStatement(sql);
+                        connect.pstat.setString(0, generateNextSupplierID());
+                        connect.pstat.setString(1, Nama);
+                        connect.pstat.setString(2, JenisKelamin);
+                        connect.pstat.setString(3, Notelp);
+                        connect.pstat.setString(4, Alamat);
+                        connect.pstat.setString(5, Email);
+                        connect.pstat.setString(6, Username);
+                        connect.pstat.setString(7, Password);
+
+                        connect.stat.close();
+                        connect.pstat.executeUpdate();
+                        connect.pstat.close();
+
+
+                        JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
+                        loadData();
+                    }
+                    catch (Exception ex)
+                    {
+                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database.\n" + ex);
+                    }
                 }
             }
         });
