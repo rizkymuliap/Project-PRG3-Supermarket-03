@@ -4,11 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/kasir/CRUDMember.java" afterDir="false" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Load data rak">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_23_04__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_20_06_2023_23_04__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,13 +61,26 @@
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CRUDJenisBarang">
+  <component name="RunManager" selected="Application.CRUDRak">
     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
       <module name="Project" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="orangGudang.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CRUDRak" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Admin.CRUDRak" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Admin.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -97,6 +110,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.CRUDRak" />
         <item itemvalue="Application.CRUDJenisBarang" />
         <item itemvalue="Application.DBConnect" />
         <item itemvalue="Application.Main" />
@@ -139,7 +153,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687155007488</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Load data rak">
+      <created>1687338151360</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1687338151360</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,6 +181,7 @@
     <MESSAGE value="Connection DB sql" />
     <MESSAGE value=" Anggun nyoba" />
     <MESSAGE value=" Anggun nyoba2" />
-    <option name="LAST_COMMIT_MESSAGE" value=" Anggun nyoba2" />
+    <MESSAGE value="Load data rak" />
+    <option name="LAST_COMMIT_MESSAGE" value="Load data rak" />
   </component>
 </project>

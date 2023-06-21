@@ -2,10 +2,10 @@ package Admin;
 
 import connection.DBConnect;
 
+import javax.jws.WebParam;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 
 public class CRUDRak extends JFrame {
@@ -21,14 +21,20 @@ public class CRUDRak extends JFrame {
     private JButton btnSearch;
     private JTable tblRak;
     private JButton btnRefresh;
-    private JTextField txtCariKaryawan;
     private JTable TableKaryawan;
 
     private DefaultTableModel Model;
+    DefaultTableModel Model2 = new DefaultTableModel(){
+        @Override
+        public boolean isCellEditable(int row, int column){
+            return false;
+        }
+    };
 
     DBConnect connect = new DBConnect();
 
-    String id_karyawan, id_rak, Huruf, Nama;
+    String id_karyawan, id_rak, Nama;
+    char Huruf;
     int Jumlah;
 
     public static void main(String[] args) {
@@ -46,53 +52,55 @@ public class CRUDRak extends JFrame {
     public CRUDRak()
     {
         Model = new DefaultTableModel();
-        tblRak.setModel(Model);
-        FrameConfig();
+        Model2 = new DefaultTableModel();
 
-        //addColumn();
-        //loadDataRak();
-        //LoadDataKaryawan();
+        TableKaryawan.setModel(Model2);
+        tblRak.setModel(Model);
+
+        FrameConfig();
+        addColumnDataKaryawan();
+        addColumn();
+
+        LoadDataKaryawan();
+
+
+
 
         btnSearch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showByNama(Model);
+                txtSearch.setText("");
             }
         });
+
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Nama = txtNamaKaryawan.getText();
-                Jumlah = Integer.parseInt(txtJumlah.getText());
-                Huruf = txtKodeRak.getText();
+                Huruf = txtKodeRak.getText().charAt(0);
+
+                boolean found = false; // inisiasi awal kalau nama yang di input tidak sama
 
 
-                //Validasi agar tidak ada nama jenis barang yang sama
-                boolean found = false; //inisiasi awal kalau nama yang di input tidak sama
-
-                //Mengambil jumlah baris pada table
+                // Mengambil jumlah baris pada table
                 int baris = tblRak.getModel().getRowCount();
 
-                for(int awal = 0; awal < baris; awal++) //Mengulang pengecekan dari awal sampai jumlah baris
-                {
-                    //Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
-                    if(Nama.toLowerCase().equals(Model.getValueAt(awal, 1).toString().toLowerCase()))
-                    {
-                        found = true; //Menemukan data yang sama
+                for (int awal = 0; awal < baris; awal++) { // Mengulang pengecekan dari awal sampai jumlah baris
+
+
+                    // Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
+                    if (Huruf == Model.getValueAt(awal, 2).toString().charAt(0)) {
+                        found = true; // Menemukan data yang sama
                     }
                 }
 
-                if(found) //Jika menemukan data yang sama pada tabel
-                {
-                    JOptionPane.showMessageDialog(null, "Karyawan Sudah memegang Rak!", "Information!",
-                            JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan
-
-                }else{
-                    if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
+                if (found) { // Jika menemukan data yang sama pada tabel
+                    JOptionPane.showMessageDialog(null, "Kode rak sudah digunakan!", "Information!",
+                            JOptionPane.INFORMATION_MESSAGE); // Menampilkan pesan
+                }else {
+                    if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) // Mengecek apakah txtbox kosong agar tidak ada data kosong
                     {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
-                                , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
-
+                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!", JOptionPane.WARNING_MESSAGE); // Jika kosong maka akan menampilkan pesan data tidak boleh kosong
                     } else {
                         // Pencarian ID Karyawan
                         try {
@@ -104,35 +112,36 @@ public class CRUDRak extends JFrame {
                             if (connection.result.next()) {
                                 id_karyawan = connection.result.getString("id_karyawan");
                             }
+                            connection.result.close();
+                            connection.pstat.close();
                         } catch (SQLException ex) {
                             System.out.println("Terjadi error saat memeriksa id_karyawan terakhir: " + ex);
                         }
 
                         try {
                             DBConnect connection = new DBConnect();
-                            String sql = "EXEC sp_InserttblRak @id_rak=?, @id_karyawan=?, @huruf=?, @jumlah=? ,@status=1";
+                            String sql = "EXEC sp_InserttblRak @id_rak=?, @id_karyawan=?, @huruf=?, @jumlah=?, @status=1";
 
                             connection.pstat = connection.conn.prepareStatement(sql);
 
-                            connection.pstat.setString(1, generateNextRakID()); //generate id supplier sebagai PK
-
-                            connection.pstat.setString(2,id_karyawan);
-                            connection.pstat.setString(3, Huruf); //alamat sebagai parameter ketiga
-                            connection.pstat.setInt(4, Jumlah); //notelp sebagai parameter keempat
+                            connection.pstat.setString(1, generateNextRakID()); // generate id supplier sebagai PK
+                            connection.pstat.setString(2, id_karyawan);
+                            connection.pstat.setString(3, txtKodeRak.getText()); // alamat sebagai parameter ketiga
+                            connection.pstat.setInt(4, Integer.parseInt(txtJumlah.getText())); // notelp sebagai parameter keempat
                             connection.pstat.executeUpdate();
                             connection.pstat.close();
 
+                            clear(); // Mengosongkan semua textbox
 
-                            clear(); //Mengosongkan semua textbox
-
-                            JOptionPane.showMessageDialog(null, "Data Supplier berhasil disimpan!", "Informasi",
-                                    JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
-                           // loadDataRak();
+                            LoadDataKaryawan();
+                            JOptionPane.showMessageDialog(null, "Data Rak berhasil disimpan!", "Informasi",
+                                    JOptionPane.INFORMATION_MESSAGE); // Menampilkan pesan berhasil input data Supplier
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
                     }
                 }
+
             }
         });
         btnUpdate.addActionListener(new ActionListener() {
@@ -160,7 +169,7 @@ public class CRUDRak extends JFrame {
                             if (i == -1) return;
                             id_rak = String.valueOf(Model.getValueAt(i, 0));
                             Nama = txtNamaKaryawan.getText();
-                            Huruf = txtKodeRak.getText();
+                            Huruf = txtKodeRak.getText().charAt(0);
                             Jumlah = Integer.parseInt(txtJumlah.getText());
 
                             DBConnect connection = new DBConnect();
@@ -169,7 +178,7 @@ public class CRUDRak extends JFrame {
                             connection.pstat = connection.conn.prepareStatement(query);
                             connection.pstat.setString(1, id_rak);  // Memasukkan nilai id_rak
                             connection.pstat.setString(2, Nama);  // Memasukkan nilai Nama
-                            connection.pstat.setString(3, Huruf);  // Memasukkan nilai Huruf
+                            connection.pstat.setString(3, String.valueOf(Huruf));  // Memasukkan nilai Huruf
                             connection.pstat.setInt(4, Jumlah);  // Memasukkan nilai Jumlah
 
                             connection.pstat.executeUpdate();
@@ -178,7 +187,8 @@ public class CRUDRak extends JFrame {
 
                             clear();
                             JOptionPane.showMessageDialog(null, "Data updated successfully!");
-                            loadDataRak();
+
+                            LoadDataKaryawan();
 
                             btnUpdate.setEnabled(false);
                             btnDelete.setEnabled(false);
@@ -196,6 +206,9 @@ public class CRUDRak extends JFrame {
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                btnUpdate.setEnabled(true);
+                btnDelete.setEnabled(true);
+                btnSave.setEnabled(true);
                 int opsi;
                 if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
                 {
@@ -207,7 +220,7 @@ public class CRUDRak extends JFrame {
                     try
                     {
                         int kode = tblRak.getSelectedRow();
-                        opsi = JOptionPane.showConfirmDialog(null, "Are you sure delete this data?",
+                        opsi = JOptionPane.showConfirmDialog(null, "Yakin akan menghapus data rak?",
                                 "Confirmation", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
                         if (opsi != 0) {
                             JOptionPane.showMessageDialog(null, "Data failed to delete");
@@ -224,11 +237,52 @@ public class CRUDRak extends JFrame {
                     {
                         JOptionPane.showMessageDialog(null, "Please, enter the valid number ."+ ex.getMessage());
                     }
-                    JOptionPane.showMessageDialog(null, "Data deleted successfully!");
+                    JOptionPane.showMessageDialog(null, "Hapus data rak berhasil!", "Informasi",
+                            JOptionPane.INFORMATION_MESSAGE);
+
                     LoadDataKaryawan();
+
+
+                    btnSave.setEnabled(true);
+                    btnUpdate.setEnabled(false);
+                    btnDelete.setEnabled(false);
+
+                    clear();
                 }
             }
         });
+
+        TableKaryawan.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int i = TableKaryawan.getSelectedRow();
+                if(i == -1){
+                    return;
+                }
+                txtNamaKaryawan.setText((String) Model2.getValueAt(i,1));
+
+            }
+        });
+
+        tblRak.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                btnDelete.setEnabled(true);
+                btnUpdate.setEnabled(true);
+                btnSave.setEnabled(false);
+                int i = tblRak.getSelectedRow();
+                if(i == -1){
+                    return;
+                }
+                txtNamaKaryawan.setText((String) Model.getValueAt(i,1));
+                txtKodeRak.setText(Model.getValueAt(i,2).toString());
+                txtJumlah.setText((String) Model.getValueAt(i,3));
+
+            }
+        });
+
     }
 
     public void addColumn(){
@@ -236,46 +290,59 @@ public class CRUDRak extends JFrame {
         Model.addColumn("ID Karyawan");
         Model.addColumn("Huruf");
         Model.addColumn("Jumlah");
-        Model.addColumn("Status");
     }
 
     public void clear()
     {
         txtJumlah.setText("");
-        txtCariKaryawan.setText("");
         txtKodeRak.setText("");
         txtNamaKaryawan.setText("");
         txtSearch.setText("");
     }
 
-    public void loadDataRak()
-    {
+    public void loadDataRak() {
         Model.getDataVector().removeAllElements();
         Model.fireTableDataChanged();
 
-        try{
+        try {
             DBConnect connection = new DBConnect();
             connection.stat = connection.conn.createStatement();
             String query = "EXEC sp_LoadRak";
             connection.result = connection.stat.executeQuery(query);
 
-            while(connection.result.next()){
-                if(connection.result.getInt("status") == 1) { //Mengecek apakah Rak masih tersedia
-                    Object[] obj = new Object[5];
-                    obj[0] = connection.result.getString("id_rak"); //Mengambil ID
-                    obj[1] = connection.result.getString("id_karyawan"); //Mengambil nama
-                    obj[2] = connection.result.getString("huruf"); //Mengambil nama
-                    obj[3] = connection.result.getString("jumlah"); //Mengambil nama
-                    obj[4] = connection.result.getString("status");
+            while (connection.result.next()) {
+                String namaKaryawan = "";
+                try {
+                    DBConnect connection2 = new DBConnect();
+                    connection2.pstat = connection2.conn.prepareStatement("SELECT nama_karyawan FROM tblKaryawan WHERE id_karyawan=?");
+                    connection2.pstat.setString(1, connection.result.getString("id_karyawan"));
+                    connection2.result = connection2.pstat.executeQuery();
+
+                    if (connection2.result.next()) {
+                        namaKaryawan = connection2.result.getString("nama_karyawan");
+                    }
+                    connection2.result.close();
+                    connection2.pstat.close();
+                } catch (SQLException ex) {
+                    System.out.println("Terjadi error saat memeriksa id_karyawan terakhir: " + ex);
+                }
+
+                if (connection.result.getInt("status") == 1) {
+                    Object[] obj = new Object[4];
+                    obj[0] = connection.result.getString("id_rak");
+                    obj[1] = namaKaryawan;
+                    obj[2] = connection.result.getString("huruf");
+                    obj[3] = connection.result.getString("jumlah");
                     Model.addRow(obj);
                 }
             }
             connection.stat.close();
             connection.result.close();
-        }catch (Exception ex){
-            JOptionPane.showMessageDialog(null, "Eror while loading for data : "+ex);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Error while loading data: " + ex);
         }
     }
+
 
     public void showByNama(DefaultTableModel model) {
         model.getDataVector().removeAllElements();
@@ -306,29 +373,29 @@ public class CRUDRak extends JFrame {
         }
     }
 
+    public void addColumnDataKaryawan()
+    {
+        Model2.addColumn("ID Karyawan");
+        Model2.addColumn("Nama Karyawan");
+    }
+
     public void LoadDataKaryawan(){
         Model.getDataVector().removeAllElements();
         Model.fireTableDataChanged();
 
+        loadDataRak();
+
         try{
             connect.stat = connect.conn.createStatement();
-            String query = "EXEC sp_LoadKaryawan";
+            String query = "EXEC sp_LoadKaryawan_Rak";
             connect.result = connect.stat.executeQuery(query);
 
             while(connect.result.next()){
-                String temp = connect.result.getString("password");
-
-                Object[] obj = new Object[8];
+                Object[] obj = new Object[2];
                 obj[0] = connect.result.getString("id_karyawan");
                 obj[1] = connect.result.getString("nama_karyawan");
-                obj[2] = connect.result.getString("jenis_kelamin");
-                obj[3] = connect.result.getString("no_telp");
-                obj[4] = connect.result.getString("email");
-                obj[5] = connect.result.getString("alamat");
-                obj[6] = connect.result.getString("username");
-                obj[7] = connect.result.getString("password");
 
-                Model.addRow(obj);
+                Model2.addRow(obj);
             }
             connect.stat.close();
             connect.result.close();
