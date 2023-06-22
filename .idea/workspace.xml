@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/kasir/CRUDMember.java" afterDir="false" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Save udah bisa">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +18,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/master" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
