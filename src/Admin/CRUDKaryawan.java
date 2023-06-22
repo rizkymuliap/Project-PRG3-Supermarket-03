@@ -268,7 +268,7 @@ public class CRUDKaryawan extends JFrame {
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String namaKaryawan = txtSearch.getText().trim();
+                String namaKaryawan = txtSearch.getText();
                 if(!namaKaryawan.isEmpty())
                 {
                     searchKaryawan(namaKaryawan);
@@ -279,6 +279,12 @@ public class CRUDKaryawan extends JFrame {
                 }
             }
         });
+        txtNama.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public void addColomn(){
@@ -286,8 +292,8 @@ public class CRUDKaryawan extends JFrame {
         Model.addColumn("Nama Karyawan");
         Model.addColumn("Jenis Kelamin");
         Model.addColumn("No telp");
-        Model.addColumn("Email");
         Model.addColumn("Alamat");
+        Model.addColumn("Email");
         Model.addColumn("Username");
         Model.addColumn("Password");
     }
@@ -340,31 +346,37 @@ public class CRUDKaryawan extends JFrame {
             connection.result = connection.pstat.executeQuery();
 
             while (connection.result.next()) {
-                Object[] obj = new Object[8];
+                Object[] obj = new Object[10];
                 obj[0] = connection.result.getString("id_karyawan");
                 obj[1] = connection.result.getString("nama_karyawan");
                 obj[2] = connection.result.getString("jenis_kelamin");
                 obj[3] = connection.result.getString("no_telp");
-                obj[4] = connection.result.getString("email");
-                obj[5] = connection.result.getString("alamat");
+                obj[4] = connection.result.getString("alamat");
+                obj[5] = connection.result.getString("email");
                 obj[6] = connection.result.getString("username");
                 obj[7] = connection.result.getString("password");
+                obj[8] = connection.result.getString("token");
+                obj[9] = connection.result.getString("status");
 
                 Model.addRow(obj);
+
+                btnUpdate.setEnabled(true);
+                btnDelete.setEnabled(true);
             }
-            connection.pstat.close();
-            connection.result.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + e);
         }
     }
 
 
-    public void loadData() {
-        Model.getDataVector().removeAllElements();
-        Model.fireTableDataChanged();
 
+    public void loadData() {
+        DBConnect connection = null;
         try {
+            Model.getDataVector().removeAllElements();
+            Model.fireTableDataChanged();
+
+            connection = new DBConnect();
             connection.stat = connection.conn.createStatement();
             String query = "EXEC sp_LoadKaryawan";
             connection.result = connection.stat.executeQuery(query);
@@ -375,26 +387,40 @@ public class CRUDKaryawan extends JFrame {
                 obj[1] = connection.result.getString("nama_karyawan");
                 obj[2] = connection.result.getString("jenis_kelamin");
                 obj[3] = connection.result.getString("no_telp");
-                obj[4] = connection.result.getString("email");
-                obj[5] = connection.result.getString("alamat");
+                obj[4] = connection.result.getString("alamat");
+                obj[5] = connection.result.getString("email");
                 obj[6] = connection.result.getString("username");
                 obj[7] = connection.result.getString("password");
                 obj[8] = connection.result.getString("token");
                 obj[9] = connection.result.getString("status");
 
-
                 Model.addRow(obj);
             }
 
-            connection.stat.close();
-            connection.result.close();
             btnSave.setEnabled(true);
             btnUpdate.setEnabled(false);
             btnDelete.setEnabled(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e);
+        } finally {
+            // Pastikan untuk selalu menutup koneksi setelah digunakan
+            try {
+                if (connection != null) {
+                    if (connection.stat != null)
+                        connection.stat.close();
+                    if (connection.result != null)
+                        connection.result.close();
+                    if (connection.conn != null)
+                        connection.conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
+
 
 
     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628

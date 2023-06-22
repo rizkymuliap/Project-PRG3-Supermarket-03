@@ -33,7 +33,7 @@ public class DBConnect {
     }
 
     public static void main(String[] args) {
-        DBConnect connect = new DBConnect();
+        DBConnect connection = new DBConnect();
         System.out.println("Connection Berhasil");
     }
 }
