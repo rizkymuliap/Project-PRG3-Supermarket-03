@@ -280,46 +280,46 @@ public class CRUDKaryawan extends JFrame {
 
             }
         });
-        TabelData.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                int selectedRow = TabelData.getSelectedRow();
-                if (selectedRow == -1) {
-                    return;
+            TabelData.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    int selectedRow = TabelData.getSelectedRow();
+                    if (selectedRow == -1) {
+                        return;
+                    }
+
+                    // Mendapatkan nilai dari kolom yang dipilih
+                    String nama = (String) Model.getValueAt(selectedRow, 1);
+                    String jenisKelamin = (String) Model.getValueAt(selectedRow, 2); // Menambahkan kolom jenis kelamin
+                    String telp = (String) Model.getValueAt(selectedRow, 3);
+                    String alamat = (String) Model.getValueAt(selectedRow, 4);
+                    String email = (String) Model.getValueAt(selectedRow, 5);
+                    String username = (String) Model.getValueAt(selectedRow, 6);
+                    String password = (String) Model.getValueAt(selectedRow, 7);
+
+                    // Mengatur nilai teks dalam komponen
+                    txtNama.setText(nama);
+
+                    txtTelp.setText(telp);
+                    txtAlamat.setText(alamat);
+                    txtEmail.setText(email);
+                    txtUsername.setText(username);
+                    txtPassword.setText(password);
+
+                    // Mengatur pilihan pada JComboBox
+                    if (jenisKelamin.equals("Laki-laki")) {
+                        cbjk.setSelectedIndex(0);
+                    } else if (jenisKelamin.equals("Perempuan")) {
+                        cbjk.setSelectedIndex(1);
+                    }
+
+                    // Mengatur status tombol
+                    btnSave.setEnabled(true);
+                    btnUpdate.setEnabled(true);
+                    btnDelete.setEnabled(true);
                 }
-
-                // Mendapatkan nilai dari kolom yang dipilih
-                String nama = (String) Model.getValueAt(selectedRow, 1);
-                String jenisKelamin = (String) Model.getValueAt(selectedRow, 2); // Menambahkan kolom jenis kelamin
-                String telp = (String) Model.getValueAt(selectedRow, 3);
-                String alamat = (String) Model.getValueAt(selectedRow, 4);
-                String email = (String) Model.getValueAt(selectedRow, 5);
-                String username = (String) Model.getValueAt(selectedRow, 6);
-                String password = (String) Model.getValueAt(selectedRow, 7);
-
-                // Mengatur nilai teks dalam komponen
-                txtNama.setText(nama);
-
-                txtTelp.setText(telp);
-                txtAlamat.setText(alamat);
-                txtEmail.setText(email);
-                txtUsername.setText(username);
-                txtPassword.setText(password);
-
-                // Mengatur pilihan pada JComboBox
-                if (jenisKelamin.equals("Laki-laki")) {
-                    cbjk.setSelectedIndex(0);
-                } else if (jenisKelamin.equals("Perempuan")) {
-                    cbjk.setSelectedIndex(1);
-                }
-
-                // Mengatur status tombol
-                btnSave.setEnabled(true);
-                btnUpdate.setEnabled(true);
-                btnDelete.setEnabled(true);
-            }
-        });
+            });
 
 
         btnClear.addActionListener(new ActionListener() {

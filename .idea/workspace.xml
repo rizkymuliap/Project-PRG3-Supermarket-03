@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="takut Ilang">
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Keryawan kelar">
+      <change afterPath="$PROJECT_DIR$/src/Admin/CRUDBundle.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Admin/CRUDBundle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/connection/DBConnect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/connection/DBConnect.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +47,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "F:/MJ/intellij-nand2tetris-hdl",
+    "last_opened_file_path": "F:/MJ/Kampus/Semester 2/Project-PRG3-Supermarket-03/src/Admin",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -58,12 +59,29 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="Admin" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\MJ\Kampus\Semester 2\Project-PRG3-Supermarket-03\src\Admin" />
       <recent name="F:\Projekan\Project-Semester2\PRG3\Project-PRG3-Supermarket-03\Library" />
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CRUDKaryawan">
+  <component name="RunManager" selected="Application.CRUDBundle">
+    <configuration name="CRUDBundle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Admin.CRUDBundle" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Admin.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
       <module name="Project" />
@@ -112,8 +130,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CRUDKaryawan" />
+        <item itemvalue="Application.CRUDBundle" />
         <item itemvalue="Application.DBConnect" />
+        <item itemvalue="Application.CRUDKaryawan" />
         <item itemvalue="Application.CRUDJenisBarang" />
         <item itemvalue="Application.Main" />
       </list>
