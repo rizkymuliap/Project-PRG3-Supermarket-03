@@ -34,7 +34,7 @@ public class CRUDKaryawan extends JFrame {
 
     private DefaultTableModel Model;
 
-    DBConnect connect = new DBConnect();
+    DBConnect connection = new DBConnect();
 
     String Nama;
     String JenisKelamin;
@@ -109,19 +109,19 @@ public class CRUDKaryawan extends JFrame {
                     {
                         String sql1 ="UPDATE tblKaryawan SET Nama = ?, JenisKelamin = ?, Notelp = ?, Alamat = ?," +
                                 "Email = ?, Username = ?, Password = ? WHERE id_karyawan = ?";
-                        connect.result = connect.stat.executeQuery(sql1);
-                        connect.pstat.setString(1, Nama);
-                        connect.pstat.setString(2, JenisKelamin);
-                        connect.pstat.setString(3, Notelp);
-                        connect.pstat.setString(4, Alamat);
-                        connect.pstat.setString(5, Email);
-                        connect.pstat.setString(6, Username);
-                        connect.pstat.setString(7, Password);
-                        connect.pstat.setString(8, id_karyawan);
+                        connection.result = connection.stat.executeQuery(sql1);
+                        connection.pstat.setString(1, Nama);
+                        connection.pstat.setString(2, JenisKelamin);
+                        connection.pstat.setString(3, Notelp);
+                        connection.pstat.setString(4, Alamat);
+                        connection.pstat.setString(5, Email);
+                        connection.pstat.setString(6, Username);
+                        connection.pstat.setString(7, Password);
+                        connection.pstat.setString(8, id_karyawan);
 
 
-                        connect.pstat.executeUpdate();
-                        connect.pstat.close();
+                        connection.pstat.executeUpdate();
+                        connection.pstat.close();
                     }
                     catch (Exception ex)
                     {
@@ -148,10 +148,10 @@ public class CRUDKaryawan extends JFrame {
                         } else {
                             id_karyawan = String.valueOf(Model.getValueAt(kode, 0));
                             String query = "EXEC sp_DeleteKaryawan @id_karyawan=?";
-                            connect.pstat = connect.conn.prepareStatement(query);
-                            connect.pstat.setString(1, id_karyawan);
-                            connect.pstat.executeUpdate();
-                            connect.pstat.close();
+                            connection.pstat = connection.conn.prepareStatement(query);
+                            connection.pstat.setString(1, id_karyawan);
+                            connection.pstat.executeUpdate();
+                            connection.pstat.close();
                         }
                     } catch (NumberFormatException nex){
                         JOptionPane.showMessageDialog(null, "Please, enter the valid number ."+nex.getMessage());
@@ -201,6 +201,7 @@ public class CRUDKaryawan extends JFrame {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 if (txtNama.getText().equals("") || cbjk.getSelectedItem().equals("") || txtTelp.getText().equals("") || txtAlamat.getText().equals("") || txtEmail.getText().equals("") || txtUsername.getText().equals("") || txtTelp.getText().equals("") || txtPassword.getText().equals("")) {
                     JOptionPane.showMessageDialog(null, "Please fill in all data!");
                 }
@@ -231,41 +232,43 @@ public class CRUDKaryawan extends JFrame {
                     Password = txtPassword.getText();
 
                     try {
-                        String sql = "INSERT tblKaryawan VALUE (?,?,?,?,?,?,?,?)";
-                        connect.pstat = connect.conn.prepareStatement(sql);
-                        connect.pstat.setString(1, generateNextSupplierID());
-                        connect.pstat.setString(2, Nama);
-                        connect.pstat.setString(3, JenisKelamin);
-                        connect.pstat.setString(4, Notelp);
-                        connect.pstat.setString(5, Alamat);
-                        connect.pstat.setString(6, Email);
-                        connect.pstat.setString(7, Username);
-                        connect.pstat.setString(8, Password);
+                        DBConnect connection = new DBConnect();
+                        String sql = "EXEC sp_InsertKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                        connection.pstat = connection.conn.prepareStatement(sql);
+                        connection.pstat.setString(1, generateNextSupplierID());
+                        connection.pstat.setString(2, Nama);
+                        connection.pstat.setString(3, JenisKelamin);
+                        connection.pstat.setString(4, Notelp);
+                        connection.pstat.setString(5, Alamat);
+                        connection.pstat.setString(6, Email);
+                        connection.pstat.setString(7, Username);
+                        connection.pstat.setString(8, Password);
+                        connection.pstat.setString(9, "1");
+                        connection.pstat.setString(10, "1");
 
-                        connect.pstat.executeUpdate();
+                        connection.pstat.executeUpdate();
+
                         JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
                         loadData();
                     } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan kedalam database." + ex);
+                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan ke dalam database." + ex);
                     } finally {
                         try {
-                            if (connect.pstat != null) {
-                                connect.pstat.close();
-                            }
-                            if (connect.stat != null) {
-                                connect.stat.close();
+                            if (connection.pstat != null) {
+                                connection.pstat.close();
                             }
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
                     }
+
                 }
             }
         });
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String namaKaryawan = txtSearch.getText().trim();
+                String namaKaryawan = txtSearch.getText();
                 if(!namaKaryawan.isEmpty())
                 {
                     searchKaryawan(namaKaryawan);
@@ -276,12 +279,19 @@ public class CRUDKaryawan extends JFrame {
                 }
             }
         });
+        txtNama.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public void addColomn(){
         Model.addColumn("ID Karyawan");
         Model.addColumn("Nama Karyawan");
-        Model.addColumn("No Telp");
+        Model.addColumn("Jenis Kelamin");
+        Model.addColumn("No telp");
         Model.addColumn("Alamat");
         Model.addColumn("Email");
         Model.addColumn("Username");
@@ -308,14 +318,14 @@ public class CRUDKaryawan extends JFrame {
             System.out.println("Terjadi error saat memeriksa id_supplier terakhir: " + e);
         } finally {
             try {
-                if (connect.result != null) {
-                    connect.result.close();
+                if (this.connection.result != null) {
+                    this.connection.result.close();
                 }
-                if (connect.pstat != null) {
-                    connect.pstat.close();
+                if (this.connection.pstat != null) {
+                    this.connection.pstat.close();
                 }
-                if (connect.conn != null) {
-                    connect.conn.close();
+                if (this.connection.conn != null) {
+                    this.connection.conn.close();
                 }
             } catch (SQLException ex) {
                 System.out.println("Terjadi error saat menutup koneksi: " + ex);
@@ -331,64 +341,86 @@ public class CRUDKaryawan extends JFrame {
 
         try {
             String query = "EXEC sp_SearchKaryawan ?";
-            connect.pstat = connect.conn.prepareStatement(query);
-            connect.pstat.setString(1, nama);
-            connect.result = connect.pstat.executeQuery();
+            connection.pstat = connection.conn.prepareStatement(query);
+            connection.pstat.setString(1, nama);
+            connection.result = connection.pstat.executeQuery();
 
-            while (connect.result.next()) {
-                Object[] obj = new Object[8];
-                obj[0] = connect.result.getString("id_karyawan");
-                obj[1] = connect.result.getString("nama_karyawan");
-                obj[2] = connect.result.getString("jenis_kelamin");
-                obj[3] = connect.result.getString("no_telp");
-                obj[4] = connect.result.getString("email");
-                obj[5] = connect.result.getString("alamat");
-                obj[6] = connect.result.getString("username");
-                obj[7] = connect.result.getString("password");
+            while (connection.result.next()) {
+                Object[] obj = new Object[10];
+                obj[0] = connection.result.getString("id_karyawan");
+                obj[1] = connection.result.getString("nama_karyawan");
+                obj[2] = connection.result.getString("jenis_kelamin");
+                obj[3] = connection.result.getString("no_telp");
+                obj[4] = connection.result.getString("alamat");
+                obj[5] = connection.result.getString("email");
+                obj[6] = connection.result.getString("username");
+                obj[7] = connection.result.getString("password");
+                obj[8] = connection.result.getString("token");
+                obj[9] = connection.result.getString("status");
 
                 Model.addRow(obj);
-            }
 
-            connect.pstat.close();
-            connect.result.close();
+                btnUpdate.setEnabled(true);
+                btnDelete.setEnabled(true);
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + e);
         }
     }
 
 
+
     public void loadData() {
-        Model.getDataVector().removeAllElements();
-        Model.fireTableDataChanged();
-
+        DBConnect connection = null;
         try {
-            connect.stat = connect.conn.createStatement();
-            String query = "EXEC sp_LoadKaryawan";
-            connect.result = connect.stat.executeQuery(query);
+            Model.getDataVector().removeAllElements();
+            Model.fireTableDataChanged();
 
-            while (connect.result.next()) {
-                Object[] obj = new Object[8];
-                obj[0] = connect.result.getString("id_karyawan");
-                obj[1] = connect.result.getString("nama_karyawan");
-                obj[2] = connect.result.getString("jenis_kelamin");
-                obj[3] = connect.result.getString("no_telp");
-                obj[4] = connect.result.getString("email");
-                obj[5] = connect.result.getString("alamat");
-                obj[6] = connect.result.getString("username");
-                obj[7] = connect.result.getString("password");
+            connection = new DBConnect();
+            connection.stat = connection.conn.createStatement();
+            String query = "EXEC sp_LoadKaryawan";
+            connection.result = connection.stat.executeQuery(query);
+
+            while (connection.result.next()) {
+                Object[] obj = new Object[10];
+                obj[0] = connection.result.getString("id_karyawan");
+                obj[1] = connection.result.getString("nama_karyawan");
+                obj[2] = connection.result.getString("jenis_kelamin");
+                obj[3] = connection.result.getString("no_telp");
+                obj[4] = connection.result.getString("alamat");
+                obj[5] = connection.result.getString("email");
+                obj[6] = connection.result.getString("username");
+                obj[7] = connection.result.getString("password");
+                obj[8] = connection.result.getString("token");
+                obj[9] = connection.result.getString("status");
 
                 Model.addRow(obj);
             }
 
-            connect.stat.close();
-            connect.result.close();
             btnSave.setEnabled(true);
             btnUpdate.setEnabled(false);
             btnDelete.setEnabled(false);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e);
+        } finally {
+            // Pastikan untuk selalu menutup koneksi setelah digunakan
+            try {
+                if (connection != null) {
+                    if (connection.stat != null)
+                        connection.stat.close();
+                    if (connection.result != null)
+                        connection.result.close();
+                    if (connection.conn != null)
+                        connection.conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
+
 
 
     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628
