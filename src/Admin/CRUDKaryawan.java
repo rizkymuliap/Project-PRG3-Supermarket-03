@@ -4,10 +4,7 @@ import connection.DBConnect;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -105,29 +102,27 @@ public class CRUDKaryawan extends JFrame {
                     Username = txtUsername.getText();
                     Password = txtPassword.getText();
 
-                    try
-                    {
-                        String sql1 ="UPDATE tblKaryawan SET Nama = ?, JenisKelamin = ?, Notelp = ?, Alamat = ?," +
-                                "Email = ?, Username = ?, Password = ? WHERE id_karyawan = ?";
-                        connection.result = connection.stat.executeQuery(sql1);
-                        connection.pstat.setString(1, Nama);
-                        connection.pstat.setString(2, JenisKelamin);
-                        connection.pstat.setString(3, Notelp);
-                        connection.pstat.setString(4, Alamat);
-                        connection.pstat.setString(5, Email);
-                        connection.pstat.setString(6, Username);
-                        connection.pstat.setString(7, Password);
-                        connection.pstat.setString(8, id_karyawan);
-
+                    try {
+                        String sql1 = "EXEC sp_UpdateKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                        int selectedRow = TabelData.getSelectedRow();
+                        connection.pstat = connection.conn.prepareStatement(sql1);
+                        connection.pstat.setString(1, (String) Model.getValueAt(selectedRow, 0));
+                        connection.pstat.setString(2, Nama);
+                        connection.pstat.setString(3, JenisKelamin);
+                        connection.pstat.setString(4, Notelp);
+                        connection.pstat.setString(5, Alamat);
+                        connection.pstat.setString(6, Email);
+                        connection.pstat.setString(7, Username);
+                        connection.pstat.setString(8, Password);
+                        connection.pstat.setString(9, "1");
+                        connection.pstat.setString(10, "1");
 
                         connection.pstat.executeUpdate();
                         connection.pstat.close();
+                        loadData();
+                    } catch (Exception ex) {
+                        System.out.println("Error saat Update Karyawan: " + ex);
                     }
-                    catch (Exception ex)
-                    {
-                        System.out.println("Error saat Update Karyawan : " + ex);
-                    }
-
                     JOptionPane.showMessageDialog(null, "Update Data Karyawan berhasil !!");
                 }
             }
@@ -285,6 +280,54 @@ public class CRUDKaryawan extends JFrame {
 
             }
         });
+            TabelData.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    int selectedRow = TabelData.getSelectedRow();
+                    if (selectedRow == -1) {
+                        return;
+                    }
+
+                    // Mendapatkan nilai dari kolom yang dipilih
+                    String nama = (String) Model.getValueAt(selectedRow, 1);
+                    String jenisKelamin = (String) Model.getValueAt(selectedRow, 2); // Menambahkan kolom jenis kelamin
+                    String telp = (String) Model.getValueAt(selectedRow, 3);
+                    String alamat = (String) Model.getValueAt(selectedRow, 4);
+                    String email = (String) Model.getValueAt(selectedRow, 5);
+                    String username = (String) Model.getValueAt(selectedRow, 6);
+                    String password = (String) Model.getValueAt(selectedRow, 7);
+
+                    // Mengatur nilai teks dalam komponen
+                    txtNama.setText(nama);
+
+                    txtTelp.setText(telp);
+                    txtAlamat.setText(alamat);
+                    txtEmail.setText(email);
+                    txtUsername.setText(username);
+                    txtPassword.setText(password);
+
+                    // Mengatur pilihan pada JComboBox
+                    if (jenisKelamin.equals("Laki-laki")) {
+                        cbjk.setSelectedIndex(0);
+                    } else if (jenisKelamin.equals("Perempuan")) {
+                        cbjk.setSelectedIndex(1);
+                    }
+
+                    // Mengatur status tombol
+                    btnSave.setEnabled(true);
+                    btnUpdate.setEnabled(true);
+                    btnDelete.setEnabled(true);
+                }
+            });
+
+
+        btnClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clear();
+            }
+        });
     }
 
     public void addColomn(){
@@ -362,6 +405,7 @@ public class CRUDKaryawan extends JFrame {
 
                 btnUpdate.setEnabled(true);
                 btnDelete.setEnabled(true);
+                txtSearch.setText("");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + e);
@@ -419,9 +463,16 @@ public class CRUDKaryawan extends JFrame {
         }
     }
 
-
-
-
+    public void clear()
+    {
+        txtNama.setText("");
+        txtAlamat.setText("");
+        txtEmail.setText("");
+        txtTelp.setText("");
+        txtPassword.setText("");
+        txtUsername.setText("");
+        txtSearch.setText("");
+    }
 
     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628
         // Regex pattern untuk memvalidasi format input
