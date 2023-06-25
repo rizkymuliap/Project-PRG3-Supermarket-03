@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="CRUD BARANG">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" afterDir="false" />
-    </list>
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="CRUD Karyawan Selesai" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -152,6 +147,7 @@
       <workItem from="1687139525595" duration="57000" />
       <workItem from="1687154561891" duration="679000" />
       <workItem from="1687590467190" duration="8194000" />
+      <workItem from="1687674606682" duration="847000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -195,7 +191,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687509621747</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="CRUD Karyawan Selesai">
+      <created>1687674752147</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1687674752147</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -218,6 +221,7 @@
     <MESSAGE value=" Anggun nyoba2" />
     <MESSAGE value="Load data rak" />
     <MESSAGE value="CRUD BARANG" />
-    <option name="LAST_COMMIT_MESSAGE" value="CRUD BARANG" />
+    <MESSAGE value="CRUD Karyawan Selesai" />
+    <option name="LAST_COMMIT_MESSAGE" value="CRUD Karyawan Selesai" />
   </component>
 </project>
