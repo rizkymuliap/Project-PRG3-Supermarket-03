@@ -2,9 +2,14 @@ package Admin;
 
 import connection.DBConnect;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -27,9 +32,24 @@ public class CRUDKaryawan extends JFrame {
     private JTextField txtNama;
     private JButton btnRefresh;
     private JComboBox cbjk;
+    private JLabel gambar_barang;
+    private JButton Tombol_Browse;
+    private JPanel Panel_Gambar;
+    private JPanel Pembatas_Gambar_Atas;
+    private JPanel Pembatas_Gambar_Bawah;
+    private JPanel Pembatas_Gambar_Kanan;
+    private JPanel Pembatas_Gambar_Kiri;
+    private JPanel Panel_Konten_Gambar;
+    private JTextField txtFileName;
+    private JComboBox cmbToken;
     private final int MAX_CHARACTERS = 50;
 
     private DefaultTableModel Model;
+
+    //Variabel
+    String selectedImagePath = "";
+    private File selectedImageFile;
+    byte[] imageBytes;
 
     DBConnect connection = new DBConnect();
 
@@ -41,18 +61,30 @@ public class CRUDKaryawan extends JFrame {
     String Username;
     String Password;
     String id_karyawan;
+    int token;
+
+    public void FrameConfigure()
+    {
+        add(this.JPKaryawan);
+        setTitle("CRUDKaryawan");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setUndecorated(true);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setVisible(true);
+
+    }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("CRUDKaryawan");
-        frame.setContentPane(new CRUDKaryawan().JPKaryawan);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setSize(500, 500);
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            new CRUDKaryawan().setVisible(true);
+        });
     }
 
     public CRUDKaryawan()
     {
+        FrameConfigure();
+
         Model = new DefaultTableModel();
         TabelData.setModel(Model);
         addColomn();
@@ -81,6 +113,7 @@ public class CRUDKaryawan extends JFrame {
                     Nama = txtNama.getText();
                     JenisKelamin = cbjk.getSelectedItem().toString();
                     Notelp = txtTelp.getText();
+                    token = cmbToken.getSelectedIndex() + 1;
                     boolean valid = validateInput(Notelp);
                     if (!valid)
                     {
@@ -103,19 +136,20 @@ public class CRUDKaryawan extends JFrame {
                     Password = txtPassword.getText();
 
                     try {
-                        String sql1 = "EXEC sp_UpdateKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                        String sql1 = "EXEC sp_UpdateKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
                         int selectedRow = TabelData.getSelectedRow();
                         connection.pstat = connection.conn.prepareStatement(sql1);
                         connection.pstat.setString(1, (String) Model.getValueAt(selectedRow, 0));
                         connection.pstat.setString(2, Nama);
                         connection.pstat.setString(3, JenisKelamin);
                         connection.pstat.setString(4, Notelp);
-                        connection.pstat.setString(5, Alamat);
-                        connection.pstat.setString(6, Email);
-                        connection.pstat.setString(7, Username);
-                        connection.pstat.setString(8, Password);
-                        connection.pstat.setString(9, "1");
-                        connection.pstat.setString(10, "1");
+                        connection.pstat.setString(5, Email);
+                        connection.pstat.setString(6, Alamat);
+                        connection.pstat.setBytes(7, imageBytes);
+                        connection.pstat.setString(8, Username);
+                        connection.pstat.setString(9, Password);
+                        connection.pstat.setInt(10, token);
+                        connection.pstat.setString(11, "1");
 
                         connection.pstat.executeUpdate();
                         connection.pstat.close();
@@ -205,6 +239,8 @@ public class CRUDKaryawan extends JFrame {
                     Nama = txtNama.getText();
                     JenisKelamin = cbjk.getSelectedItem().toString();
                     Notelp = txtTelp.getText();
+                    token = cmbToken.getSelectedIndex() + 1;
+
                     boolean valid = validateInput(Notelp);
                     if (!valid)
                     {
@@ -228,18 +264,19 @@ public class CRUDKaryawan extends JFrame {
 
                     try {
                         DBConnect connection = new DBConnect();
-                        String sql = "EXEC sp_InsertKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
+                        String sql = "EXEC sp_InsertKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
                         connection.pstat = connection.conn.prepareStatement(sql);
                         connection.pstat.setString(1, generateNextSupplierID());
                         connection.pstat.setString(2, Nama);
                         connection.pstat.setString(3, JenisKelamin);
                         connection.pstat.setString(4, Notelp);
-                        connection.pstat.setString(5, Alamat);
-                        connection.pstat.setString(6, Email);
-                        connection.pstat.setString(7, Username);
-                        connection.pstat.setString(8, Password);
-                        connection.pstat.setString(9, "1");
-                        connection.pstat.setString(10, "1");
+                        connection.pstat.setString(5, Email);
+                        connection.pstat.setString(6, Alamat);
+                        connection.pstat.setBytes(7, imageBytes);
+                        connection.pstat.setString(8, Username);
+                        connection.pstat.setString(9, Password);
+                        connection.pstat.setInt(10, token);
+                        connection.pstat.setString(11, "1");
 
                         connection.pstat.executeUpdate();
 
@@ -280,52 +317,157 @@ public class CRUDKaryawan extends JFrame {
 
             }
         });
-            TabelData.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    super.mouseClicked(e);
-                    int selectedRow = TabelData.getSelectedRow();
-                    if (selectedRow == -1) {
-                        return;
-                    }
-
-                    // Mendapatkan nilai dari kolom yang dipilih
-                    String nama = (String) Model.getValueAt(selectedRow, 1);
-                    String jenisKelamin = (String) Model.getValueAt(selectedRow, 2); // Menambahkan kolom jenis kelamin
-                    String telp = (String) Model.getValueAt(selectedRow, 3);
-                    String alamat = (String) Model.getValueAt(selectedRow, 4);
-                    String email = (String) Model.getValueAt(selectedRow, 5);
-                    String username = (String) Model.getValueAt(selectedRow, 6);
-                    String password = (String) Model.getValueAt(selectedRow, 7);
-
-                    // Mengatur nilai teks dalam komponen
-                    txtNama.setText(nama);
-
-                    txtTelp.setText(telp);
-                    txtAlamat.setText(alamat);
-                    txtEmail.setText(email);
-                    txtUsername.setText(username);
-                    txtPassword.setText(password);
-
-                    // Mengatur pilihan pada JComboBox
-                    if (jenisKelamin.equals("Laki-laki")) {
-                        cbjk.setSelectedIndex(0);
-                    } else if (jenisKelamin.equals("Perempuan")) {
-                        cbjk.setSelectedIndex(1);
-                    }
-
-                    // Mengatur status tombol
-                    btnSave.setEnabled(true);
-                    btnUpdate.setEnabled(true);
-                    btnDelete.setEnabled(true);
+        TabelData.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int selectedRow = TabelData.getSelectedRow();
+                if (selectedRow == -1) {
+                    return;
                 }
-            });
+
+                // Mendapatkan nilai dari kolom yang dipilih
+                String nama = (String) Model.getValueAt(selectedRow, 1);
+                String jenisKelamin = (String) Model.getValueAt(selectedRow, 2); // Menambahkan kolom jenis kelamin
+                String telp = (String) Model.getValueAt(selectedRow, 3);
+                String alamat = (String) Model.getValueAt(selectedRow, 4);
+                String email = (String) Model.getValueAt(selectedRow, 5);
+                String username = (String) Model.getValueAt(selectedRow, 6);
+                String password = (String) Model.getValueAt(selectedRow, 7);
+
+                switch (Model.getValueAt(selectedRow, 8).toString()){
+                    case "Manager" : token = 1; break;
+                    case "Manager Keuangan" : token = 2; break;
+                    case "Admin" : token = 3; break;
+                    case "Kasir" : token = 4; break;
+                    case "Orang Gudang" : token = 5; break;
+                    case "PJR" : token = 6; break;
+                }
+
+
+
+
+                // Execute the SwingWorker in the background
+                SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+                    @Override
+                    protected ImageIcon doInBackground() throws Exception {
+                        // Retrieve the image from the database
+                        return retrieveImageFromDatabase(Model.getValueAt(selectedRow, 0).toString());
+                    }
+
+                    @Override
+                    protected void done() {
+                        try {
+                            // Get the image result from doInBackground()
+                            ImageIcon imageIcon = get();
+
+                            if (imageIcon != null) {
+                                // Mengatur nilai teks dalam komponen
+                                txtNama.setText(nama);
+                                txtTelp.setText(telp);
+                                txtAlamat.setText(alamat);
+                                txtEmail.setText(email);
+                                txtUsername.setText(username);
+                                txtPassword.setText(password);
+
+                                // Mengatur pilihan pada JComboBox
+                                if (jenisKelamin.equals("Laki-laki")) {
+                                    cbjk.setSelectedIndex(0);
+                                } else if (jenisKelamin.equals("Perempuan")) {
+                                    cbjk.setSelectedIndex(1);
+                                }
+
+                                cmbToken.setSelectedIndex(token-1);
+
+                                // Resize image to fit JLabel
+                                Image image = imageIcon.getImage().getScaledInstance(gambar_barang.getWidth(), gambar_barang.getHeight(), Image.SCALE_SMOOTH);
+                                gambar_barang.setIcon(new ImageIcon(image));
+
+                                // Enable buttons
+                                btnSave.setEnabled(false);
+                                btnUpdate.setEnabled(true);
+                                btnDelete.setEnabled(true);
+                            } else {
+                                // Handle the case when imageIcon is null
+                                // Set default values or display an error message
+                                // Example:
+                                txtNama.setText("");
+                                txtTelp.setText("");
+                                txtAlamat.setText("");
+                                txtEmail.setText("");
+                                txtUsername.setText("");
+                                txtPassword.setText("");
+                                gambar_barang.setIcon(null);
+                                btnSave.setEnabled(false);
+                                btnUpdate.setEnabled(false);
+                                btnDelete.setEnabled(false);
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                };
+
+
+                worker.execute(); // Start the SwingWorker
+
+                // Mengatur status tombol
+                btnSave.setEnabled(true);
+                btnUpdate.setEnabled(true);
+                btnDelete.setEnabled(true);
+            }
+        });
+
 
 
         btnClear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                btnDelete.setEnabled(false);
+                btnUpdate.setEnabled(false);
+                btnSave.setEnabled(true);
+
                 clear();
+            }
+        });
+        Tombol_Browse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser browseImageFile = new JFileChooser();
+                //Filter extensions
+                FileNameExtensionFilter fnef = new FileNameExtensionFilter("IMAGES", "png", "jpg", "jpeg");
+                browseImageFile.addChoosableFileFilter(fnef);
+                int showOpenDialogue = browseImageFile.showOpenDialog(null);
+
+                if (showOpenDialogue == JFileChooser.APPROVE_OPTION) {
+                    selectedImageFile = browseImageFile.getSelectedFile();
+                    selectedImagePath = selectedImageFile.getAbsolutePath();
+
+                    try {
+                        // Mengubah gambar menjadi byte array
+                        imageBytes = convertImageToByteArray(selectedImageFile);
+
+                        //Display image on jlable
+                        ImageIcon ii = new ImageIcon(selectedImagePath);
+                        //Resize image to fit jlabel
+                        Image image = ii.getImage().getScaledInstance(gambar_barang.getWidth(), gambar_barang.getHeight(), Image.SCALE_SMOOTH);
+                        gambar_barang.setIcon(new ImageIcon(image));
+
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        gambar_barang.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                try {
+                    loadGambarawal();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
@@ -339,6 +481,7 @@ public class CRUDKaryawan extends JFrame {
         Model.addColumn("Email");
         Model.addColumn("Username");
         Model.addColumn("Password");
+        Model.addColumn("Jabatan");
     }
 
     public String generateNextSupplierID() {
@@ -435,7 +578,16 @@ public class CRUDKaryawan extends JFrame {
                 obj[5] = connection.result.getString("email");
                 obj[6] = connection.result.getString("username");
                 obj[7] = connection.result.getString("password");
-                obj[8] = connection.result.getString("token");
+
+                //Mencari Nama Jabatan
+                switch (connection.result.getString("token")){
+                    case "1" : obj[8] = "Manager"; break;
+                    case "2" : obj[8] = "Manager Keuangan"; break;
+                    case "3" : obj[8] = "Admin"; break;
+                    case "4" : obj[8] = "Kasir"; break;
+                    case "5" : obj[8] = "Orang Gudang"; break;
+                    case "6" : obj[8] = "PJR"; break;
+                }
                 obj[9] = connection.result.getString("status");
 
                 Model.addRow(obj);
@@ -472,6 +624,64 @@ public class CRUDKaryawan extends JFrame {
         txtPassword.setText("");
         txtUsername.setText("");
         txtSearch.setText("");
+        cmbToken.setSelectedIndex(0);
+        cbjk.setSelectedIndex(0);
+
+        try {
+            loadGambarawal();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadGambarawal() throws IOException {
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/Gambar/defaultuser.jpg")); // Ganti dengan path gambar Anda
+        Image image = imageIcon.getImage();
+
+        //JOptionPane.showMessageDialog(null, gambar_barang.getHeight() +" "+gambar_barang.getWidth());
+
+        // Mengubah ukuran gambar sesuai dengan ukuran JLabel
+        int labelWidth = gambar_barang.getWidth();
+        int labelHeight = gambar_barang.getHeight();
+        Image scaledImage = image.getScaledInstance(labelWidth, labelHeight, Image.SCALE_SMOOTH);
+
+        // Membuat ImageIcon dari gambar yang telah diubah ukurannya
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        // Mengubah gambar menjadi byte array
+        File scaledImageFile = convertImageToFile(scaledImage);
+
+        // Mengatur ikon pada JLabel
+        gambar_barang.setIcon(scaledIcon);
+
+        // Mengubah gambar menjadi byte array
+        imageBytes = convertImageToByteArray(scaledImageFile);
+    }
+
+    private File convertImageToFile(Image image) throws IOException {
+        BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = bufferedImage.createGraphics();
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
+
+        File tempFile = File.createTempFile("temp", ".jpg");
+        ImageIO.write(bufferedImage, "jpg", tempFile);
+        return tempFile;
+    }
+
+    private static byte[] convertImageToByteArray(File imageFile) throws IOException {
+        FileInputStream fis = new FileInputStream(imageFile);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        byte[] buffer = new byte[4096];
+        int bytesRead;
+        while ((bytesRead = fis.read(buffer)) != -1) {
+            baos.write(buffer, 0, bytesRead);
+        }
+
+        fis.close();
+        baos.close();
+
+        return baos.toByteArray();
     }
 
     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628
@@ -500,5 +710,54 @@ public class CRUDKaryawan extends JFrame {
 
         // Mengembalikan true jika email cocok dengan pattern, false jika tidak cocok
         return matcher.matches();
+    }
+
+    public ImageIcon retrieveImageFromDatabase(String id_karyawan) {
+        ImageIcon imageIcon = null;
+
+        try {
+            // Establish database connection
+            DBConnect connection = new DBConnect();
+
+            // Prepare SQL statement
+            String sq2 = "SELECT foto_karyawan FROM tblKaryawan WHERE id_karyawan = ?";
+            connection.pstat = connection.conn.prepareStatement(sq2);
+
+
+            // Set the image ID parameter
+            connection.pstat.setString(1, id_karyawan);
+
+            connection.result = connection.pstat.executeQuery();
+
+
+            if (connection.result.next()) {
+                // Retrieve the image data as an input stream
+                InputStream inputStream = connection.result.getBinaryStream("foto_karyawan");
+
+                // Convert the input stream to a byte array
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                imageBytes = outputStream.toByteArray();
+
+                // Create an ImageIcon from the byte array
+                imageIcon = new ImageIcon(imageBytes);
+
+                // Close streams and database connection
+                inputStream.close();
+                outputStream.close();
+            }
+
+            connection.pstat.close();
+        } catch (SQLException | IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return imageIcon;
     }
 }
