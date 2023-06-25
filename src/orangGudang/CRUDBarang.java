@@ -379,15 +379,6 @@ public CRUDBarang() {
         }
     });
 
-    btRefresh.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            loadData();
-            tampilRak();
-            tampilJenisBarang();
-        }
-    });
-
     tbBarang.addMouseListener(new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {

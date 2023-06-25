@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="CRUD BARANG" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="CRUD BARANG">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,13 +61,39 @@
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CRUDRak">
+  <component name="RunManager" selected="Application.CRUDKaryawan">
+    <configuration name="CRUDBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDBarang" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="orangGudang.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
       <module name="Project" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="orangGudang.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CRUDKaryawan" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Admin.CRUDKaryawan" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Admin.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -96,19 +127,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="Project" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.CRUDKaryawan" />
+        <item itemvalue="Application.DBConnect" />
+        <item itemvalue="Application.CRUDBarang" />
         <item itemvalue="Application.CRUDRak" />
         <item itemvalue="Application.CRUDJenisBarang" />
-        <item itemvalue="Application.DBConnect" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -126,6 +151,7 @@
       <workItem from="1687135743360" duration="482000" />
       <workItem from="1687139525595" duration="57000" />
       <workItem from="1687154561891" duration="679000" />
+      <workItem from="1687590467190" duration="8194000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -162,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687509557706</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="CRUD BARANG">
+      <created>1687509621747</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1687509621747</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
