@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 public class CRUDBundle extends JFrame {
-    private JPanel JPBundle;
+    public JPanel JPBundle;
     private JTextField txtNamaBundle;
     private JButton btnSave;
     private JButton btnUpdate;
