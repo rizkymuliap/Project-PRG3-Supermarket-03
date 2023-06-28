@@ -5,16 +5,12 @@ import connection.DBConnect;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.Objects;
 
 public class CRUDEvent extends JFrame {
     private JPanel JPEvent;
@@ -43,7 +39,7 @@ public class CRUDEvent extends JFrame {
     JDateChooser chooser1 = new JDateChooser();
 
 
-    String Nama, status, jenis, NamaBundle, tanggalmulai, tanggalselesai, bundle, id_event;
+    String Nama, status, jenis, NamaBUndle, StatusTersedia, tanggalmulai, tanggalselesai, bundle, diskon;
     int minimal;
     double Diskon;
 
@@ -56,7 +52,8 @@ public class CRUDEvent extends JFrame {
         frame.setVisible(true);
     }
 
-    public CRUDEvent() {
+    public CRUDEvent()
+    {
         JPTglMulai.add(chooser);
         JPTglSelesai.add(chooser1);
         Model = new DefaultTableModel();
@@ -79,35 +76,64 @@ public class CRUDEvent extends JFrame {
                     JPTglSelesai.add(chooser1);
                     minimal = Integer.parseInt(txtMinBelanja.getText());
                     status = cbStatus.getSelectedItem().toString();
-                    if (Objects.equals(jenis, "Bundle")) {
-                        Diskon = 0.0;
+                    if (jenis.equals("Bundle")) {
+                        Diskon = 0;
                         bundle = txtNamaBundle.getText();
                     } else {
-                        Diskon = Double.parseDouble(txtDiskon.getText());
+                        Diskon = Integer.parseInt(txtDiskon.getText());
                         bundle = "";
                     }
 
-                    if (group.getSelection() != null) {
-                        jenis = group.getSelection().getActionCommand();
-                    }
+                   //System.out.print(Nama, chooser.getDate(), chooser1.getDate(), minimal, status.toString(), diskon.toString(), bundle.toString());
 
                     Format format = new SimpleDateFormat("yyyy-MM-dd");
                     tanggalmulai = format.format(chooser.getDate());
                     tanggalselesai = format.format(chooser1.getDate());
 
                     try {
+                        DBConnect connect = new DBConnect();
                         String query = "EXEC sp_InsertEvent ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
                         connect.pstat = connect.conn.prepareStatement(query);
                         connect.pstat.setString(1, generateNextEventID());
-                        connect.pstat.setString(2, Nama);
-                        connect.pstat.setString(3, tanggalmulai);
-                        connect.pstat.setString(4, tanggalselesai);
+                        System.out.println(generateNextEventID());
+                        connect.pstat.setString(2, txtNama.getText());
+                        System.out.println(txtNama.getText());
+                        connect.pstat.setString(3, format.format(chooser.getDate()));
+                        System.out.println(chooser);
+                        connect.pstat.setString(4, format.format(chooser1.getDate()));
+                        System.out.println(chooser1);
                         connect.pstat.setString(5, jenis);
-                        connect.pstat.setString(6, NamaBundle);
+                        System.out.println(jenis);
+                        connect.pstat.setString(6, txtNamaBundle.getText());
+                        System.out.println(txtNamaBundle.getText());
+
+                        //Mncari Id bundle
+//                        try
+//                        {
+//                            DBConnect connect1 = new DBConnect();
+//                            connect1.stat = connect1.conn.createStatement();
+//                            String SQL = "SELECT * FROM tblBundle WHERE nama_bundle LIKE '%" + txtNamaBundle.getText() + "%'";
+//                            connect1.result = connect1.stat.executeQuery(SQL);
+//                            while (connect1.result.next())
+//                            {
+//                                connect.pstat.setString(6, connect1.result.getString("id_bundle"));
+//
+//                            }
+//
+//                            connect1.stat.close();
+//                            connect1.result.close();
+//                        }
+//                        catch (Exception ex)
+//                        {
+//                            System.out.println("Terjadi Error saat memasukan data : " + ex);
+//                        }
+
+
                         connect.pstat.setDouble(7, Diskon);
-                        connect.pstat.setInt(8, minimal);
-                        int tersedia = cbStatus.getSelectedIndex() == 0 ? 1 : 0;
-                        connect.pstat.setInt(9, tersedia);
+                        System.out.println(Diskon);
+                        connect.pstat.setString(8, txtMinBelanja.getText());
+                        System.out.println(txtMinBelanja.getText());
+                        connect.pstat.setString(9, "1");
                         connect.pstat.setInt(10, 1);
 
                         connect.pstat.executeUpdate();
@@ -117,6 +143,7 @@ public class CRUDEvent extends JFrame {
                         loadData();
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Eror saat Menyimpan ke dalam database." + ex);
+
                     } finally {
                         try {
                             if (connect.pstat != null) {
@@ -125,11 +152,11 @@ public class CRUDEvent extends JFrame {
                         } catch (SQLException ex) {
                             ex.printStackTrace();
                         }
+
                     }
                 }
             }
         });
-
         rbBundle.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,156 +167,6 @@ public class CRUDEvent extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jenis = "Diskon";
-            }
-        });
-
-        tblEvent.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                int selectedRow = tblEvent.getSelectedRow();
-                if (selectedRow == -1) {
-                    return;
-                }
-
-                // Mendapatkan nilai dari kolom yang dipilih
-                String nama = (String) Model.getValueAt(selectedRow, 1);
-                chooser.setDate((Date) tblEvent.getValueAt(selectedRow, 2));
-                chooser1.setDate((Date) tblEvent.getValueAt(selectedRow, 3));
-                if (Model.getValueAt(selectedRow, 4).toString().equals("Bundle")) {
-                    rbBundle.setSelected(true);
-                    rbDiskon.setSelected(false);
-                } else {
-                    rbDiskon.setSelected(true);
-                    rbBundle.setSelected(false);
-                }
-                String namaBundle = (String) Model.getValueAt(selectedRow, 5);
-                String Diskon = (String) Model.getValueAt(selectedRow, 6);
-                String Minimal = (String) Model.getValueAt(selectedRow, 7);
-                int tersedia = Model.getValueAt(selectedRow, 8).toString().equals("Tersedia") ? 0 : 1;
-
-                txtNama.setText(nama);
-                txtMinBelanja.setText(Minimal);
-                cbStatus.setSelectedIndex(tersedia);
-                txtNamaBundle.setText(namaBundle);
-                txtDiskon.setText(Diskon);
-
-                btnSave.setEnabled(false);
-                btnUpdate.setEnabled(true);
-                btnDelete.setEnabled(true);
-            }
-        });
-        btnUpdate.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (txtNama.getText().equals("") || cbStatus.getSelectedItem().equals("") || txtMinBelanja.getText().equals("") || txtNamaBundle.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null, "Please fill in all data!");
-                } else {
-                    Nama = txtNama.getText();
-                    JPTglMulai.add(chooser);
-                    JPTglSelesai.add(chooser1);
-                    minimal = Integer.parseInt(txtMinBelanja.getText());
-                    status = cbStatus.getSelectedItem().toString();
-                    if (Objects.equals(jenis, "Bundle")) {
-                        Diskon = 0.0;
-                        bundle = txtNamaBundle.getText();
-                    } else {
-                        Diskon = Double.parseDouble(txtDiskon.getText());
-                        bundle = "";
-                    }
-
-                    if (group.getSelection() != null) {
-                        jenis = group.getSelection().getActionCommand();
-                    }
-                    if (rbBundle.isSelected())
-                    {
-                        jenis = "Bundle";
-                    }
-                    else
-                    {
-                        jenis = "Diskon";
-                    }
-                    Format format = new SimpleDateFormat("yyyy-MM-dd");
-                    tanggalmulai = format.format(chooser.getDate());
-                    tanggalselesai = format.format(chooser1.getDate());
-
-                    try {
-                        String query = "EXEC sp_UpdateEvent ?, ?, ?, ?, ?, ?, ?, ?, ?";
-                        int selectedRow = tblEvent.getSelectedRow();
-                        connect.pstat = connect.conn.prepareStatement(query);
-                        connect.pstat.setString(1, (String) Model.getValueAt(selectedRow, 0));
-                        connect.pstat.setString(2, Nama);
-                        connect.pstat.setString(3, tanggalmulai);
-                        connect.pstat.setString(4, tanggalselesai);
-                        connect.pstat.setString(5, jenis);
-                        connect.pstat.setString(6, txtNamaBundle.getText());
-                        connect.pstat.setDouble(7, Diskon);
-                        connect.pstat.setInt(8, minimal);
-                        int tersedia = cbStatus.getSelectedIndex() == 0 ? 1 : 0;
-                        connect.pstat.setInt(9, tersedia);
-                        connect.pstat.executeUpdate();
-                        connect.pstat.close();
-
-                        JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
-                        loadData();
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Eror saat Menyimpan ke dalam database." + ex);
-                    } finally {
-                        try {
-                            if (connect.pstat != null) {
-                                connect.pstat.close();
-                            }
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                }
-            }
-        });
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int opsi;
-                if (txtNama.getText().equals("") || cbStatus.getSelectedItem().equals("") || txtMinBelanja.getText().equals("") || txtNamaBundle.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null, "Please fill in all data!");
-                }else{
-                    try {
-                        int kode = tblEvent.getSelectedRow();
-                        opsi = JOptionPane.showConfirmDialog(null, "Are you sure delete this data?",
-                                "Confirmation", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (opsi != 0) {
-                            JOptionPane.showMessageDialog(null, "Data failed to delete");
-                        } else {
-                            id_event = String.valueOf(Model.getValueAt(kode, 0));
-                            String query = "EXEC sp_DeleteEvent @id_event=?";
-                            connect.pstat = connect.conn.prepareStatement(query);
-                            connect.pstat.setString(1, id_event);
-                            connect.pstat.executeUpdate();
-                            connect.pstat.close();
-                        }
-                    } catch (NumberFormatException nex){
-                        JOptionPane.showMessageDialog(null, "Please, enter the valid number ."+nex.getMessage());
-                    } catch (Exception e1){
-                        JOptionPane.showMessageDialog(null, "an error occurred while deleting data into the database.\n" + e1);
-                    }
-
-                    JOptionPane.showMessageDialog(null, "Data deleted successfully!");
-                    loadData();
-                }
-            }
-        });
-        btnRefresh.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String namaEvent = txtSearch.getText();
-                if(!namaEvent.isEmpty())
-                {
-                    SearchEvent();
-                }
-                else
-                {
-                    loadData();
-                }
             }
         });
     }
@@ -306,24 +183,19 @@ public class CRUDEvent extends JFrame {
             connection.result = connection.stat.executeQuery(query);
 
             while (connection.result.next()) {
-                Object[] obj = new Object[9];
-                if (connection.result.getInt("status") == 1) {
-                    obj[0] = connection.result.getString("id_event");
-                    obj[1] = connection.result.getString("nama_event");
-                    obj[2] = connection.result.getDate("tanggal_mulai");
-                    obj[3] = connection.result.getDate("tanggal_berakhir");
-                    obj[4] = connection.result.getString("jenis_promo");
-                    obj[5] = connection.result.getString("id_bundle");
-                    obj[6] = connection.result.getString("diskon");
-                    String tersedia = connection.result.getString("status_tersedia").equals("1") ? "Tersedia" : "Tidak Tersedia";
-                    Double minimal = Double.parseDouble(connection.result.getString("minimal_belanja"));
-                    int min = minimal.intValue();
-                    obj[7] = String.valueOf(min);
-                    obj[8] = tersedia;
+                Object[] obj = new Object[10];
+                obj[0] = connection.result.getString("id_event");
+                obj[1] = connection.result.getString("nama_event");
+                obj[2] = connection.result.getString("tanggal_mulai");
+                obj[3] = connection.result.getString("tanggal_berakhir");
+                obj[4] = connection.result.getString("jenis_promo");
+                obj[5] = connection.result.getString("id_bundle");
+                obj[6] = connection.result.getString("diskon");
+                obj[7] = connection.result.getString("minimal_belanja");
+                obj[8] = connection.result.getString("status_tersedia");
+                obj[9] = connection.result.getString("status");
 
-
-                    Model.addRow(obj);
-                }
+                Model.addRow(obj);
             }
 
             btnSave.setEnabled(true);
@@ -358,6 +230,7 @@ public class CRUDEvent extends JFrame {
         Model.addColumn("Diskon");
         Model.addColumn("Minimal Belanja");
         Model.addColumn("Status Tersedia");
+        Model.addColumn("Status");
     }
 
     public String generateNextEventID() {
@@ -396,59 +269,4 @@ public class CRUDEvent extends JFrame {
 
         return null;
     }
-
-    public void SearchEvent()
-    {
-            Model.getDataVector().removeAllElements();
-            Model.fireTableDataChanged();
-            try
-            {
-            String query = "EXEC sp_SearchEvent ?";
-                connect.pstat = connect.conn.prepareStatement(query);
-                connect.pstat.setString(1, txtSearch.getText());
-                connect.result = connect.pstat.executeQuery();
-
-            while (connect.result.next()) {
-
-                Object[] obj = new Object[9];
-                if (connect.result.getInt("status") == 1) {
-                    obj[0] = connect.result.getString("id_event");
-                    obj[1] = connect.result.getString("nama_event");
-                    obj[2] = connect.result.getDate("tanggal_mulai");
-                    obj[3] = connect.result.getDate("tanggal_berakhir");
-                    obj[4] = connect.result.getString("jenis_promo");
-                    obj[5] = connect.result.getString("id_bundle");
-                    obj[6] = connect.result.getString("diskon");
-                    String tersedia = connect.result.getString("status_tersedia").equals("1") ? "Tersedia" : "Tersedia";
-                    Double minimal = Double.parseDouble(connect.result.getString("minimal_belanja"));
-                    int min = minimal.intValue();
-                    obj[7] = String.valueOf(min);
-                    obj[8] = tersedia;
-
-                    Model.addRow(obj);
-                }
-            }
-
-            btnSave.setEnabled(true);
-            btnUpdate.setEnabled(false);
-            btnDelete.setEnabled(false);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e);
-        } finally {
-            // Pastikan untuk selalu menutup koneksi setelah digunakan
-            try {
-                if (connect != null) {
-                    if (connect.stat != null)
-                        connect.stat.close();
-                    if (connect.result != null)
-                        connect.result.close();
-                    if (connect.conn != null)
-                        connect.conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
-

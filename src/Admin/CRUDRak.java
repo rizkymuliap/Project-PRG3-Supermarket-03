@@ -380,8 +380,8 @@ public class CRUDRak extends JFrame {
     }
 
     public void LoadDataKaryawan(){
-        Model.getDataVector().removeAllElements();
-        Model.fireTableDataChanged();
+        Model2.getDataVector().removeAllElements();
+        Model2.fireTableDataChanged();
 
         loadDataRak();
 

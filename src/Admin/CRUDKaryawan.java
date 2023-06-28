@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CRUDKaryawan extends JFrame {
-    private JPanel JPKaryawan;
+    public JPanel JPKaryawan;
     private JTextField txtTelp;
     private JTextField txtEmail;
     private JTextField txtUsername;

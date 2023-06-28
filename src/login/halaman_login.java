@@ -1,5 +1,6 @@
 package login;
 
+import Admin.HalamanAdmin;
 import connection.DBConnect;
 import jdk.nashorn.internal.scripts.JO;
 
@@ -34,26 +35,23 @@ public class halaman_login extends JFrame{
 
                 Boolean valid = Boolean.parseBoolean(value[0]);
 
-                if (valid){
-                    JOptionPane.showMessageDialog(halaman_utama, "Selamat Datang di Program Pelatihan Java", "Information", JOptionPane.INFORMATION_MESSAGE);
-
-                    dispose();
+                System.out.println(value[0].toString() + " " + value[1].toString() + " " + value[2].toString() + " "+value[3].toString());
 
 
-
-
-                    if(value[3].equals("admin")){
-                    }else if (value[3].equals("kasir")){
+                if (valid) {
+                    JOptionPane.showMessageDialog(halaman_utama, "Selamat Datang!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    if (value[3].equals("Admin")) {
                         dispose();
-
-
-                    }else if (value[3].equals("manajer")){
-                        dispose();
-
+                        new HalamanAdmin(value).setVisible(true);
+                    } else if (value[3].equals("kasir")) {
+                        // Handle kasir
+                    } else if (value[3].equals("manajer")) {
+                        // Handle manajer
                     }
                 }
             }
         });
+
         keluarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,25 +66,29 @@ public class halaman_login extends JFrame{
         }else {
 
             try {
+                String jabatan = "";
                 DBConnect connection = new DBConnect();
-
                 connection.stat = connection.conn.createStatement();
-
                 String query = "SELECT * FROM tblKaryawan WHERE username = '" +txtUsername.getText()+"' and password = '" +txtPassword.getText()+"'";
-
                 connection.result = connection.stat.executeQuery(query);
 
                 if(!connection.result.next()){
                     throw  new Exception("Pengguna Tidak Ditemukan");
                 }
-                JOptionPane.showMessageDialog(null, connection.result.getString(1));
 
                 String id_karyawan = connection.result.getString(1);
-                String password = connection.result.getString(2);
-                String nama = connection.result.getString(3);
-                String jabatan = connection.result.getString(4);
+                String nama = connection.result.getString(2);
+                switch (connection.result.getString(10)){
+                    case "1" : jabatan = "Manager"; break;
+                    case "2" : jabatan = "Manager Keuangan"; break;
+                    case "3" : jabatan = "Admin"; break;
+                    case "4" : jabatan = "Kasir"; break;
+                    case "5" : jabatan = "Orang Gudang"; break;
+                    case "6" : jabatan = "PJR"; break;
+                }
 
-                return new String[] {"true", id_karyawan,password,nama,jabatan};
+
+                return new String[] {"true", id_karyawan,nama,jabatan};
             }catch (Exception ex){
 
                 System.out.println(ex.getMessage());
@@ -102,8 +104,7 @@ public class halaman_login extends JFrame{
 
         JTextField txtUsername = new JTextField();
         txtUsername.setSize(500, 100000); // Mengatur lebar: 200px, tinggi: 30px
-// atau
-        //textField.setPreferredSize(new Dimension(200, 30));
+
 
     }
 }
