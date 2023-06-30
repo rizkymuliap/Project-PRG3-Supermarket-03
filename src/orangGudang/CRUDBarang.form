@@ -127,8 +127,8 @@
                                 <properties>
                                   <background color="-14146253"/>
                                   <foreground color="-1"/>
-                                  <label value="Browse"/>
-                                  <text value="Browse"/>
+                                  <label value="Telusuri"/>
+                                  <text value="Telusuri"/>
                                 </properties>
                               </component>
                             </children>
@@ -545,7 +545,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="12" style="1"/>
                       <foreground color="-1"/>
-                      <text value="Save"/>
+                      <text value="Simpan"/>
                     </properties>
                   </component>
                   <component id="4c7de" class="javax.swing.JButton" binding="btnUpdate">
@@ -556,7 +556,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="11" style="1"/>
                       <foreground color="-1"/>
-                      <text value="Update"/>
+                      <text value="Ubah"/>
                     </properties>
                   </component>
                   <component id="46903" class="javax.swing.JButton" binding="btnDelete">
@@ -567,7 +567,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="11" style="1"/>
                       <foreground color="-1"/>
-                      <text value="Delete"/>
+                      <text value="Hapus"/>
                     </properties>
                   </component>
                   <component id="cc03e" class="javax.swing.JButton" binding="btnCari">
@@ -578,7 +578,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="12"/>
                       <foreground color="-1443852"/>
-                      <text value="Search"/>
+                      <text value="Cari"/>
                     </properties>
                   </component>
                   <component id="1ffbb" class="javax.swing.JButton" binding="btRefresh">
@@ -589,7 +589,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="12"/>
                       <foreground color="-1443852"/>
-                      <text value="Refresh"/>
+                      <text value="Segarkan"/>
                     </properties>
                   </component>
                   <component id="aadc9" class="javax.swing.JButton" binding="btnCancel">
@@ -600,7 +600,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="11" style="1"/>
                       <foreground color="-1"/>
-                      <text value="Cancel"/>
+                      <text value="Batal"/>
                     </properties>
                   </component>
                 </children>

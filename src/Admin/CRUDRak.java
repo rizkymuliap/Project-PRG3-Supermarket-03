@@ -2,11 +2,12 @@ package Admin;
 
 import connection.DBConnect;
 
-import javax.jws.WebParam;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class CRUDRak extends JFrame {
     private JPanel JPRak;
@@ -36,6 +37,23 @@ public class CRUDRak extends JFrame {
     String id_karyawan, id_rak, Nama;
     char Huruf;
     int Jumlah;
+    int i;
+
+    public void async() {
+        CompletableFuture<Void> task1 = CompletableFuture.runAsync(this::loadDataRak);
+        CompletableFuture<Void> task2 = CompletableFuture.runAsync(this::LoadDataKaryawan);
+
+        CompletableFuture.allOf(task1, task2)
+                .thenRun(() -> {
+                    // Tindakan yang akan dilakukan setelah kedua task selesai
+                    System.out.println("Load data completed");
+                })
+                .exceptionally(ex -> {
+                    // Tindakan yang akan dilakukan jika terjadi kegagalan pada salah satu task
+                    System.err.println("Terjadi kegagalan dalam menjalankan task: " + ex.getMessage());
+                    return null;
+                });
+    }
 
     public static void main(String[] args) {
         new CRUDRak().setVisible(true);
@@ -61,9 +79,7 @@ public class CRUDRak extends JFrame {
         addColumnDataKaryawan();
         addColumn();
 
-        LoadDataKaryawan();
-
-
+        async();
 
 
         btnSearch.addActionListener(new ActionListener() {
@@ -95,12 +111,13 @@ public class CRUDRak extends JFrame {
                 }
 
                 if (found) { // Jika menemukan data yang sama pada tabel
-                    JOptionPane.showMessageDialog(null, "Kode rak sudah digunakan!", "Information!",
-                            JOptionPane.INFORMATION_MESSAGE); // Menampilkan pesan
+                    JOptionPane.showMessageDialog(null, "Kode rak sudah digunakan!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE); // Menampilkan pesan
                 }else {
                     if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) // Mengecek apakah txtbox kosong agar tidak ada data kosong
                     {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!", JOptionPane.WARNING_MESSAGE); // Jika kosong maka akan menampilkan pesan data tidak boleh kosong
+                        JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                                JOptionPane.WARNING_MESSAGE);
                     } else {
                         // Pencarian ID Karyawan
                         try {
@@ -115,7 +132,7 @@ public class CRUDRak extends JFrame {
                             connection.result.close();
                             connection.pstat.close();
                         } catch (SQLException ex) {
-                            System.out.println("Terjadi error saat memeriksa id_karyawan terakhir: " + ex);
+                            System.out.println("Terjadi error saat memeriksa id_rak terakhir: " + ex);
                         }
 
                         try {
@@ -133,9 +150,9 @@ public class CRUDRak extends JFrame {
 
                             clear(); // Mengosongkan semua textbox
 
-                            LoadDataKaryawan();
-                            JOptionPane.showMessageDialog(null, "Data Rak berhasil disimpan!", "Informasi",
-                                    JOptionPane.INFORMATION_MESSAGE); // Menampilkan pesan berhasil input data Supplier
+                            async();
+                            JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!",
+                                    "Informasi" ,JOptionPane.INFORMATION_MESSAGE); // Menampilkan pesan berhasil input data Rak
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -147,19 +164,35 @@ public class CRUDRak extends JFrame {
         btnUpdate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean found = false;
-                // validasi tidak boleh sama
-                Object[] obj = new Object[1];
-                obj[0] = txtNamaKaryawan.getText();
+                Huruf = txtKodeRak.getText().charAt(0);
+
+                boolean found = false; // inisiasi awal kalau nama yang di input tidak sama
+
+
+                // Mengambil jumlah baris pada table
+                int baris = tblRak.getModel().getRowCount();
+
+                for (int awal = 0; awal < baris; awal++) { // Mengulang pengecekan dari awal sampai jumlah baris
+
+
+                    // Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
+                    if (Huruf == Model.getValueAt(awal, 2).toString().charAt(0) && i != awal) {
+                        found = true; // Menemukan data yang sama
+
+                    }
+                }
 
                 if(found) {
-                    JOptionPane.showMessageDialog(null, "Data Rak sudah ada!", "Information"
+                    JOptionPane.showMessageDialog(null, "Kode rak sudah ada!", "Informasi"
                             , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput
+                    txtKodeRak.setText("");
+                    txtKodeRak.requestFocus();
+
                 }else
                 {
                     if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
                     {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!",
+                        JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
                                 JOptionPane.WARNING_MESSAGE);
                     }
                     else
@@ -174,10 +207,28 @@ public class CRUDRak extends JFrame {
 
                             DBConnect connection = new DBConnect();
 
-                            String query = "EXEC sp_UpdateRak @id_rak=?, @nama=?, @huruf=?, @jumlah=?, @status=1";
+                            String query = "EXEC sp_UpdateRak @id_rak=?, @id_karyawan=?, @huruf=?, @jumlah=?";
                             connection.pstat = connection.conn.prepareStatement(query);
                             connection.pstat.setString(1, id_rak);  // Memasukkan nilai id_rak
-                            connection.pstat.setString(2, Nama);  // Memasukkan nilai Nama
+
+                            //Cari ID Karyawan
+                            // Pencarian ID Karyawan
+                            try {
+                                DBConnect connection2 = new DBConnect();
+                                connection2.pstat = connection2.conn.prepareStatement("SELECT id_karyawan FROM tblKaryawan WHERE nama_karyawan=?");
+                                connection2.pstat.setString(1, Nama);
+                                connection2.result = connection2.pstat.executeQuery();
+
+                                if (connection2.result.next()) {
+                                    id_karyawan = connection2.result.getString("id_karyawan");
+                                }
+                                connection2.result.close();
+                                connection2.pstat.close();
+                            } catch (SQLException ex) {
+                                System.out.println("Terjadi error saat memeriksa id_rak terakhir: " + ex);
+                            }
+
+                            connection.pstat.setString(2, id_karyawan);  // Memasukkan nilai Nama
                             connection.pstat.setString(3, String.valueOf(Huruf));  // Memasukkan nilai Huruf
                             connection.pstat.setInt(4, Jumlah);  // Memasukkan nilai Jumlah
 
@@ -186,9 +237,10 @@ public class CRUDRak extends JFrame {
                             connection.pstat.close();
 
                             clear();
-                            JOptionPane.showMessageDialog(null, "Data updated successfully!");
+                            JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!",
+                                    "Informasi", JOptionPane.INFORMATION_MESSAGE);
 
-                            LoadDataKaryawan();
+                            async();
 
                             btnUpdate.setEnabled(false);
                             btnDelete.setEnabled(false);
@@ -196,7 +248,7 @@ public class CRUDRak extends JFrame {
 
                         }
                         catch (SQLException ex) {
-                            JOptionPane.showMessageDialog(null, "Please, enter the valid number.");
+                            JOptionPane.showMessageDialog(null, "Please, enter the valid number." + ex.getMessage());
                         }
                     }
 
@@ -212,7 +264,7 @@ public class CRUDRak extends JFrame {
                 int opsi;
                 if (txtNamaKaryawan.getText().equals("") || txtKodeRak.getText().equals("") || txtJumlah.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
                 {
-                    JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!",
+                    JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
                             JOptionPane.WARNING_MESSAGE);
                 }
                 else
@@ -220,10 +272,11 @@ public class CRUDRak extends JFrame {
                     try
                     {
                         int kode = tblRak.getSelectedRow();
-                        opsi = JOptionPane.showConfirmDialog(null, "Yakin akan menghapus data rak?",
-                                "Confirmation", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
+                        opsi = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                                "Konfirmasi", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE);
                         if (opsi != 0) {
-                            JOptionPane.showMessageDialog(null, "Data failed to delete");
+                            JOptionPane.showMessageDialog(null, "Data batal dihapus!",
+                                    "Informasi!", JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             id_rak = String.valueOf(Model.getValueAt(kode, 0));
                             String query = "EXEC sp_DeleteRak @id_rak=?";
@@ -231,18 +284,15 @@ public class CRUDRak extends JFrame {
                             connect.pstat.setString(1, id_rak);
                             connect.pstat.executeUpdate();
                             connect.pstat.close();
+                            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!",
+                                    "Informasi!", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
                     catch (SQLException ex)
                     {
                         JOptionPane.showMessageDialog(null, "Please, enter the valid number ."+ ex.getMessage());
                     }
-                    JOptionPane.showMessageDialog(null, "Hapus data rak berhasil!", "Informasi",
-                            JOptionPane.INFORMATION_MESSAGE);
-
-                    LoadDataKaryawan();
-
-
+                    async();
                     btnSave.setEnabled(true);
                     btnUpdate.setEnabled(false);
                     btnDelete.setEnabled(false);
@@ -272,7 +322,7 @@ public class CRUDRak extends JFrame {
                 btnDelete.setEnabled(true);
                 btnUpdate.setEnabled(true);
                 btnSave.setEnabled(false);
-                int i = tblRak.getSelectedRow();
+                i =  tblRak.getSelectedRow();
                 if(i == -1){
                     return;
                 }
@@ -283,6 +333,13 @@ public class CRUDRak extends JFrame {
             }
         });
 
+        btnCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clear();
+                async();
+            }
+        });
     }
 
     public void addColumn(){
@@ -382,8 +439,6 @@ public class CRUDRak extends JFrame {
     public void LoadDataKaryawan(){
         Model2.getDataVector().removeAllElements();
         Model2.fireTableDataChanged();
-
-        loadDataRak();
 
         try{
             connect.stat = connect.conn.createStatement();

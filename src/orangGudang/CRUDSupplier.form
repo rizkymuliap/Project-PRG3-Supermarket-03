@@ -181,7 +181,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="12" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Save"/>
+                  <text value="Simpan"/>
                 </properties>
               </component>
               <hspacer id="7b0d">
@@ -202,7 +202,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Update"/>
+                  <text value="Ubah"/>
                 </properties>
               </component>
               <component id="f15ca" class="javax.swing.JButton" binding="btnDelete">
@@ -213,7 +213,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Delete"/>
+                  <text value="Hapus"/>
                 </properties>
               </component>
               <component id="8b552" class="javax.swing.JButton" binding="btnCancel">
@@ -224,7 +224,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Cancel"/>
+                  <text value="Batal"/>
                 </properties>
               </component>
               <component id="2683a" class="javax.swing.JTextField" binding="txtSearch">
@@ -278,7 +278,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Search"/>
+                  <text value="Cari"/>
                 </properties>
               </component>
             </children>
@@ -372,7 +372,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Refresh"/>
+                  <text value="Segarkan"/>
                 </properties>
               </component>
               <hspacer id="f5c2b">

@@ -67,7 +67,9 @@
                 <constraints>
                   <grid row="1" column="2" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-14146253"/>
+                </properties>
                 <border type="none"/>
                 <children>
                   <component id="9de33" class="javax.swing.JTextField" binding="txtNamaKaryawan">
@@ -145,7 +147,9 @@
                 <constraints>
                   <grid row="1" column="4" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-14146253"/>
+                </properties>
                 <border type="none" title="Data Karyawan" title-justification="2" title-position="2"/>
                 <children>
                   <scrollpane id="57b8">
@@ -168,7 +172,9 @@
                 <constraints>
                   <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-14146253"/>
+                </properties>
                 <border type="none"/>
                 <children/>
               </grid>
@@ -177,7 +183,9 @@
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <background color="-14146253"/>
+                </properties>
                 <border type="none"/>
                 <children/>
               </grid>
@@ -203,7 +211,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="12" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Save"/>
+                  <text value="Simpan"/>
                 </properties>
               </component>
               <hspacer id="7b0d">
@@ -224,7 +232,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Update"/>
+                  <text value="Ubah"/>
                 </properties>
               </component>
               <component id="f15ca" class="javax.swing.JButton" binding="btnDelete">
@@ -235,7 +243,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Delete"/>
+                  <text value="Hapus"/>
                 </properties>
               </component>
               <component id="8b552" class="javax.swing.JButton" binding="btnCancel">
@@ -246,7 +254,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Cancel"/>
+                  <text value="Batal"/>
                 </properties>
               </component>
               <component id="2683a" class="javax.swing.JTextField" binding="txtSearch">
@@ -300,7 +308,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Search"/>
+                  <text value="Cari"/>
                 </properties>
               </component>
             </children>
@@ -383,7 +391,9 @@
             <constraints>
               <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-14146253"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="7242b" class="javax.swing.JButton" binding="btnRefresh">
@@ -394,7 +404,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Refresh"/>
+                  <text value="Segarkan"/>
                 </properties>
               </component>
               <hspacer id="f5c2b">

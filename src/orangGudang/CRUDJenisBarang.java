@@ -75,8 +75,8 @@ public class CRUDJenisBarang extends JFrame{
                 }else{
                         if (txtJenisBarang.getText().equals("")) //Mengecek apakah txtbox kosong
                         {
-                            JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
-                                    , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
+                            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                                    JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
                         } else {
                             try {
                                 String sql = "EXEC sp_InserttblJenisBarang @nama_jenis=?, @status=1";
@@ -86,8 +86,8 @@ public class CRUDJenisBarang extends JFrame{
                                 connection.pstat.close();
 
                                 clear(); //Mengosongkan semua textbox
-                                JOptionPane.showMessageDialog(null, "Data jenis barang berhasil disimpan!", "Informasi",
-                                        JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data jenis barang
+                                JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!",
+                                        "Informasi", JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data jenis barang
                                 loadData();
                             } catch (SQLException ex) {
                                 throw new RuntimeException(ex);
@@ -118,8 +118,8 @@ public class CRUDJenisBarang extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Menampilkan kotak dialog konfirmasi
-                int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data?", "Konfirmasi Penghapusan Data", JOptionPane.YES_NO_OPTION);
-
+                int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                        "Konfirmasi", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 // Menggunakan hasil pilihan dari kotak dialog
                 if (option == JOptionPane.YES_OPTION) {
                     // Proses penghapusan data
@@ -138,8 +138,8 @@ public class CRUDJenisBarang extends JFrame{
                         connection.pstat.close();
 
                         clear();
-                        JOptionPane.showMessageDialog(null, "Hapus Jenis Barang Berhasil!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
-                        loadData();
+                        JOptionPane.showMessageDialog(null, "Data berhasil dihapus!",
+                                "Informasi!", JOptionPane.INFORMATION_MESSAGE);loadData();
 
                         updateButton.setEnabled(false);
                         deleteButton.setEnabled(false);
@@ -152,8 +152,8 @@ public class CRUDJenisBarang extends JFrame{
 
                 } else {
                     // Tidak melakukan penghapusan data
-                    JOptionPane.showMessageDialog(null, "Jenis Barang batal dihapus", "Informasi", JOptionPane.INFORMATION_MESSAGE);
-                }
+                    JOptionPane.showMessageDialog(null, "Data batal dihapus!",
+                            "Informasi!", JOptionPane.INFORMATION_MESSAGE);                }
             }
         });
         updateButton.addActionListener(new ActionListener() {
@@ -173,12 +173,13 @@ public class CRUDJenisBarang extends JFrame{
                     }
                 }
                 if(found) {
-                    JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
-                            , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
+                    JOptionPane.showMessageDialog(null, "Jenis barang sudah ada!", "Information"
+                            , JOptionPane.INFORMATION_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
                 } else{
                     try {
                         if (txtJenisBarang.getText().equals(""))
-                            JOptionPane.showMessageDialog(null, "Please, fill in all data!");
+                            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                                    JOptionPane.WARNING_MESSAGE);
                         else {
                             try {
                                 int i = tbJenisBarang.getSelectedRow();
@@ -196,7 +197,8 @@ public class CRUDJenisBarang extends JFrame{
                                 connection.pstat.close();
 
                                 clear();
-                                JOptionPane.showMessageDialog(null, "Data updated successfully!");
+                                JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!",
+                                        "Informasi", JOptionPane.INFORMATION_MESSAGE);
                                 loadData();
                                 updateButton.setEnabled(false);
                                 deleteButton.setEnabled(false);

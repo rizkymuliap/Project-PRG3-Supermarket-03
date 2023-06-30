@@ -84,8 +84,8 @@ public class CRUDSupplier extends JFrame {
                 }else{
                     if (txtNamaSupplier.getText().equals("") || txtAlamat.getText().equals("") || txtEmail.getText().equals("") || txtNotelp.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
                     {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
-                                , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
+                        JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                                JOptionPane.WARNING_MESSAGE);  //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
 
                     } else {
                         try {
@@ -126,8 +126,8 @@ public class CRUDSupplier extends JFrame {
 
                             clear(); //Mengosongkan semua textbox
 
-                            JOptionPane.showMessageDialog(null, "Data Supplier berhasil disimpan!", "Informasi",
-                                    JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
+                            JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!",
+                                    "Informasi" ,JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
                             loadData();
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -215,12 +215,13 @@ public class CRUDSupplier extends JFrame {
 
 
                 if(found) {
-                    JOptionPane.showMessageDialog(null, "Data supplier sudah ada!", "Information"
-                            , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput
+                    JOptionPane.showMessageDialog(null, "Data supplier sudah ada!", "Informasi",
+                            JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan //Jika Sudah diinput
                 } else{
                     try {
+                        //Cek apakah masih ada data yang belum diisikan
                         if (txtNamaSupplier.getText().equals("") || txtAlamat.getText().equals("") || txtEmail.getText().equals("") || txtNotelp.getText().equals(""))
-                            JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!",
+                            JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
                                     JOptionPane.WARNING_MESSAGE);
                         else {
                             try {
@@ -258,7 +259,8 @@ public class CRUDSupplier extends JFrame {
                                 connection.pstat.close();
 
                                 clear();
-                                JOptionPane.showMessageDialog(null, "Data updated successfully!");
+                                JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!",
+                                        "Informasi", JOptionPane.INFORMATION_MESSAGE);
                                 loadData();
 
                                 btnUpdate.setEnabled(false);
@@ -281,8 +283,8 @@ public class CRUDSupplier extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Menampilkan kotak dialog konfirmasi
-                int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data?", "Konfirmasi Penghapusan Data", JOptionPane.YES_NO_OPTION);
-
+                int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                        "Konfirmasi", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE);
                 // Menggunakan hasil pilihan dari kotak dialog
                 if (option == JOptionPane.YES_OPTION) {
                     // Proses penghapusan data
@@ -304,7 +306,8 @@ public class CRUDSupplier extends JFrame {
                         connection.pstat.close();
 
                         clear();
-                        JOptionPane.showMessageDialog(null, "Hapus Supplier Berhasil!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Data berhasil dihapus!",
+                                "Informasi!", JOptionPane.INFORMATION_MESSAGE);
                         loadData();
 
                         btnUpdate.setEnabled(false);
@@ -318,7 +321,8 @@ public class CRUDSupplier extends JFrame {
 
                 } else {
                     // Tidak melakukan penghapusan data
-                    JOptionPane.showMessageDialog(null, "Supplier batal dihapus!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Data batal dihapus!",
+                            "Informasi!", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -346,7 +350,7 @@ public class CRUDSupplier extends JFrame {
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                clear();
             }
         });
     }
@@ -364,6 +368,7 @@ public class CRUDSupplier extends JFrame {
             boolean found = false;
 
             while (connection.result.next()) {
+                found = true;
                 if (connection.result.getInt("status") == 1) {
                     Object[] obj = new Object[5];
 
