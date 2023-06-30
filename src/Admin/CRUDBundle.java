@@ -60,6 +60,7 @@ public class CRUDBundle extends JFrame {
 
                     JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
                     loadData();
+                    clear();
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(null, "Error saat memasukan data : " + ex);
                 } finally {
@@ -102,7 +103,7 @@ public class CRUDBundle extends JFrame {
                         connect.pstat.executeUpdate();
                         connect.pstat.close();
 
-                        JOptionPane.showMessageDialog(null, "Bundle Berhasil Diupdate");
+                        JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!!");
                         loadData();
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Error Update : " + ex);
@@ -120,7 +121,7 @@ public class CRUDBundle extends JFrame {
                 } else {
                     try {
                         int kode = tblBundle.getSelectedRow();
-                        opsi = JOptionPane.showConfirmDialog(null, "Are you sure delete this data?", "Confirmation", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
+                        opsi = JOptionPane.showConfirmDialog(null, "Apakah Anda Yakin ingin menghapus data ini ?", "Konfirmasi", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
                         if (opsi != 0) {
                             JOptionPane.showMessageDialog(null, "Data failed to delete");
                         } else {
@@ -134,8 +135,9 @@ public class CRUDBundle extends JFrame {
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "an error occurred while deleting data into the database.\n" + ex);
                     }
-                    JOptionPane.showMessageDialog(null, "Data deleted successfully!");
+                    JOptionPane.showMessageDialog(null, "Data Berhasil diHapus!!");
                     loadData();
+                    clear();
                 }
             }
         });
@@ -296,4 +298,5 @@ public class CRUDBundle extends JFrame {
             JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + ex);
         }
     }
+
 }

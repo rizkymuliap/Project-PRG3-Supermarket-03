@@ -1,9 +1,7 @@
 package Admin;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.toedter.calendar.JDateChooser;
 import connection.DBConnect;
-import sun.security.util.Password;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,9 +11,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.Format;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class CRUDEvent extends JFrame {
     private JPanel JPEvent;
@@ -35,6 +35,7 @@ public class CRUDEvent extends JFrame {
     private JRadioButton rbDiskon;
     private JTextField txtNamaBundle;
     private JTextField txtDiskon;
+    private JComboBox cbBundle;
 
     DefaultTableModel Model;
 
@@ -44,7 +45,7 @@ public class CRUDEvent extends JFrame {
     JDateChooser chooser1 = new JDateChooser();
 
 
-    String Nama, status, jenis, NamaBUndle, StatusTersedia, tanggalmulai, tanggalselesai, bundle, diskon;
+    String Nama, status, jenis, idbundle, StatusTersedia, tanggalmulai, tanggalselesai, bundle, diskon;
     int minimal;
     double Diskon;
 
@@ -68,18 +69,21 @@ public class CRUDEvent extends JFrame {
         ButtonGroup group = new ButtonGroup();
         group.add(rbBundle);
         group.add(rbDiskon);
+        tampilBundle();
+
 
 
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (txtNama.getText().equals("") || cbStatus.getSelectedItem().equals("") || txtMinBelanja.getText().equals("") || txtNamaBundle.getText().equals("")) {
+                if (txtNama.getText().equals("") || cbStatus.getSelectedItem().equals("") || txtMinBelanja.getText().equals("") || cbBundle.getSelectedItem().equals("")) {
                     JOptionPane.showMessageDialog(null, "Please fill in all data!");
                 } else {
                     Nama = txtNama.getText();
                     JPTglMulai.add(chooser);
                     JPTglSelesai.add(chooser1);
                     minimal = Integer.parseInt(txtMinBelanja.getText());
+                    idbundle = cbBundle.getSelectedItem().toString();
                     status = cbStatus.getSelectedItem().toString();
                     if (jenis.equals("Bundle")) {
                         Diskon = 0;
@@ -88,7 +92,6 @@ public class CRUDEvent extends JFrame {
                         Diskon = Integer.parseInt(txtDiskon.getText());
                         bundle = "";
                     }
-
                     Format format = new SimpleDateFormat("yyyy-MM-dd");
                     tanggalmulai = format.format(chooser.getDate());
                     tanggalselesai = format.format(chooser1.getDate());
@@ -102,7 +105,7 @@ public class CRUDEvent extends JFrame {
                         connect.pstat.setString(3, format.format(chooser.getDate()));
                         connect.pstat.setString(4, format.format(chooser1.getDate()));
                         connect.pstat.setString(5, jenis);
-                        connect.pstat.setString(6, txtNamaBundle.getText());
+                        connect.pstat.setString(6, idbundle);
                         connect.pstat.setDouble(7, Diskon);
                         connect.pstat.setString(8, txtMinBelanja.getText());
                         connect.pstat.setString(9, "1");
@@ -133,12 +136,16 @@ public class CRUDEvent extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jenis = "Bundle";
+                txtDiskon.setEnabled(false);
+                cbBundle.setEnabled(true);
             }
         });
         rbDiskon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jenis = "Diskon";
+                cbBundle.setEnabled(false);
+                txtDiskon.setEnabled(true);
             }
         });
         tblEvent.addMouseListener(new MouseAdapter() {
@@ -183,7 +190,7 @@ public class CRUDEvent extends JFrame {
                     rbDiskon.setSelected(true);
                 }
 
-                txtNamaBundle.setText((String) Model.getValueAt(selectedRow, 5));
+                cbBundle.setSelectedItem(Model.getValueAt(selectedRow, 5).toString());
                 txtDiskon.setText(String.valueOf(Model.getValueAt(selectedRow, 6)));
                 txtMinBelanja.setText((String) Model.getValueAt(selectedRow, 7));
 
@@ -203,6 +210,7 @@ public class CRUDEvent extends JFrame {
                     JPTglMulai.add(chooser);
                     JPTglSelesai.add(chooser1);
                     minimal = Integer.parseInt(txtMinBelanja.getText());
+                    idbundle = cbBundle.getSelectedItem().toString();
                     status = cbStatus.getSelectedItem().toString();
                     if (jenis.equals("Bundle")) {
                         Diskon = 0;
@@ -224,7 +232,7 @@ public class CRUDEvent extends JFrame {
                         connect.pstat.setString(3, format.format(chooser.getDate()));
                         connect.pstat.setString(4, format.format(chooser1.getDate()));
                         connect.pstat.setString(5, jenis);
-                        connect.pstat.setString(6, txtNamaBundle.getText());
+                        connect.pstat.setString(6, idbundle);
                         connect.pstat.setDouble(7, Diskon);
                         connect.pstat.setString(8, txtMinBelanja.getText());
                         connect.pstat.setString(9, "1");
@@ -305,6 +313,12 @@ public class CRUDEvent extends JFrame {
                 clear();
             }
         });
+        cbBundle.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public void loadData() {
@@ -327,7 +341,17 @@ public class CRUDEvent extends JFrame {
                 obj[4] = connection.result.getString("jenis_promo");
                 obj[5] = connection.result.getString("id_bundle");
                 obj[6] = connection.result.getString("diskon");
-                obj[7] = connection.result.getString("minimal_belanja");
+                String harga_beli = connection.result.getString("minimal_belanja");
+                int harga_beli_int = (int) Double.parseDouble(harga_beli);
+
+                NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+                String harga_beli_str = formatRupiah.format(harga_beli_int);
+
+                // Menambahkan jarak satu spasi antara "Rp" dan angka
+                harga_beli_str = harga_beli_str.replace("Rp", "Rp ");
+
+
+                obj[7] = harga_beli_str;
                 obj[8] = connection.result.getString("status_tersedia");
                 obj[9] = connection.result.getString("status");
 
@@ -355,6 +379,7 @@ public class CRUDEvent extends JFrame {
             }
         }
     }
+
 
     private void searchEvent(String nama) {
         Model.getDataVector().removeAllElements();
@@ -453,4 +478,35 @@ public class CRUDEvent extends JFrame {
 
         return null;
     }
+
+    public void tampilBundle() {
+        Thread tampilBundleThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cbBundle.removeAllItems();
+                DBConnect connection = new DBConnect();
+                try {
+                    connection.stat = connection.conn.createStatement();
+                    String sql = "SELECT id_bundle FROM tblBundle";
+                    connection.result = connection.stat.executeQuery(sql);
+
+                    while (connection.result.next()) {
+                        String idBundle = connection.result.getString("id_bundle");
+                        cbBundle.addItem(String.valueOf(idBundle));
+                    }
+
+                    connection.stat.close();
+                    connection.result.close();
+                } catch (Exception ex) {
+                    System.out.println("Terjadi error saat load data jenis Bundle " + ex);
+                }
+                cbBundle.insertItemAt("-- Pilih Jenis Barang --", 0);
+                cbBundle.setSelectedIndex(0);
+            }
+        });
+
+        tampilBundleThread.start();
+
+    }
+
 }
