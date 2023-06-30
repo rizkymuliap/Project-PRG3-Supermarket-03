@@ -1,16 +1,21 @@
 package Admin;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import com.toedter.calendar.JDateChooser;
 import connection.DBConnect;
+import sun.security.util.Password;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CRUDEvent extends JFrame {
     private JPanel JPEvent;
@@ -84,8 +89,6 @@ public class CRUDEvent extends JFrame {
                         bundle = "";
                     }
 
-                   //System.out.print(Nama, chooser.getDate(), chooser1.getDate(), minimal, status.toString(), diskon.toString(), bundle.toString());
-
                     Format format = new SimpleDateFormat("yyyy-MM-dd");
                     tanggalmulai = format.format(chooser.getDate());
                     tanggalselesai = format.format(chooser1.getDate());
@@ -95,44 +98,13 @@ public class CRUDEvent extends JFrame {
                         String query = "EXEC sp_InsertEvent ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
                         connect.pstat = connect.conn.prepareStatement(query);
                         connect.pstat.setString(1, generateNextEventID());
-                        System.out.println(generateNextEventID());
                         connect.pstat.setString(2, txtNama.getText());
-                        System.out.println(txtNama.getText());
                         connect.pstat.setString(3, format.format(chooser.getDate()));
-                        System.out.println(chooser);
                         connect.pstat.setString(4, format.format(chooser1.getDate()));
-                        System.out.println(chooser1);
                         connect.pstat.setString(5, jenis);
-                        System.out.println(jenis);
                         connect.pstat.setString(6, txtNamaBundle.getText());
-                        System.out.println(txtNamaBundle.getText());
-
-                        //Mncari Id bundle
-//                        try
-//                        {
-//                            DBConnect connect1 = new DBConnect();
-//                            connect1.stat = connect1.conn.createStatement();
-//                            String SQL = "SELECT * FROM tblBundle WHERE nama_bundle LIKE '%" + txtNamaBundle.getText() + "%'";
-//                            connect1.result = connect1.stat.executeQuery(SQL);
-//                            while (connect1.result.next())
-//                            {
-//                                connect.pstat.setString(6, connect1.result.getString("id_bundle"));
-//
-//                            }
-//
-//                            connect1.stat.close();
-//                            connect1.result.close();
-//                        }
-//                        catch (Exception ex)
-//                        {
-//                            System.out.println("Terjadi Error saat memasukan data : " + ex);
-//                        }
-
-
                         connect.pstat.setDouble(7, Diskon);
-                        System.out.println(Diskon);
                         connect.pstat.setString(8, txtMinBelanja.getText());
-                        System.out.println(txtMinBelanja.getText());
                         connect.pstat.setString(9, "1");
                         connect.pstat.setInt(10, 1);
 
@@ -167,6 +139,170 @@ public class CRUDEvent extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jenis = "Diskon";
+            }
+        });
+        tblEvent.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                int selectedRow = tblEvent.getSelectedRow();
+                if (selectedRow == -1) {
+                    return;
+                }
+
+                // Mendapatkan nilai dari kolom yang dipilih
+                txtNama.setText((String) Model.getValueAt(selectedRow, 1));
+
+                // Mendapatkan nilai tglMulai dari model tabel
+                String tglMulaiStr = Model.getValueAt(selectedRow, 2).toString();
+                Date tglMulai = null;
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    tglMulai = format.parse(tglMulaiStr);
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                chooser.setDate(tglMulai);
+
+                String tglSelesaiStr = Model.getValueAt(selectedRow, 3).toString();
+                Date tglSelesai = null;
+                try {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    tglSelesai = format.parse(tglSelesaiStr);
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                chooser1.setDate(tglSelesai);
+
+                String jenisEvent = (String) Model.getValueAt(selectedRow, 4);
+                if (jenisEvent.equals("Bundle")) {
+                    rbBundle.setSelected(true);
+                    rbDiskon.setSelected(false);
+                } else {
+                    rbBundle.setSelected(false);
+                    rbDiskon.setSelected(true);
+                }
+
+                txtNamaBundle.setText((String) Model.getValueAt(selectedRow, 5));
+                txtDiskon.setText(String.valueOf(Model.getValueAt(selectedRow, 6)));
+                txtMinBelanja.setText((String) Model.getValueAt(selectedRow, 7));
+
+                btnSave.setEnabled(false);
+                btnUpdate.setEnabled(true);
+                btnDelete.setEnabled(true);
+            }
+        });
+
+        btnUpdate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (txtNama.getText().equals("") || cbStatus.getSelectedItem().equals("") || txtMinBelanja.getText().equals("") || txtNamaBundle.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Please fill in all data!");
+                } else {
+                    Nama = txtNama.getText();
+                    JPTglMulai.add(chooser);
+                    JPTglSelesai.add(chooser1);
+                    minimal = Integer.parseInt(txtMinBelanja.getText());
+                    status = cbStatus.getSelectedItem().toString();
+                    if (jenis.equals("Bundle")) {
+                        Diskon = 0;
+                        bundle = txtNamaBundle.getText();
+                    } else {
+                        Diskon = Integer.parseInt(txtDiskon.getText());
+                        bundle = "";
+                    }
+                    Format format = new SimpleDateFormat("yyyy-MM-dd");
+                    tanggalmulai = format.format(chooser.getDate());
+                    tanggalselesai = format.format(chooser1.getDate());
+
+                    try {
+                        DBConnect connect = new DBConnect();
+                        String query = "EXEC sp_UpdateEvent ?, ?, ?, ?, ?, ?, ?, ?, ?"; // Ubah sp_UpdateEvent sesuai dengan nama stored procedure Anda
+                        connect.pstat = connect.conn.prepareStatement(query);
+                        connect.pstat.setString(1, generateNextEventID()); // Ubah ID dengan ID yang sesuai dengan data yang ingin diupdate
+                        connect.pstat.setString(2, txtNama.getText());
+                        connect.pstat.setString(3, format.format(chooser.getDate()));
+                        connect.pstat.setString(4, format.format(chooser1.getDate()));
+                        connect.pstat.setString(5, jenis);
+                        connect.pstat.setString(6, txtNamaBundle.getText());
+                        connect.pstat.setDouble(7, Diskon);
+                        connect.pstat.setString(8, txtMinBelanja.getText());
+                        connect.pstat.setString(9, "1");
+
+                        connect.pstat.executeUpdate();
+                        connect.pstat.close();
+
+                        JOptionPane.showMessageDialog(null, "Data Berhasil diperbarui!!");
+                        loadData();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error saat melakukan update ke dalam database: " + ex);
+                    } finally {
+                        try {
+                            if (connect.pstat != null) {
+                                connect.pstat.close();
+                            }
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int opsi;
+                int selectedRow = tblEvent.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(null, "Please select a row to delete.");
+                    return;
+                }
+
+                opsi = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this event?",
+                        "Confirmation", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (opsi == JOptionPane.YES_OPTION) {
+                    try {
+                        String eventID = (String) Model.getValueAt(selectedRow, 0);
+                        String query = "EXEC sp_DeleteEvent @id_event = ?";
+                        connect.pstat = connect.conn.prepareStatement(query);
+                        connect.pstat.setString(1, eventID);
+                        connect.pstat.executeUpdate();
+                        connect.pstat.close();
+
+                        JOptionPane.showMessageDialog(null, "Event deleted successfully!");
+                        loadData();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "An error occurred while deleting event from the database: " + ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Deletion canceled.");
+                }
+            }
+        });
+
+        btnRefresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String namaEvent = txtSearch.getText();
+                if(!namaEvent.isEmpty())
+                {
+                    searchEvent(namaEvent);
+                }
+                else
+                {
+                    loadData();
+                }
+            }
+        });
+        btnClear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnDelete.setEnabled(false);
+                btnUpdate.setEnabled(false);
+                btnSave.setEnabled(true);
+
+                clear();
             }
         });
     }
@@ -220,6 +356,41 @@ public class CRUDEvent extends JFrame {
         }
     }
 
+    private void searchEvent(String nama) {
+        Model.getDataVector().removeAllElements();
+        Model.fireTableDataChanged();
+
+        try {
+            String query = "EXEC sp_SearchEvent ?";
+            connect.pstat = connect.conn.prepareStatement(query);
+            connect.pstat.setString(1, nama);
+            connect.result = connect.pstat.executeQuery();
+
+            while (connect.result.next()) {
+                Object[] obj = new Object[10];
+                obj[0] = connect.result.getString("id_event");
+                obj[1] = connect.result.getString("nama_event");
+                obj[2] = connect.result.getString("tanggal_mulai");
+                obj[3] = connect.result.getString("tanggal_berakhir");
+                obj[4] = connect.result.getString("jenis_promo");
+                obj[5] = connect.result.getString("id_bundle");
+                obj[6] = connect.result.getDouble("diskon");
+                obj[7] = connect.result.getString("minimal_belanja");
+                obj[8] = connect.result.getString("status_tersedia");
+                obj[9] = connect.result.getString("status");
+
+                Model.addRow(obj);
+
+                btnUpdate.setEnabled(true);
+                btnDelete.setEnabled(true);
+                txtSearch.setText("");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "An error occurred while searching data.\n" + e);
+        }
+    }
+
+
     public void addColomn(){
         Model.addColumn("ID Event");
         Model.addColumn("Nama Event");
@@ -231,6 +402,19 @@ public class CRUDEvent extends JFrame {
         Model.addColumn("Minimal Belanja");
         Model.addColumn("Status Tersedia");
         Model.addColumn("Status");
+    }
+
+    public void clear()
+    {
+        txtNama.setText("");
+        txtDiskon.setText("");
+        txtMinBelanja.setText("");
+        txtNamaBundle.setText("");
+        cbStatus.setSelectedIndex(0);
+        rbBundle.setSelected(false);
+        rbDiskon.setSelected(false);
+        chooser.setDate(null);
+        chooser1.setDate(null);
     }
 
     public String generateNextEventID() {

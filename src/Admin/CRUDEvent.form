@@ -245,7 +245,7 @@
                     <properties>
                       <background color="-12828863"/>
                       <foreground color="-1"/>
-                      <text value="Nama Bundle"/>
+                      <text value="ID Bundle"/>
                     </properties>
                   </component>
                 </children>
@@ -307,7 +307,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="12" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Save"/>
+                  <text value="Simpan"/>
                 </properties>
               </component>
               <hspacer id="13d12">
@@ -328,7 +328,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Update"/>
+                  <text value="Ubah"/>
                 </properties>
               </component>
               <component id="16ac0" class="javax.swing.JButton" binding="btnDelete">
@@ -339,7 +339,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Delete"/>
+                  <text value="Hapus"/>
                 </properties>
               </component>
               <component id="332e9" class="javax.swing.JButton" binding="btnClear">
@@ -350,7 +350,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Cancel"/>
+                  <text value="Batal"/>
                 </properties>
               </component>
               <component id="7f5d1" class="javax.swing.JLabel">
@@ -360,7 +360,7 @@
                 <properties>
                   <font name="Century Gothic" size="12"/>
                   <foreground color="-1"/>
-                  <text value="Search"/>
+                  <text value="Cari"/>
                 </properties>
               </component>
               <component id="c3135" class="javax.swing.JTextField" binding="txtSearch">
@@ -435,7 +435,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="11" style="1"/>
                       <foreground color="-1"/>
-                      <text value="Refresh"/>
+                      <text value="Perbarui"/>
                     </properties>
                   </component>
                 </children>

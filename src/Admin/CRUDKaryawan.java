@@ -484,6 +484,7 @@ public class CRUDKaryawan extends JFrame {
         Model.addColumn("Jabatan");
     }
 
+
     public String generateNextSupplierID() {
         DBConnect connection = new DBConnect();
         try {
