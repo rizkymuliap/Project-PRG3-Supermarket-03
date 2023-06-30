@@ -16,6 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CRUDKaryawan extends JFrame {
+
+    //Deklarasi semua komponen dalam form
     public JPanel JPKaryawan;
     private JTextField txtTelp;
     private JTextField txtEmail;
@@ -42,17 +44,25 @@ public class CRUDKaryawan extends JFrame {
     private JPanel Panel_Konten_Gambar;
     private JTextField txtFileName;
     private JComboBox cmbToken;
+    private JCheckBox cbPassword;
+    private JPanel cbShow;
+
+    //deklarasi maksimal character
     private final int MAX_CHARACTERS = 50;
 
+    //deklarasi model
     private DefaultTableModel Model;
 
-    //Variabel
+    //Variabel yang digunakan dalam program
     String selectedImagePath = "";
     private File selectedImageFile;
     byte[] imageBytes;
+    int selectedRow = 0;
 
+    //Deklarasi objec connection dari class DBConnect
     DBConnect connection = new DBConnect();
 
+    //Deklarasi beberapa variabel yang akan menjadi penampung nilai dari data
     String Nama;
     String JenisKelamin;
     String Notelp;
@@ -63,32 +73,33 @@ public class CRUDKaryawan extends JFrame {
     String id_karyawan;
     int token;
 
+    //Configurasi frame form
     public void FrameConfigure()
     {
-        add(this.JPKaryawan);
-        setTitle("CRUDKaryawan");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        add(this.JPKaryawan); //Mengatur yang akan ditampilkan adalah Jpanel JPKaryawan
+        setTitle("Kelola Karyawan"); //Mengatur title dari form yang akan ditampilakan "CRUD Karyawan"
+        setExtendedState(JFrame.MAXIMIZED_BOTH); //Mengatur agar frame ditampilkan semaksimal Jpanel penampung
         setUndecorated(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
+        setVisible(true); //Mengatur visibilitas dari form
 
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new CRUDKaryawan().setVisible(true);
+            new CRUDKaryawan().setVisible(true); //Menjalankan CRUDKaryawan
         });
     }
 
     public CRUDKaryawan()
     {
-        FrameConfigure();
+        FrameConfigure(); //Mengatur agar tampilan sesuai dengan konfigurasi yang sebelumnya
 
-        Model = new DefaultTableModel();
-        TabelData.setModel(Model);
-        addColomn();
-        loadData();
+        Model = new DefaultTableModel(); //Deklarasi Model menjadi object dari class DefaultTableModel
+        TabelData.setModel(Model); //Mengatur model dari table TabelData yaitu "Model"
+        addColomn(); //Menambahkan header ke tabel TabelData --> Menuju prosedur addColumn()
+        loadData(); //Melakukan load data --> Menuju prosedur loadData()
 
 
         txtNama.addKeyListener(new KeyAdapter() {
@@ -102,94 +113,137 @@ public class CRUDKaryawan extends JFrame {
                 }
             }
         });
-        btnUpdate.addActionListener(new ActionListener() {
+
+        btnUpdate.addActionListener(new ActionListener() {  //Listener saat tombol Ubah di tekan
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Mengecek apakah ada salah satu data yang kosong
                 if (Objects.equals(txtNama.getText(), "") || cbjk.getSelectedItem().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
-                    JOptionPane.showMessageDialog(null, "Please, fill in all data!");
+                    //Menampilkan pesan berikut jika salah satu atau lebih data masih ada yang kosong
+                    JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE);
                 }
                 else
                 {
+                    //Melakukan inisialisasi nilai variabel dari textbox
                     Nama = txtNama.getText();
                     JenisKelamin = cbjk.getSelectedItem().toString();
                     Notelp = txtTelp.getText();
                     token = cmbToken.getSelectedIndex() + 1;
+
+                    //Melakukan validasi input melakukan pengecekan terhadap inputan nomor telepon
                     boolean valid = validateInput(Notelp);
-                    if (!valid)
+
+                    if (!valid) //Jika tidak valid
                     {
-                        JOptionPane.showMessageDialog(null, "No telp harus 628XXX");
-                        txtTelp.setText("");
-                        txtTelp.requestFocus();
+                        //Maka akan menampilkan pesan berikut
+                        JOptionPane.showMessageDialog(null, "Nomor telepon harus 628XXX"
+                                , "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                        txtTelp.setText(""); //Mengosongkan isi dari textbox nomor telepon
+                        txtTelp.requestFocus(); //Mengatur focus pengisian input ke textbox nomor telepon
                         return;
                     }
+
+                    //Melanjutkan inisialisasi nilai
                     Alamat = txtAlamat.getText();
                     Email = txtEmail.getText();
+
+                    //Melakukan validasi inputan email yang diinput oleh user
                     boolean valid2 = validateEmail(Email);
+                    //Jika inputan email tidak valid
                     if(!valid2)
                     {
-                        JOptionPane.showMessageDialog(null, "No Email Harus Menggunakan a@b.c");
-                        txtEmail.setText("");
-                        txtEmail.requestFocus();
+                        //Maka akan menampilkan pesan berikut
+                        JOptionPane.showMessageDialog(null, "Email Harus Menggunakan a@b.c"
+                                , "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                        txtEmail.setText(""); //Mengosongkan isi textbox email
+                        txtEmail.requestFocus(); //Mengatur focus untuk mengisi textbox email
                         return;
                     }
+
+                    //Inisialisi variabel lanjutan
                     Username = txtUsername.getText();
                     Password = txtPassword.getText();
 
                     try {
-                        String sql1 = "EXEC sp_UpdateKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
-                        int selectedRow = TabelData.getSelectedRow();
-                        connection.pstat = connection.conn.prepareStatement(sql1);
-                        connection.pstat.setString(1, (String) Model.getValueAt(selectedRow, 0));
-                        connection.pstat.setString(2, Nama);
-                        connection.pstat.setString(3, JenisKelamin);
-                        connection.pstat.setString(4, Notelp);
-                        connection.pstat.setString(5, Email);
-                        connection.pstat.setString(6, Alamat);
-                        connection.pstat.setBytes(7, imageBytes);
-                        connection.pstat.setString(8, Username);
-                        connection.pstat.setString(9, Password);
-                        connection.pstat.setInt(10, token);
-                        connection.pstat.setString(11, "1");
+                        //Menyiapkan query yang akan di eksekusi dalam variabel sql1
+                        String sql1 = "EXEC sp_UpdateKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"; //query SP untuk update data karyawan
+                        int selectedRow = TabelData.getSelectedRow(); //Mengambil baris yang di klik pada tabel
 
-                        connection.pstat.executeUpdate();
-                        connection.pstat.close();
-                        loadData();
+                        connection.pstat = connection.conn.prepareStatement(sql1); // Menyiapkan pernyataan SQL dengan objek PreparedStatement
+                        connection.pstat.setString(1, (String) Model.getValueAt(selectedRow, 0)); // Mengatur nilai parameter pertama dengan nilai dari sel di baris terpilih dalam Model
+                        connection.pstat.setString(2, Nama); // Mengatur nilai parameter kedua dengan nilai dari variabel Nama
+                        connection.pstat.setString(3, JenisKelamin); // Mengatur nilai parameter ketiga dengan nilai dari variabel JenisKelamin
+                        connection.pstat.setString(4, Notelp); // Mengatur nilai parameter keempat dengan nilai dari variabel Notelp
+                        connection.pstat.setString(5, Email); // Mengatur nilai parameter kelima dengan nilai dari variabel Email
+                        connection.pstat.setString(6, Alamat); // Mengatur nilai parameter keenam dengan nilai dari variabel Alamat
+                        connection.pstat.setBytes(7, imageBytes); // Mengatur nilai parameter ketujuh dengan nilai dari array of bytes (imageBytes)
+                        connection.pstat.setString(8, Username); // Mengatur nilai parameter kedelapan dengan nilai dari variabel Username
+                        connection.pstat.setString(9, Password); // Mengatur nilai parameter kesembilan dengan nilai dari variabel Password
+                        connection.pstat.setInt(10, token); // Mengatur nilai parameter kesepuluh dengan nilai dari variabel token
+                        connection.pstat.setString(11, "1"); // Mengatur nilai parameter kesebelas dengan nilai string "1"
+
+                        connection.pstat.executeUpdate(); // Mengeksekusi pernyataan SQL untuk melakukan pembaruan data (seperti INSERT, UPDATE, DELETE)
+                        connection.pstat.close(); // Menutup objek PreparedStatement untuk membebaskan sumber daya yang digunakan
+                        loadData(); // Memuat data kembali setelah pembaruan dilakukan
+                        clear(); // Mengosongkan atau mereset input atau komponen lainnya setelah pembaruan dilakukan
+
                     } catch (Exception ex) {
-                        System.out.println("Error saat Update Karyawan: " + ex);
+                        System.out.println("Error saat Update Karyawan: " + ex); // Menampilkan pesan kesalahan jika terjadi pengecualian
                     }
-                    JOptionPane.showMessageDialog(null, "Update Data Karyawan berhasil !!");
+                    // Menampilkan dialog informasi menggunakan JOptionPane setelah pembaruan data berhasil dilakukan
+                    JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!",
+                            "Informasi", JOptionPane.INFORMATION_MESSAGE);
+
                 }
             }
         });
         btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int opsi;
+                int opsi; //Deklarasi variabel opsi untuk menampung pilihan konfirmasi user
+                //Melakukan pengecekan apakah masih ada data yang kosong
                 if (Objects.equals(txtNama.getText(), "") || cbjk.getSelectedItem().equals("") || (txtTelp.getText().equals("")) || (txtAlamat.getText().equals("")) || (txtEmail.getText().equals("")) || Objects.equals(txtUsername.getText(), "") || Objects.equals(txtTelp.getText(), "") || Objects.equals(txtPassword.getText(), "")){
-                    JOptionPane.showMessageDialog(null, "Please, fill in all data!");
-                }else{
+                    JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE); //Menampilkan pesan jika ditemukan salah satu data masih kosong
+                }else{ //Jika tidak ada yang kosong lagi
                     try {
-                        int kode = TabelData.getSelectedRow();
-                        opsi = JOptionPane.showConfirmDialog(null, "Are you sure delete this data?",
-                                "Confirmation", JOptionPane.YES_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (opsi != 0) {
-                            JOptionPane.showMessageDialog(null, "Data failed to delete");
+                        //Mengambil nilai baris yang dipilih
+                        int kode = TabelData.getSelectedRow(); //Inisialisasi variabel kode untuk menampung nilai baris
+                        //Menampilkan pesan konfirmasi pakah data yang dipilih akan dihapus
+                        opsi = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                                "Konfirmasi", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                        if (opsi != 0) { //jika user memmilih tidak
+                            JOptionPane.showMessageDialog(null, "Data batal dihapus!",
+                                    "Informasi!", JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan data batal dihapus
                         } else {
-                            id_karyawan = String.valueOf(Model.getValueAt(kode, 0));
-                            String query = "EXEC sp_DeleteKaryawan @id_karyawan=?";
-                            connection.pstat = connection.conn.prepareStatement(query);
-                            connection.pstat.setString(1, id_karyawan);
-                            connection.pstat.executeUpdate();
-                            connection.pstat.close();
+                            //Mengambil nilai id_karyawan
+                            id_karyawan = String.valueOf(Model.getValueAt(kode, 0)); //Mengambil pada kolom 0 dari Tabel
+                            String query = "EXEC sp_DeleteKaryawan @id_karyawan=?"; //query SP untuk hapus data karyawan
+                            connection.pstat = connection.conn.prepareStatement(query); // Menyiapkan pernyataan SQL dengan objek PreparedStatement
+                            connection.pstat.setString(1, id_karyawan); // Mengatur nilai parameter pertama dengan nilai dari variabel id_karyawan
+                            connection.pstat.executeUpdate(); // Mengeksekusi pernyataan SQL untuk melakukan pembaruan data (seperti INSERT, UPDATE, DELETE)
+                            connection.pstat.close(); // Menutup objek PreparedStatement untuk membebaskan sumber daya yang digunakan
+
+                            //Menampilkan pesan berikut jika hapus data berhasil
+                            JOptionPane.showMessageDialog(null, "Data berhasil dihapus!",
+                                    "Informasi!", JOptionPane.INFORMATION_MESSAGE);
                         }
                     } catch (NumberFormatException nex){
-                        JOptionPane.showMessageDialog(null, "Please, enter the valid number ."+nex.getMessage());
-                    } catch (Exception e1){
+                        JOptionPane.showMessageDialog(null, "Tolong masukan nomor yang benar ."+nex.getMessage());
+                        // Menampilkan dialog pesan kesalahan jika terjadi pengecualian NumberFormatException
+                        // Pesan dialog memberi tahu pengguna untuk memasukkan nomor yang benar
+                    }
+                    catch (Exception e1){
                         JOptionPane.showMessageDialog(null, "an error occurred while deleting data into the database.\n" + e1);
+                        // Menampilkan dialog pesan kesalahan jika terjadi pengecualian yang tidak ditangkap sebelumnya (Exception)
+                        // Pesan dialog memberi tahu pengguna bahwa terjadi kesalahan saat menghapus data ke dalam database
                     }
 
-                    JOptionPane.showMessageDialog(null, "Data deleted successfully!");
+                    // Memuat data kembali setelah pembaruan atau penghapusan dilakukan (mungkin untuk memperbarui tampilan data)
                     loadData();
+                    // Mengosongkan atau mereset input atau komponen lainnya setelah pembaruan atau penghapusan dilakukan
+                    clear();
                 }
             }
         });
@@ -230,58 +284,97 @@ public class CRUDKaryawan extends JFrame {
         btnSave.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Notelp = txtTelp.getText();
 
-                if (txtNama.getText().equals("") || cbjk.getSelectedItem().equals("") || txtTelp.getText().equals("") || txtAlamat.getText().equals("") || txtEmail.getText().equals("") || txtUsername.getText().equals("") || txtTelp.getText().equals("") || txtPassword.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null, "Please fill in all data!");
+                boolean found = false; // inisiasi awal kalau nama yang di input tidak sama
+
+
+                // Mengambil jumlah baris pada table
+                int baris = TabelData.getModel().getRowCount();
+
+                for (int awal = 0; awal < baris; awal++) { // Mengulang pengecekan dari awal sampai jumlah baris
+
+
+                    // Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
+                    if (Notelp == Model.getValueAt(awal, 3).toString() && selectedRow != awal) {
+                        found = true; // Menemukan data yang sama pada yang sebelumnya
+
+                    }
                 }
-                else
-                {
+
+                if(found) { //Jika menemukan data yang sama
+                    //akan menampilkna pesan berikut
+                    JOptionPane.showMessageDialog(null, "Data karyawan sudah ada!", "Informasi"
+                            , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput
+                    txtTelp.setText(""); //Mengosongkan ini dari textbox telepon
+                    txtTelp.requestFocus(); //Mengatur set focus ke textbox tersebut
+
+                }else{
+                    // Dilakukan pengecekan apakah masih ada data yang kosong atau tidak
+                if (txtNama.getText().equals("") || cbjk.getSelectedItem().equals("") || txtTelp.getText().equals("") || txtAlamat.getText().equals("") || txtEmail.getText().equals("") || txtUsername.getText().equals("") || txtTelp.getText().equals("") || txtPassword.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE); // Jika ditemukan maka akan menampilkan pesan seperti diatas
+                }
+                else { //Jika semua data telah terisi
+
+                    //Diakukan inisialisasi data pada variabel penampung nilai dati textbox yang bersangkutan
                     Nama = txtNama.getText();
                     JenisKelamin = cbjk.getSelectedItem().toString();
                     Notelp = txtTelp.getText();
                     token = cmbToken.getSelectedIndex() + 1;
 
+                    //Dilakukan validasi apakah nomor telepon yang dimasukkan sudah sesuai
                     boolean valid = validateInput(Notelp);
-                    if (!valid)
-                    {
-                        JOptionPane.showMessageDialog(null, "No telp harus 628XXX");
-                        txtTelp.setText("");
-                        txtTelp.requestFocus();
+                    if (!valid || !Notelp.matches("[0-9]+")) {
+                        //Menampilkan pesan error berikut jika nomor telepon tidak sesuai dengan format atau semua nya tidak angka
+                        JOptionPane.showMessageDialog(null, "Nomor telepon harus 628XXX / semua harus angka"
+                                , "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                        txtTelp.setText(""); //Mengosongkan textbox nomor telepon
+                        txtTelp.requestFocus(); //Mengatur set focus ke textbox nomor telepon
                         return;
                     }
+                    //inisialisasi lanjutan
                     Alamat = txtAlamat.getText();
                     Email = txtEmail.getText();
+
+                    // Memanggil metode validateEmail() untuk memvalidasi format Email. Hasil validasi disimpan dalam variabel boolean valid2.
                     boolean valid2 = validateEmail(Email);
-                    if(!valid2)
-                    {
-                        JOptionPane.showMessageDialog(null, "No Email Harus Menggunakan a@b.c");
+                    if (!valid2) { //Jika inputan tidak valid
+                        // Jika validasi Email tidak berhasil, menampilkan dialog pesan kesalahan dengan pesan yang menunjukkan format yang benar
+                        JOptionPane.showMessageDialog(null, "Email Harus Menggunakan a@b.c"
+                                , "Kesalahan", JOptionPane.ERROR_MESSAGE);
+                        // Mengosongkan nilai txtEmail dan mengarahkan fokus ke komponen txtEmail.
                         txtEmail.setText("");
                         txtEmail.requestFocus();
                         return;
+                        // Menghentikan eksekusi lebih lanjut dan kembali dari metode atau blok saat ini.
                     }
                     Username = txtUsername.getText();
                     Password = txtPassword.getText();
 
                     try {
-                        DBConnect connection = new DBConnect();
-                        String sql = "EXEC sp_InsertKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
-                        connection.pstat = connection.conn.prepareStatement(sql);
-                        connection.pstat.setString(1, generateNextSupplierID());
-                        connection.pstat.setString(2, Nama);
-                        connection.pstat.setString(3, JenisKelamin);
-                        connection.pstat.setString(4, Notelp);
-                        connection.pstat.setString(5, Email);
-                        connection.pstat.setString(6, Alamat);
-                        connection.pstat.setBytes(7, imageBytes);
-                        connection.pstat.setString(8, Username);
-                        connection.pstat.setString(9, Password);
-                        connection.pstat.setInt(10, token);
-                        connection.pstat.setString(11, "1");
+                        DBConnect connection = new DBConnect(); // Membuat objek DBConnect untuk mengelola koneksi ke database
+                        String sql = "EXEC sp_InsertKaryawan ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?"; // Mendefinisikan pernyataan SQL yang akan dieksekusi untuk memasukkan data karyawan ke database menggunakan stored procedure
+                        connection.pstat = connection.conn.prepareStatement(sql); // Menyiapkan pernyataan SQL dengan menggunakan koneksi database yang dibuat sebelumnya
+                        connection.pstat.setString(1, generateNextSupplierID()); // Mengatur nilai parameter pertama dengan menggunakan metode generateNextSupplierID() untuk menghasilkan ID karyawan baru
+                        connection.pstat.setString(2, Nama); // Mengatur nilai parameter kedua dengan nilai dari variabel Nama
+                        connection.pstat.setString(3, JenisKelamin); // Mengatur nilai parameter ketiga dengan nilai dari variabel JenisKelamin
+                        connection.pstat.setString(4, Notelp); // Mengatur nilai parameter keempat dengan nilai dari variabel Notelp
+                        connection.pstat.setString(5, Email); // Mengatur nilai parameter kelima dengan nilai dari variabel Email
+                        connection.pstat.setString(6, Alamat); // Mengatur nilai parameter keenam dengan nilai dari variabel Alamat
+                        connection.pstat.setBytes(7, imageBytes); // Mengatur nilai parameter ketujuh dengan nilai dari variabel imageBytes
+                        connection.pstat.setString(8, Username); // Mengatur nilai parameter kedelapan dengan nilai dari variabel Username
+                        connection.pstat.setString(9, Password); // Mengatur nilai parameter kesembilan dengan nilai dari variabel Password
+                        connection.pstat.setInt(10, token); // Mengatur nilai parameter kesepuluh dengan nilai dari variabel token
+                        connection.pstat.setString(11, "1"); // Mengatur nilai parameter kesebelas dengan nilai "1"
 
-                        connection.pstat.executeUpdate();
+                        connection.pstat.executeUpdate(); // Mengeksekusi pernyataan SQL yang sudah disiapkan untuk memasukkan data karyawan ke dalam database
 
-                        JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
-                        loadData();
+                        //Menampilkan pesan berikut jika input data berhasil
+                        JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!",
+                                "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                        loadData(); // Memuat data kembali setelah pembaruan
+                        clear(); // Mengosongkan atau mereset input
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Eror saat Menyimpan ke dalam database." + ex);
                     } finally {
@@ -293,10 +386,12 @@ public class CRUDKaryawan extends JFrame {
                             ex.printStackTrace();
                         }
                     }
+                }
 
                 }
             }
         });
+
         btnRefresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -304,10 +399,12 @@ public class CRUDKaryawan extends JFrame {
                 if(!namaKaryawan.isEmpty())
                 {
                     searchKaryawan(namaKaryawan);
+                    clear();
                 }
                 else
                 {
                     loadData();
+                    clear();
                 }
             }
         });
@@ -321,7 +418,7 @@ public class CRUDKaryawan extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                int selectedRow = TabelData.getSelectedRow();
+                selectedRow = TabelData.getSelectedRow();
                 if (selectedRow == -1) {
                     return;
                 }
@@ -371,13 +468,13 @@ public class CRUDKaryawan extends JFrame {
                                 txtPassword.setText(password);
 
                                 // Mengatur pilihan pada JComboBox
-                                if (jenisKelamin.equals("Laki-laki")) {
-                                    cbjk.setSelectedIndex(0);
-                                } else if (jenisKelamin.equals("Perempuan")) {
+                                if (jenisKelamin.equals("Laki-Laki")) {
                                     cbjk.setSelectedIndex(1);
+                                } else if (jenisKelamin.equals("Perempuan")) {
+                                    cbjk.setSelectedIndex(2);
                                 }
 
-                                cmbToken.setSelectedIndex(token-1);
+                                cmbToken.setSelectedIndex(token);
 
                                 // Resize image to fit JLabel
                                 Image image = imageIcon.getImage().getScaledInstance(gambar_barang.getWidth(), gambar_barang.getHeight(), Image.SCALE_SMOOTH);
@@ -470,19 +567,19 @@ public class CRUDKaryawan extends JFrame {
                 }
             }
         });
+        cbPassword.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(cbPassword.isSelected()){
+                    txtPassword.setEchoChar('\0');
+                }else{
+                    txtPassword.setEchoChar('•');
+                }
+            }
+        });
     }
 
-    public void addColomn(){
-        Model.addColumn("ID Karyawan");
-        Model.addColumn("Nama Karyawan");
-        Model.addColumn("Jenis Kelamin");
-        Model.addColumn("No telp");
-        Model.addColumn("Alamat");
-        Model.addColumn("Email");
-        Model.addColumn("Username");
-        Model.addColumn("Password");
-        Model.addColumn("Jabatan");
-    }
+
 
 
     public String generateNextSupplierID() {
@@ -502,7 +599,7 @@ public class CRUDKaryawan extends JFrame {
                 return "KRW001";
             }
         } catch (Exception e) {
-            System.out.println("Terjadi error saat memeriksa id_supplier terakhir: " + e);
+            System.out.println("Terjadi error saat memeriksa Karyawan terakhir: " + e);
         } finally {
             try {
                 if (this.connection.result != null) {
@@ -556,62 +653,75 @@ public class CRUDKaryawan extends JFrame {
         }
     }
 
+    public void addColomn(){  //Berfungsi menambahkan Header
+        Model.addColumn("ID Karyawan"); //Menambahkan header "ID Karyawan" ke "Model"
+        Model.addColumn("Nama Karyawan"); //Menambahkan header "Nama Karyawan" ke "Model"
+        Model.addColumn("Jenis Kelamin"); //Menambahkan header "Jenis Kelamin" ke "Model"
+        Model.addColumn("Nomor telepon"); //Menambahkan header "Nomor telepon " ke "Model"
+        Model.addColumn("Alamat"); //Menambahkan header "Alamat" ke "Model"
+        Model.addColumn("Email"); //Menambahkan header "Email" ke "Model"
+        Model.addColumn("Username"); //Menambahkan header "Username" ke "Model"
+        Model.addColumn("Password"); //Menambahkan header "Password" ke "Model"
+        Model.addColumn("Jabatan"); //Menambahkan header "Jabatan" ke "Model"
+    }
 
-
-    public void loadData() {
-        DBConnect connection = null;
+    public void loadData() { //Melakukan memuat data
+        DBConnect connection = null; //Deklarasi awal connection dari Class DBConnect
         try {
-            Model.getDataVector().removeAllElements();
-            Model.fireTableDataChanged();
+            Model.getDataVector().removeAllElements(); //Menghapus data yang sebelumnya sudah ada pada table
+            Model.fireTableDataChanged(); //Memberi tahu table model bahwa data telah berubah sehingga akan memperbarui isi
 
-            connection = new DBConnect();
-            connection.stat = connection.conn.createStatement();
-            String query = "EXEC sp_LoadKaryawan";
-            connection.result = connection.stat.executeQuery(query);
+            connection = new DBConnect(); //Mendeklarasi Obejct Connect
+            connection.stat = connection.conn.createStatement(); //menjalankan pernyataan SQL. Objek Statement tersebut kemudian disimpan dalam variabel stat
+            String query = "EXEC sp_LoadKaryawan"; //Mendeklarasi kan query yang akan di eksekusi yaitu sp_LoadKaryawan
+            connection.result = connection.stat.executeQuery(query); // Menjalankan pernyataan SQL yang diberikan pada objek Statement dan menyimpan hasilnya dalam objek ResultSet.
 
-            while (connection.result.next()) {
-                Object[] obj = new Object[10];
-                obj[0] = connection.result.getString("id_karyawan");
-                obj[1] = connection.result.getString("nama_karyawan");
-                obj[2] = connection.result.getString("jenis_kelamin");
-                obj[3] = connection.result.getString("no_telp");
-                obj[4] = connection.result.getString("alamat");
-                obj[5] = connection.result.getString("email");
-                obj[6] = connection.result.getString("username");
-                obj[7] = connection.result.getString("password");
+            while (connection.result.next()) { //Melakukan iterasi terhadap setiap baris dalam object ResultSet
+
+                Object[] obj = new Object[10]; //Deklarasi array object dengan nama obj ukuran 10
+                obj[0] = connection.result.getString("id_karyawan"); //mengambil nilai kolom "id_karyawan" dari ResultSet dan menetapkannya ke elemen indeks ke-0 dari obj.
+                obj[1] = connection.result.getString("nama_karyawan"); //mengambil nilai kolom "nama_karyawan" dari ResultSet dan menetapkannya ke elemen indeks ke-1 dari obj.
+                obj[2] = connection.result.getString("jenis_kelamin"); //mengambil nilai kolom "jenis_kelamin" dari ResultSet dan menetapkannya ke elemen indeks ke-2 dari obj.
+                obj[3] = connection.result.getString("no_telp"); //mengambil nilai kolom "no_telp" dari ResultSet dan menetapkannya ke elemen indeks ke-3 dari obj.
+                obj[4] = connection.result.getString("alamat"); //mengambil nilai kolom "alamat" dari ResultSet dan menetapkannya ke elemen indeks ke-4 dari obj.
+                obj[5] = connection.result.getString("email"); //mengambil nilai kolom "email" dari ResultSet dan menetapkannya ke elemen indeks ke-5 dari obj.
+                obj[6] = connection.result.getString("username"); //mengambil nilai kolom "username" dari ResultSet dan menetapkannya ke elemen indeks ke-6 dari obj.
+                obj[7] = connection.result.getString("password"); //mengambil nilai kolom "password" dari ResultSet dan menetapkannya ke elemen indeks ke-7 dari obj.
 
                 //Mencari Nama Jabatan
-                switch (connection.result.getString("token")){
-                    case "1" : obj[8] = "Manager"; break;
-                    case "2" : obj[8] = "Manager Keuangan"; break;
-                    case "3" : obj[8] = "Admin"; break;
-                    case "4" : obj[8] = "Kasir"; break;
-                    case "5" : obj[8] = "Orang Gudang"; break;
-                    case "6" : obj[8] = "PJR"; break;
+                switch (connection.result.getString("token")){ //Mengambil nilai dari kolom "token"
+                    case "1" : obj[8] = "Manager"; break; //jika token bernilai "1" maka menetapkan nilai obj[8] = "Manager"
+                    case "2" : obj[8] = "Manager Keuangan"; break; //jika token bernilai "2" maka menetapkan nilai obj[8] = "Manager Keuangan"
+                    case "3" : obj[8] = "Admin"; break; //jika token bernilai "3" maka menetapkan nilai obj[8] = "Admin"
+                    case "4" : obj[8] = "Kasir"; break; //jika token bernilai "4" maka menetapkan nilai obj[8] = "Kasir"
+                    case "5" : obj[8] = "Orang Gudang"; break; //jika token bernilai "5" maka menetapkan nilai obj[8] = "Orang Gudang"
+                    case "6" : obj[8] = "PJR"; break; //jika token bernilai "6" maka menetapkan nilai obj[8] = "PJR"
                 }
-                obj[9] = connection.result.getString("status");
+                obj[9] = connection.result.getString("status"); //Mengambil nilai dari kolom "status" dari ResultSet dan menyimpannya dalam obj index ke-9
 
-                Model.addRow(obj);
+                Model.addRow(obj); //Menambah sebuah baris pada tabel yang diisi dengan data dari obj
+
+                //Melakukan iterasi sampai akhir data dari ResultSet
             }
 
-            btnSave.setEnabled(true);
-            btnUpdate.setEnabled(false);
-            btnDelete.setEnabled(false);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e);
-        } finally {
+            btnSave.setEnabled(true); //Menetapkan tombol save enable
+            btnUpdate.setEnabled(false); //Menetapkan tombol update disable
+            btnDelete.setEnabled(false); //Menetapkan tombol delete disable
+        } catch (Exception e) { //Jika menangkap kesalahan / error selama melakukan load data
+            JOptionPane.showMessageDialog(null, "An error occurred while loading data.\n" + e); //Menampilkan pesan error
+        } finally { //Hal yang akan pasti dilakukan meski error maupun tidak error
             // Pastikan untuk selalu menutup koneksi setelah digunakan
             try {
-                if (connection != null) {
-                    if (connection.stat != null)
-                        connection.stat.close();
-                    if (connection.result != null)
-                        connection.result.close();
-                    if (connection.conn != null)
-                        connection.conn.close();
+                if (connection != null) { //Jika connection tidak null
+                    if (connection.stat != null) //jika connection statement tidak null
+                        connection.stat.close(); //melakukan penutupan statement
+                    if (connection.result != null) //jika connection statement tidak null
+                        connection.result.close(); //melakukan penutupan Result set
+                    if (connection.conn != null) //jika connection statement tidak null
+                        connection.conn.close(); //melakukan penutupan statement
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (SQLException e) { //Jika terjadi kesalahan selama melakukan pengaksesan data ke database
+                e.printStackTrace(); //Menampilakn pesan error
             }
         }
     }

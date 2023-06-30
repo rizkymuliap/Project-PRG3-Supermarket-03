@@ -6,14 +6,16 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class CRUDBarang extends JFrame{
     private JPanel PanelBarang;
@@ -60,11 +62,13 @@ public class CRUDBarang extends JFrame{
             return false;
         }
     };
+    DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
     //Variabel
     String selectedImagePath = "";
     private File selectedImageFile;
     byte[] imageBytes;
+    int i;
 
     public void FrameConfigure()
     {
@@ -75,7 +79,7 @@ public class CRUDBarang extends JFrame{
         setVisible(true);
     }
 
-public CRUDBarang() {
+    public CRUDBarang() {
         FrameConfigure();
         tbBarang.setModel(model);
 
@@ -170,7 +174,7 @@ public CRUDBarang() {
 
             if(found) //Jika menemukan data yang sama pada tabel
             {
-                JOptionPane.showMessageDialog(null, "Data Barang sudah ada!", "Information!",
+                JOptionPane.showMessageDialog(null, "Data Barang sudah ada!", "Informasi",
                         JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan
 
             }
@@ -189,8 +193,8 @@ public CRUDBarang() {
                 }else{
                     if (txtNama.getText().equals("") || txtlayer.getText().equals("") ||  txtStockBarang.getText().equals("") || txtHargaBeli.getText().equals("") || txtHargaJual.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
                     {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
-                                , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
+                        JOptionPane.showMessageDialog(null, "Data tidak boleh kosong!", "Peringatan!",
+                                JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
                     }
                     else{
 
@@ -262,10 +266,13 @@ public CRUDBarang() {
 
                             clear(); //Mengosongkan semua textbox
 
-                            JOptionPane.showMessageDialog(null, "Data Member berhasil disimpan!", "Informasi",
-                                    JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
+                            JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!",
+                                    "Informasi" ,JOptionPane.INFORMATION_MESSAGE);  //Menampilkan pesan berhasil input data barang
                             loadData();
+                            loadGambarawal();
                         } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }
 
@@ -282,22 +289,34 @@ public CRUDBarang() {
         public void actionPerformed(ActionEvent e) {
             boolean found = false;
 
+            //Mengambil jumlah baris pada table
+            int baris = tbBarang.getModel().getRowCount();
+
+            for(int awal = 0; awal < baris; awal++) //Mengulang pengecekan dari awal sampai jumlah baris
+            {
+                //Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
+                if(txtNama.getText().toLowerCase().equals(model.getValueAt(awal, 1).toString().toLowerCase()) && i != baris)
+                {
+                    found = true; //Menemukan data yang sama
+                }
+            }
+
             if (found) {
-                JOptionPane.showMessageDialog(null, "Data Barang sudah ada!", "Information!",
+                JOptionPane.showMessageDialog(null, "Data Barang sudah ada!", "Informasi",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
                 if (cmbJenis.getSelectedIndex() == 0) {
-                    JOptionPane.showMessageDialog(null, "Pilih salah satu jenis barang!", "Information!",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Pilih salah satu jenis barang!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE);
                 } else if (cmbRak.getSelectedIndex() == 0) {
-                    JOptionPane.showMessageDialog(null, "Pilih salah satu rak!", "Information!",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Pilih salah satu rak!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE);
                 } else if (cmbJenis.getSelectedIndex() == 0) {
-                    JOptionPane.showMessageDialog(null, "Pilih satuan barang!", "Information!",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Pilih satuan barang!", "Peringatan!",
+                            JOptionPane.WARNING_MESSAGE);
                 } else {
                     if (txtNama.getText().equals("") || txtlayer.getText().equals("") || txtStockBarang.getText().equals("") || txtHargaBeli.getText().equals("") || txtHargaJual.getText().equals("")) {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Peringatan!", JOptionPane.WARNING_MESSAGE);
                     } else {
                         try {
                             //Konvert Image to Byte
@@ -364,12 +383,10 @@ public CRUDBarang() {
 
                             connection.pstat.executeUpdate();
                             connection.pstat.close();
-
+                            JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!",
+                                    "Informasi", JOptionPane.INFORMATION_MESSAGE);
                             clear(); //Mengosongkan semua textbox
-
-                            JOptionPane.showMessageDialog(null, "Data Member berhasil disimpan!", "Informasi",
-                                    JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
-                            loadData();
+                            loadData(); //Melakukan load data paling baru
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -383,13 +400,13 @@ public CRUDBarang() {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);
-
+            long value1, value2;
             // Disable buttons
             btnDelete.setEnabled(false);
             btnUpdate.setEnabled(false);
             btnSave.setEnabled(false);
 
-            int i = tbBarang.getSelectedRow();
+            i = tbBarang.getSelectedRow();
             if (i == -1) {
                 return;
             }
@@ -400,11 +417,34 @@ public CRUDBarang() {
             String rak = model.getValueAt(i, 3).toString();
             String layer = model.getValueAt(i, 4).toString();
             String stock = model.getValueAt(i, 5).toString();
-            String hargaBeli = model.getValueAt(i, 7).toString();
-            String hargaJual = model.getValueAt(i, 8).toString();
+
+            //Mengambil nilai rupiah tanpa Format mata uang
+
+            //a. Harga Beli
+            // Menghapus semua karakter non-digit
+            String angkaStr =model.getValueAt(i, 7).toString().replaceAll("\\D+", "");
+            // Mengonversi string menjadi integer
+            int hargaBeliInt = Integer.parseInt(angkaStr);
+            String hargaBeli = String.valueOf(hargaBeliInt);
+
+            hargaBeli = decimalFormat.format(hargaBeli);
+
+            //b. Harga Jual
+            // Menghapus semua karakter non-digit
+            angkaStr = model.getValueAt(i, 8).toString().replaceAll("\\D+", "");
+            // Mengonversi string menjadi integer
+            int hargaJualInt = Integer.parseInt(angkaStr);
+            String hargaJual = String.valueOf(hargaJualInt);
+
+            hargaJual = decimalFormat.format(hargaJual);
+
+
             String satuan = model.getValueAt(i, 6).toString();
 
             // Execute the SwingWorker in the background
+            String finalHargaBeli = hargaBeli;
+            String finalHargaJual = hargaJual;
+
             SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
                 @Override
                 protected ImageIcon doInBackground() throws Exception {
@@ -424,8 +464,8 @@ public CRUDBarang() {
                         cmbRak.setSelectedItem(rak);
                         txtlayer.setText(layer);
                         txtStockBarang.setText(stock);
-                        txtHargaBeli.setText(hargaBeli);
-                        txtHargaJual.setText(hargaJual);
+                        txtHargaBeli.setText(finalHargaBeli);
+                        txtHargaJual.setText(finalHargaJual);
                         cmbSatuan.setSelectedItem(satuan);
 
                         // Resize image to fit JLabel
@@ -449,8 +489,8 @@ public CRUDBarang() {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Menampilkan kotak dialog konfirmasi
-            int option = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data?", "Konfirmasi Penghapusan Data", JOptionPane.YES_NO_OPTION);
-
+            int option  = JOptionPane.showConfirmDialog(null, "Apakah Anda yakin ingin menghapus data ini?",
+                    "Konfirmasi", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE);
             // Menggunakan hasil pilihan dari kotak dialog
             if (option == JOptionPane.YES_OPTION) {
                 // Proses penghapusan data
@@ -472,8 +512,9 @@ public CRUDBarang() {
                     connection.pstat.close();
 
                     clear();
-                    JOptionPane.showMessageDialog(null, "Hapus Barang Berhasil!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
-                    gambar_barang.setIcon(null);
+                    JOptionPane.showMessageDialog(null, "Data berhasil dihapus!",
+                            "Informasi!", JOptionPane.INFORMATION_MESSAGE);
+                    loadGambarawal();
                     loadData();
 
                     btnUpdate.setEnabled(false);
@@ -487,8 +528,8 @@ public CRUDBarang() {
 
             } else {
                 // Tidak melakukan penghapusan data
-                JOptionPane.showMessageDialog(null, "Supplier batal dihapus!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
-            }
+                JOptionPane.showMessageDialog(null, "Data batal dihapus!",
+                        "Informasi!", JOptionPane.INFORMATION_MESSAGE);            }
         }
     });
     btnCari.addActionListener(new ActionListener() {
@@ -515,9 +556,57 @@ public CRUDBarang() {
                 throw new RuntimeException(ex);
             }
             clear();
+            btnUpdate.setEnabled(false);
+            btnDelete.setEnabled(false);
+            btnSave.setEnabled(true);
         }
     });
-}
+    txtHargaBeli.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            super.keyReleased(e);
+
+            char c = e.getKeyChar();
+            if (!Character.isDigit(c)) {
+                // Mengabaikan karakter yang bukan angka
+                txtHargaBeli.setText(txtHargaBeli.getText().replaceAll("[^\\d]", ""));
+            }
+
+            String input = txtHargaBeli.getText().trim().replaceAll(",", "");
+            try {
+                // Mengubah input menjadi angka
+                long value = Long.parseLong(input);
+                // Format angka dengan penambahan titik otomatis dan tampilkan dalam textbox
+                txtHargaBeli.setText(decimalFormat.format(value));
+            } catch (NumberFormatException ex) {
+                // Jika input tidak valid, tidak melakukan apa-apa
+            }
+        }
+    });
+    txtHargaJual.addKeyListener(new KeyAdapter() {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            super.keyReleased(e);
+
+            char c = e.getKeyChar();
+            if (!Character.isDigit(c)) {
+                // Mengabaikan karakter yang bukan angka
+                txtHargaJual.setText(txtHargaJual.getText().replaceAll("[^\\d]", ""));
+            }
+
+            String input = txtHargaJual.getText().trim().replaceAll(",", "");
+            try {
+                // Mengubah input menjadi angka
+                long value = Long.parseLong(input);
+                // Format angka dengan penambahan titik otomatis dan tampilkan dalam textbox
+                txtHargaJual.setText(decimalFormat.format(value));
+            } catch (NumberFormatException ex) {
+                // Jika input tidak valid, tidak melakukan apa-apa
+            }
+        }
+    });
+
+    }
 
     public void loadGambarawal() throws IOException {
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/Gambar/defaultbarang.jpg")); // Ganti dengan path gambar Anda
@@ -566,6 +655,7 @@ public CRUDBarang() {
             boolean found = false;
 
             while (connection.result.next()) {
+                found = true;
                 if (connection.result.getInt("status") == 1) {
                     Object[] obj = new Object[9];
                     obj[0] = connection.result.getString("id_barang");
@@ -634,6 +724,11 @@ public CRUDBarang() {
 
 public void clear()
 {
+    try {
+        loadGambarawal();
+    } catch (IOException e) {
+        throw new RuntimeException(e);
+    }
     txtNama.setText("");
     cmbRak.setSelectedIndex(0);
     cmbJenis.setSelectedIndex(0);
@@ -791,11 +886,24 @@ public void clear()
 
                             String harga_beli = connection.result.getString("harga_beli");
                             int harga_beli_int = (int) Double.parseDouble(harga_beli);
-                            obj[7] = "Rp. " + String.valueOf(harga_beli_int);
+
+                            NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+                            String harga_beli_str = formatRupiah.format(harga_beli_int);
+
+                            // Menambahkan jarak satu spasi antara "Rp" dan angka
+                            harga_beli_str = harga_beli_str.replace("Rp", "Rp ");
+
+
+                            obj[7] = harga_beli_str;
 
                             String harga_jual = connection.result.getString("harga_jual");
                             int harga_jual_int = (int) Double.parseDouble(harga_jual);
-                            obj[8] = "Rp. " + String.valueOf(harga_jual_int);
+
+                            String harga_jual_str = formatRupiah.format(harga_jual_int);
+
+                            harga_jual_str = harga_beli_str.replace("Rp", "Rp ");
+
+                            obj[8] = harga_jual_str;
 
                             model.addRow(obj);
 
