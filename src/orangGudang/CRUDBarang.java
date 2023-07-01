@@ -1,5 +1,6 @@
 package orangGudang;
 
+import com.toedter.calendar.JDateChooser;
 import connection.DBConnect;
 
 import javax.imageio.ImageIO;
@@ -12,6 +13,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -55,6 +57,8 @@ public class CRUDBarang extends JFrame{
     private JTextField txtStockBarang;
     private JComboBox cmbSatuan;
     private JButton btnCancel;
+    private JPanel jpkadaluarsa;
+    private JDateChooser chooser;
 
     DefaultTableModel model = new DefaultTableModel(){
         @Override
@@ -69,6 +73,7 @@ public class CRUDBarang extends JFrame{
     private File selectedImageFile;
     byte[] imageBytes;
     int i;
+    String huruflama;
 
     public void FrameConfigure()
     {
@@ -82,6 +87,9 @@ public class CRUDBarang extends JFrame{
     public CRUDBarang() {
         FrameConfigure();
         tbBarang.setModel(model);
+
+        chooser = new JDateChooser();
+        jpkadaluarsa.add(chooser);
 
     Thread tampilJenisBarangThread = new Thread(new Runnable() {
         @Override
@@ -204,7 +212,7 @@ public class CRUDBarang extends JFrame{
 
 
                             DBConnect connection = new DBConnect();
-                            String sql = "EXEC sp_InserttblBarang @id_barang=?, @id_jenis_barang=?, @id_rak=?, @layer=? ,@nama_barang =?, @stock=?, @satuan=?, @gambar_barang=?, @harga_beli=?, @harga_jual=?, @status=1";
+                            String sql = "EXEC sp_InserttblBarang @id_barang=?, @id_jenis_barang=?, @id_rak=?, @layer=? ,@nama_barang =?, @stock=?, @satuan=?, @gambar_barang=?, @harga_beli=?, @harga_jual=?, @kadaluarsa=?, @status=1";
 
                             connection.pstat = connection.conn.prepareStatement(sql);
                             connection.pstat.setString(1,generateNextBarangID());
@@ -249,6 +257,20 @@ public class CRUDBarang extends JFrame{
                                 JOptionPane.showMessageDialog(null, "Error while loading data: " + ex);
                             }
 
+                            //Update jumlah barang dalam rak
+                            DBConnect connection4 = new DBConnect();
+                            try {
+                                connection4.stat = connection4.conn.createStatement();
+                                String sql4 = "UPDATE tblRak SET jumlah  = jumlah +1 WHERE huruf = ?";
+                                connection4.pstat = connection4.conn.prepareStatement(sql4);
+                                connection4.pstat.setString(1, cmbRak.getSelectedItem().toString());
+                                connection4.result = connection4.pstat.executeQuery();
+
+                                connection4.pstat.close();
+                                connection4.result.close();
+                            } catch (Exception ex) {
+                                JOptionPane.showMessageDialog(null, "Error while loading data: " + ex);
+                            }
 
 
                             connection.pstat.setInt(4, Integer.parseInt(txtlayer.getText()));
@@ -258,6 +280,10 @@ public class CRUDBarang extends JFrame{
                             connection.pstat.setBytes(8, imageBytes);
                             connection.pstat.setInt(9, Integer.parseInt(txtHargaBeli.getText()));
                             connection.pstat.setInt(10, Integer.parseInt(txtHargaJual.getText()));
+                            java.util.Date utilDate = chooser.getDate();
+                            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+                            connection.pstat.setDate(11, sqlDate);
 
 
 
@@ -269,6 +295,7 @@ public class CRUDBarang extends JFrame{
                             JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!",
                                     "Informasi" ,JOptionPane.INFORMATION_MESSAGE);  //Menampilkan pesan berhasil input data barang
                             loadData();
+                            tampilRak();
                             loadGambarawal();
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
@@ -295,7 +322,7 @@ public class CRUDBarang extends JFrame{
             for(int awal = 0; awal < baris; awal++) //Mengulang pengecekan dari awal sampai jumlah baris
             {
                 //Mengecek apakah nama jenis yang dimasukkan sama dengan nama pada kolom tertentu
-                if(txtNama.getText().toLowerCase().equals(model.getValueAt(awal, 1).toString().toLowerCase()) && i != baris)
+                if(txtNama.getText().toLowerCase().equals(model.getValueAt(awal, 1).toString().toLowerCase()) && i == baris)
                 {
                     found = true; //Menemukan data yang sama
                 }
@@ -324,7 +351,7 @@ public class CRUDBarang extends JFrame{
                             int row = tbBarang.getSelectedRow();
 
                             DBConnect connection = new DBConnect();
-                            String sql = "EXEC sp_UpdatetblBarang @id_barang=?, @id_jenis_barang=?, @id_rak=?, @layer=? ,@nama_barang =?, @stock=?, @satuan=?, @gambar_barang=?, @harga_beli=?, @harga_jual=?";
+                            String sql = "EXEC sp_UpdatetblBarang @id_barang=?, @id_jenis_barang=?, @id_rak=?, @layer=? ,@nama_barang =?, @stock=?, @satuan=?, @gambar_barang=?, @harga_beli=?, @harga_jual=?, @kadaluarsa= ?";
 
                             connection.pstat = connection.conn.prepareStatement(sql);
                             connection.pstat.setString(1, model.getValueAt(row, 0).toString());
@@ -347,6 +374,31 @@ public class CRUDBarang extends JFrame{
                             } catch (Exception ex) {
                                 JOptionPane.showMessageDialog(null, "Error while loading data: " + ex);
                             }
+                            JOptionPane.showMessageDialog(null, cmbRak.getSelectedItem().toString());
+                            if (!huruflama.equals(cmbRak.getSelectedItem().toString())) {
+                                // Update jumlah barang dalam rak lama
+                                DBConnect connection4 = new DBConnect();
+                                try  {
+                                    String sql4 = "UPDATE tblRak SET jumlah = jumlah - 1 WHERE huruf = ?";
+                                    connection4.pstat = connection4.conn.prepareStatement(sql4);
+                                    connection4.pstat.setString(1, huruflama);
+                                    connection4.pstat.executeUpdate();
+                                } catch (Exception ex) {
+                                    JOptionPane.showMessageDialog(null, "Error while updating data: " + ex);
+                                }
+
+                                // Update jumlah barang dalam rak baru
+                                DBConnect connection5 = new DBConnect();
+                                try  {
+                                    String sql5 = "UPDATE tblRak SET jumlah = jumlah + 1 WHERE huruf = ?";
+                                    connection5.pstat = connection5.conn.prepareStatement(sql5);
+                                    connection5.pstat.setString(1, cmbRak.getSelectedItem().toString());
+                                    connection5.pstat.executeUpdate();
+                                } catch (Exception ex) {
+                                    JOptionPane.showMessageDialog(null, "Error while updating data: " + ex);
+                                }
+                            }
+
 
                             //Mencari ID Rak
                             DBConnect connection3 = new DBConnect();
@@ -376,8 +428,12 @@ public class CRUDBarang extends JFrame{
                             connection.pstat.setInt(6, Integer.parseInt(txtStockBarang.getText()));
                             connection.pstat.setString(7, cmbSatuan.getSelectedItem().toString());
                             connection.pstat.setBytes(8, imageBytes);
-                            connection.pstat.setInt(9, Integer.parseInt(txtHargaBeli.getText().substring(4).trim()));
-                            connection.pstat.setInt(10, Integer.parseInt(txtHargaJual.getText().substring(4).trim()));
+                            connection.pstat.setInt(9, Integer.parseInt(txtHargaBeli.getText().replaceAll(",", "")));
+                            connection.pstat.setInt(10, Integer.parseInt(txtHargaJual.getText().replaceAll(",","")));
+                            java.util.Date utilDate = chooser.getDate();
+                            java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+                            connection.pstat.setDate(11, sqlDate);
 
 
 
@@ -387,6 +443,7 @@ public class CRUDBarang extends JFrame{
                                     "Informasi", JOptionPane.INFORMATION_MESSAGE);
                             clear(); //Mengosongkan semua textbox
                             loadData(); //Melakukan load data paling baru
+                            tampilRak();
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -415,6 +472,7 @@ public class CRUDBarang extends JFrame{
             String nama = (String) model.getValueAt(i, 1);
             String jenis = model.getValueAt(i, 2).toString();
             String rak = model.getValueAt(i, 3).toString();
+            huruflama = rak;
             String layer = model.getValueAt(i, 4).toString();
             String stock = model.getValueAt(i, 5).toString();
 
@@ -422,21 +480,23 @@ public class CRUDBarang extends JFrame{
 
             //a. Harga Beli
             // Menghapus semua karakter non-digit
-            String angkaStr =model.getValueAt(i, 7).toString().replaceAll("\\D+", "");
+            String nilaiStr = model.getValueAt(i, 7).toString();
+            String angkaStr = nilaiStr.substring(nilaiStr.indexOf(" ") + 1).replaceAll("[^\\d]", "");
+            angkaStr = angkaStr.substring(0, angkaStr.length() - 2);
             // Mengonversi string menjadi integer
             int hargaBeliInt = Integer.parseInt(angkaStr);
-            String hargaBeli = String.valueOf(hargaBeliInt);
-
-            hargaBeli = decimalFormat.format(hargaBeli);
+            String hargaBeli = String.valueOf(decimalFormat.format(hargaBeliInt));
 
             //b. Harga Jual
             // Menghapus semua karakter non-digit
-            angkaStr = model.getValueAt(i, 8).toString().replaceAll("\\D+", "");
+            nilaiStr = model.getValueAt(i, 8).toString();
+            angkaStr = nilaiStr.substring(nilaiStr.indexOf(" ") + 1).replaceAll("[^\\d]+", "");
+            angkaStr = angkaStr.substring(0, angkaStr.length() - 2);
             // Mengonversi string menjadi integer
             int hargaJualInt = Integer.parseInt(angkaStr);
-            String hargaJual = String.valueOf(hargaJualInt);
+            String hargaJual = String.valueOf(decimalFormat.format(hargaJualInt));
 
-            hargaJual = decimalFormat.format(hargaJual);
+
 
 
             String satuan = model.getValueAt(i, 6).toString();
@@ -461,12 +521,29 @@ public class CRUDBarang extends JFrame{
                         // Update the UI with the retrieved data
                         txtNama.setText(nama);
                         cmbJenis.setSelectedItem(jenis);
-                        cmbRak.setSelectedItem(rak);
+
+                        boolean rakDitemukan = false;
+                        for (int i = 0; i < cmbRak.getItemCount(); i++) {
+                            String hurufRak = cmbRak.getItemAt(i).toString();
+                            if (hurufRak.equals(rak)) {
+                                rakDitemukan = true;
+                                break;
+                            }
+                        }
+
+                        if (!rakDitemukan) {
+                            cmbRak.addItem(rak);
+                            cmbRak.setSelectedItem(rak);
+                        }else{
+                            cmbRak.setSelectedItem(rak);
+                        }
+                        
                         txtlayer.setText(layer);
                         txtStockBarang.setText(stock);
                         txtHargaBeli.setText(finalHargaBeli);
                         txtHargaJual.setText(finalHargaJual);
                         cmbSatuan.setSelectedItem(satuan);
+                        chooser.setDate((java.sql.Date) model.getValueAt(i, 9));
 
                         // Resize image to fit JLabel
                         Image image = imageIcon.getImage().getScaledInstance(gambar_barang.getWidth(), gambar_barang.getHeight(), Image.SCALE_SMOOTH);
@@ -507,6 +584,17 @@ public class CRUDBarang extends JFrame{
                     connection.pstat = connection.conn.prepareStatement(query);
                     connection.pstat.setString(1, id_barang); //variabel id dari
 
+                    // Update jumlah barang dalam rak lama
+                    DBConnect connection4 = new DBConnect();
+                    try  {
+                        String sql4 = "UPDATE tblRak SET jumlah = jumlah - 1 WHERE huruf = ?";
+                        connection4.pstat = connection4.conn.prepareStatement(sql4);
+                        connection4.pstat.setString(1, String.valueOf(model.getValueAt(i, 3)));
+                        connection4.pstat.executeUpdate();
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error while updating data: " + ex);
+                    }
+
                     connection.stat.close();
                     connection.pstat.executeUpdate();
                     connection.pstat.close();
@@ -516,6 +604,7 @@ public class CRUDBarang extends JFrame{
                             "Informasi!", JOptionPane.INFORMATION_MESSAGE);
                     loadGambarawal();
                     loadData();
+                    tampilRak();
 
                     btnUpdate.setEnabled(false);
                     btnDelete.setEnabled(false);
@@ -542,6 +631,7 @@ public class CRUDBarang extends JFrame{
     btRefresh.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+            clear();
             loadData();
             tampilJenisBarang();
             tampilRak();
@@ -657,7 +747,7 @@ public class CRUDBarang extends JFrame{
             while (connection.result.next()) {
                 found = true;
                 if (connection.result.getInt("status") == 1) {
-                    Object[] obj = new Object[9];
+                    Object[] obj = new Object[10];
                     obj[0] = connection.result.getString("id_barang");
                     obj[1] = connection.result.getString("nama_barang");
 
@@ -704,6 +794,7 @@ public class CRUDBarang extends JFrame{
                     String harga_jual = connection.result.getString("harga_jual");
                     int harga_jual_int = (int) Double.parseDouble(harga_jual);
                     obj[8] = "Rp. " + String.valueOf(harga_jual_int);
+                    obj[9] = connection.result.getDate("kadaluarsa");
 
                     model.addRow(obj);
                 }
@@ -737,6 +828,7 @@ public void clear()
     txtStockBarang.setText("");
     txtHargaBeli.setText("");
     txtHargaJual.setText("");
+    chooser.setDate(null);
 }
 
     public void tampilJenisBarang() {
@@ -827,6 +919,7 @@ public void clear()
         model.addColumn("Satuan");
         model.addColumn("Harga Beli");
         model.addColumn("Harga Jual");
+        model.addColumn("Kadaluarsa");
     }
 
     public void loadData() {
@@ -844,7 +937,7 @@ public void clear()
 
                     while (connection.result.next()) {
 
-                            Object[] obj = new Object[9];
+                            Object[] obj = new Object[10];
                             obj[0] = connection.result.getString("id_barang");
                             obj[1] = connection.result.getString("nama_barang");
 
@@ -901,9 +994,10 @@ public void clear()
 
                             String harga_jual_str = formatRupiah.format(harga_jual_int);
 
-                            harga_jual_str = harga_beli_str.replace("Rp", "Rp ");
+                            harga_jual_str = harga_jual_str.replace("Rp", "Rp ");
 
                             obj[8] = harga_jual_str;
+                            obj[9] = connection.result.getDate("kadaluarsa");;
 
                             model.addRow(obj);
 

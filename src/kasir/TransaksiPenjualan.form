@@ -199,7 +199,7 @@
                                         <border type="none"/>
                                         <children/>
                                       </grid>
-                                      <grid id="c64f6" binding="Pembatas_Attribut_Tengah" layout-manager="GridLayoutManager" row-count="7" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                      <grid id="c64f6" binding="Pembatas_Attribut_Tengah" layout-manager="GridLayoutManager" row-count="5" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                         <margin top="0" left="0" bottom="0" right="0"/>
                                         <constraints border-constraint="Center"/>
                                         <properties>
@@ -220,7 +220,7 @@
                                             <border type="none" title=""/>
                                             <children/>
                                           </grid>
-                                          <component id="aff6b" class="javax.swing.JTextField" binding="Textbox_ID">
+                                          <component id="aff6b" class="javax.swing.JTextField" binding="txtIDBarang">
                                             <constraints>
                                               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                                 <preferred-size width="150" height="-1"/>
@@ -242,7 +242,7 @@
                                             <border type="none"/>
                                             <children/>
                                           </grid>
-                                          <component id="dfdd0" class="javax.swing.JTextField" binding="Textbox_Nama_Barang">
+                                          <component id="dfdd0" class="javax.swing.JTextField" binding="txtNamaBarang">
                                             <constraints>
                                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                                 <preferred-size width="150" height="-1"/>
@@ -259,7 +259,7 @@
                                             </constraints>
                                             <properties>
                                               <foreground color="-1"/>
-                                              <text value="Stock Remaining"/>
+                                              <text value="Stock"/>
                                             </properties>
                                             <border type="none"/>
                                             <children/>
@@ -271,12 +271,12 @@
                                             </constraints>
                                             <properties>
                                               <foreground color="-1"/>
-                                              <text value="Price"/>
+                                              <text value="Harga     Rp"/>
                                             </properties>
                                             <border type="none"/>
                                             <children/>
                                           </grid>
-                                          <component id="65005" class="javax.swing.JTextField" binding="Textbox_Stock">
+                                          <component id="65005" class="javax.swing.JTextField" binding="txtStock">
                                             <constraints>
                                               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                                 <preferred-size width="150" height="-1"/>
@@ -286,7 +286,7 @@
                                               <editable value="false"/>
                                             </properties>
                                           </component>
-                                          <component id="9dddd" class="javax.swing.JTextField" binding="Textbox_Harga">
+                                          <component id="9dddd" class="javax.swing.JTextField" binding="txtHarga">
                                             <constraints>
                                               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                                 <preferred-size width="150" height="-1"/>
@@ -296,44 +296,10 @@
                                               <editable value="false"/>
                                             </properties>
                                           </component>
-                                          <grid id="e3223" class="javax.swing.JLabel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                          <grid id="15f4" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                             <margin top="0" left="0" bottom="0" right="0"/>
                                             <constraints>
-                                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                            </constraints>
-                                            <properties>
-                                              <foreground color="-1"/>
-                                              <text value="Quantity"/>
-                                            </properties>
-                                            <border type="none"/>
-                                            <children/>
-                                          </grid>
-                                          <grid id="6f1e3" class="javax.swing.JLabel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                            <margin top="0" left="0" bottom="0" right="0"/>
-                                            <constraints>
-                                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                            </constraints>
-                                            <properties>
-                                              <foreground color="-1"/>
-                                              <text value="Warranty Type"/>
-                                            </properties>
-                                            <border type="none"/>
-                                            <children/>
-                                          </grid>
-                                          <component id="ad84b" class="javax.swing.JTextField" binding="Textbox_Warranty">
-                                            <constraints>
-                                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                                <preferred-size width="150" height="-1"/>
-                                              </grid>
-                                            </constraints>
-                                            <properties>
-                                              <editable value="false"/>
-                                            </properties>
-                                          </component>
-                                          <grid id="15f4" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                            <margin top="0" left="0" bottom="0" right="0"/>
-                                            <constraints>
-                                              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                                             </constraints>
                                             <properties>
                                               <background color="-14146253"/>
@@ -349,17 +315,9 @@
                                                   <text value="Add "/>
                                                 </properties>
                                               </component>
-                                              <component id="55cb3" class="javax.swing.JButton" binding="Tombol_Hapus_Pesanan">
-                                                <constraints>
-                                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                                </constraints>
-                                                <properties>
-                                                  <text value="Delete Order"/>
-                                                </properties>
-                                              </component>
                                               <component id="b6f8c" class="javax.swing.JButton" binding="Tombol_Batal_Pesanan">
                                                 <constraints>
-                                                  <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                                                 </constraints>
                                                 <properties>
                                                   <text value="Cancel"/>
@@ -372,16 +330,6 @@
                                               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                                             </constraints>
                                           </hspacer>
-                                          <component id="5a073" class="javax.swing.JTextField" binding="Textbox_Jumlah_Pesanan">
-                                            <constraints>
-                                              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                                <preferred-size width="150" height="-1"/>
-                                              </grid>
-                                            </constraints>
-                                            <properties>
-                                              <editable value="true"/>
-                                            </properties>
-                                          </component>
                                         </children>
                                       </grid>
                                     </children>
@@ -411,7 +359,12 @@
                                 <border type="none" title="Barang" title-justification="2">
                                   <font size="22" style="1"/>
                                 </border>
-                                <children/>
+                                <children>
+                                  <component id="ff3aa" class="javax.swing.JTable" binding="tbBarang">
+                                    <constraints/>
+                                    <properties/>
+                                  </component>
+                                </children>
                               </scrollpane>
                               <component id="9b6dd" class="javax.swing.JTextField" binding="Textbox_Pencarian">
                                 <constraints>
@@ -437,17 +390,16 @@
                                   <text value="Refresh"/>
                                 </properties>
                               </component>
-                              <component id="ebfc6" class="javax.swing.JComboBox" binding="Combobox_Filter">
+                              <component id="ebfc6" class="javax.swing.JComboBox" binding="cmbFilter">
                                 <constraints>
                                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
                                   <model>
                                     <item value="Filter"/>
-                                    <item value="Name"/>
-                                    <item value="Stock"/>
-                                    <item value="Selling Price"/>
-                                    <item value="Merk"/>
+                                    <item value="Nama"/>
+                                    <item value="Jenis Barang"/>
+                                    <item value="Rak"/>
                                   </model>
                                 </properties>
                               </component>
@@ -498,7 +450,7 @@
                                         <properties/>
                                         <border type="none"/>
                                         <children>
-                                          <component id="16f6" class="javax.swing.JTable" binding="Tabel_Item">
+                                          <component id="16f6" class="javax.swing.JTable" binding="tbItem">
                                             <constraints/>
                                             <properties/>
                                           </component>
@@ -793,7 +745,7 @@
                                 </constraints>
                                 <properties>
                                   <foreground color="-1"/>
-                                  <text value="Search Member ID"/>
+                                  <text value="Cari ID Member"/>
                                 </properties>
                               </component>
                               <component id="9ae51" class="javax.swing.JTextField" binding="txtSearchMemberID">
@@ -817,7 +769,7 @@
                               </component>
                             </children>
                           </grid>
-                          <grid id="3da78" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <grid id="3da78" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
                               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -833,12 +785,12 @@
                                 </constraints>
                                 <properties>
                                   <foreground color="-1"/>
-                                  <text value="ID Customer"/>
+                                  <text value="Cari ID Bundle"/>
                                 </properties>
                               </component>
                               <component id="f8986" class="javax.swing.JTextField" binding="txtIdCustomer">
                                 <constraints>
-                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                     <preferred-size width="150" height="-1"/>
                                   </grid>
                                 </constraints>
@@ -847,24 +799,13 @@
                                   <enabled value="true"/>
                                 </properties>
                               </component>
-                              <component id="9e821" class="javax.swing.JLabel">
+                              <component id="95e39" class="javax.swing.JButton">
                                 <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                                 </constraints>
                                 <properties>
-                                  <foreground color="-1"/>
-                                  <text value="Customer Name"/>
-                                </properties>
-                              </component>
-                              <component id="4afa4" class="javax.swing.JTextField" binding="txtCustomerName">
-                                <constraints>
-                                  <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                                    <preferred-size width="150" height="-1"/>
-                                  </grid>
-                                </constraints>
-                                <properties>
-                                  <editable value="false"/>
-                                  <enabled value="true"/>
+                                  <enabled value="false"/>
+                                  <text value="Search"/>
                                 </properties>
                               </component>
                             </children>
