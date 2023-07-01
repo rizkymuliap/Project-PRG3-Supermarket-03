@@ -107,7 +107,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="12" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Save"/>
+                  <text value="Simpan"/>
                 </properties>
               </component>
               <hspacer id="b8689">
@@ -128,7 +128,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Update"/>
+                  <text value="Ubah"/>
                 </properties>
               </component>
               <component id="c7678" class="javax.swing.JButton" binding="btnHapus">
@@ -139,7 +139,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Delete"/>
+                  <text value="Hapus"/>
                 </properties>
               </component>
               <component id="ecfca" class="javax.swing.JButton" binding="btnCancel">
@@ -150,7 +150,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Cancel"/>
+                  <text value="Batal"/>
                 </properties>
               </component>
               <component id="8a53d" class="javax.swing.JTextField" binding="txtSearch">
@@ -170,7 +170,7 @@
                 <properties>
                   <font name="Century Gothic" size="12"/>
                   <foreground color="-1"/>
-                  <text value="Search"/>
+                  <text value="Cari"/>
                 </properties>
               </component>
               <component id="e529d" class="javax.swing.JButton" binding="btnRefresh">
@@ -181,7 +181,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Refresh"/>
+                  <text value="Perbarui"/>
                 </properties>
               </component>
             </children>

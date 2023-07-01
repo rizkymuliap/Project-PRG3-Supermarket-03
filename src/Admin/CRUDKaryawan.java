@@ -581,6 +581,7 @@ public class CRUDKaryawan extends JFrame {
 
 
 
+
     public String generateNextSupplierID() {
         DBConnect connection = new DBConnect();
         try {

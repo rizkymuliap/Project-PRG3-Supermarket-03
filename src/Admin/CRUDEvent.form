@@ -230,14 +230,6 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="54581" class="javax.swing.JTextField" binding="txtNamaBundle">
-                    <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties/>
-                  </component>
                   <component id="6cd8" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -245,7 +237,15 @@
                     <properties>
                       <background color="-12828863"/>
                       <foreground color="-1"/>
-                      <text value="Nama Bundle"/>
+                      <text value="ID Bundle"/>
+                    </properties>
+                  </component>
+                  <component id="166d0" class="javax.swing.JComboBox" binding="cbBundle">
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <model/>
                     </properties>
                   </component>
                 </children>
@@ -307,7 +307,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="12" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Save"/>
+                  <text value="Simpan"/>
                 </properties>
               </component>
               <hspacer id="13d12">
@@ -328,7 +328,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Update"/>
+                  <text value="Ubah"/>
                 </properties>
               </component>
               <component id="16ac0" class="javax.swing.JButton" binding="btnDelete">
@@ -339,7 +339,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Delete"/>
+                  <text value="Hapus"/>
                 </properties>
               </component>
               <component id="332e9" class="javax.swing.JButton" binding="btnClear">
@@ -350,7 +350,7 @@
                   <background color="-14146253"/>
                   <font name="Century Gothic" size="11" style="1"/>
                   <foreground color="-1"/>
-                  <text value="Cancel"/>
+                  <text value="Batal"/>
                 </properties>
               </component>
               <component id="7f5d1" class="javax.swing.JLabel">
@@ -360,7 +360,7 @@
                 <properties>
                   <font name="Century Gothic" size="12"/>
                   <foreground color="-1"/>
-                  <text value="Search"/>
+                  <text value="Cari"/>
                 </properties>
               </component>
               <component id="c3135" class="javax.swing.JTextField" binding="txtSearch">
@@ -435,7 +435,7 @@
                       <background color="-14146253"/>
                       <font name="Century Gothic" size="11" style="1"/>
                       <foreground color="-1"/>
-                      <text value="Refresh"/>
+                      <text value="Perbarui"/>
                     </properties>
                   </component>
                 </children>
