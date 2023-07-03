@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="hampir 100% transaksi pengadaan">
-      <change afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.java" afterDir="false" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Dikit lagi laporan">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -190,7 +188,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687509557706</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Dikit lagi laporan">
+      <created>1688354741874</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1688354741874</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -214,6 +219,7 @@
     <MESSAGE value="Load data rak" />
     <MESSAGE value="CRUD BARANG" />
     <MESSAGE value="Baru di ganti" />
-    <option name="LAST_COMMIT_MESSAGE" value="Baru di ganti" />
+    <MESSAGE value="Dikit lagi laporan" />
+    <option name="LAST_COMMIT_MESSAGE" value="Dikit lagi laporan" />
   </component>
 </project>
