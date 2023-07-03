@@ -123,7 +123,7 @@ public class TransaksiPengadaan extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String idtrsPengadaan, IdKaryawan, tglDatang, tglKembali, stock, hargajual;
                 double totalakhir;
-                Format formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Format formatter = new SimpleDateFormat("yyyy-MM-dd");
                 int j = tblPengadaan.getModel().getRowCount();
                 idtrsPengadaan = txtIDTransaksi.getText();
                 IdKaryawan = txtIDKaryawan.getText();

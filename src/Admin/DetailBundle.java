@@ -18,6 +18,8 @@ public class DetailBundle {
     private JButton cancelButton;
     private JButton simpanButton;
     private JButton btnBatal;
+    private JButton btnUbah;
+    private JButton btnCari;
 
     DBConnect connect = new DBConnect();
 
@@ -101,6 +103,15 @@ public class DetailBundle {
                         connect.pstat.setString(2, model.getValueAt(i, 0).toString());
                         connect.pstat.executeUpdate();
 
+                        DBConnect connect1 = new DBConnect();
+
+                        String sql1 = "UPDATE tblBarang SET harga_jual = ? WHERE id_barang = ?";
+                        connect1.pstat = connect1.conn.prepareStatement(sql1);
+                        connect1.pstat.setString(1, model.getValueAt(i, 2).toString()); // Menggunakan setString untuk kolom harga jual
+                        connect1.pstat.setString(2, model.getValueAt(i, 0).toString()); // Menggunakan setString untuk kolom id_barang
+                        connect1.pstat.executeUpdate();
+
+
                         connect.pstat.close();
                     }
                     JOptionPane.showMessageDialog(null, "Insert Data Berhasil !!");
@@ -119,9 +130,39 @@ public class DetailBundle {
                 if (i == -1) {
                     return;
                 }
-                // Menghapus baris dari tabel
+                // Menghapus baris   dari tabel
                 ((DefaultTableModel) tblBundle.getModel()).removeRow(i);
             }
         });
+        btnCari.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String idBundle = txtIDBundle.getText();
+                String NamaBundle = txtNamaBundle.getText();
+
+                try {
+                    DBConnect connect = new DBConnect();
+                    String sql = "SELECT nama_bundle FROM tblBundle WHERE id_bundle = ?";
+                    connect.pstat = connect.conn.prepareStatement(sql);
+                    connect.pstat.setString(1, idBundle);
+                    connect.result = connect.pstat.executeQuery();
+
+                    if (connect.result.next()) {
+                        String namaBundle = connect.result.getString("nama_bundle");
+                        txtNamaBundle.setText(namaBundle);
+                    } else {
+                        // Tidak ada hasil yang ditemukan
+                        JOptionPane.showMessageDialog(null, "Bundle dengan ID tersebut tidak ditemukan");
+                    }
+
+                    connect.result.close();
+                    connect.pstat.close();
+                    connect.conn.close();
+                } catch (Exception ex) {
+                    System.out.println("Terjadi Error Pada Bagian Cari : " + ex);
+                }
+            }
+        });
+
     }
 }
