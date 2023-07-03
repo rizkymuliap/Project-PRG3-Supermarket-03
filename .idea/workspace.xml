@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Dikit lagi laporan">
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Nambah jasper">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/DetailBundle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +22,12 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="master" />
@@ -41,7 +49,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "F:/MJ/Kampus/Semester 2/Project-PRG3-Supermarket-03/src/Admin",
+    "last_opened_file_path": "F:/MJ/Kampus/Semester 2/TerraQuest_Repo",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -62,7 +70,7 @@
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.DetailBundle">
+  <component name="RunManager" selected="Application.CRUDEvent">
     <configuration name="CRUDEvent" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Admin.CRUDEvent" />
       <module name="Project" />
@@ -130,9 +138,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.CRUDEvent" />
         <item itemvalue="Application.DetailBundle" />
         <item itemvalue="Application.TransaksiPenjualan" />
-        <item itemvalue="Application.CRUDEvent" />
         <item itemvalue="Application.CRUDRak" />
         <item itemvalue="Application.CRUDJenisBarang" />
       </list>
@@ -152,6 +160,7 @@
       <workItem from="1687135743360" duration="482000" />
       <workItem from="1687139525595" duration="57000" />
       <workItem from="1687154561891" duration="679000" />
+      <workItem from="1688361570804" duration="8387000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>
@@ -195,7 +204,14 @@
       <option name="project" value="LOCAL" />
       <updated>1688354741874</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Nambah jasper">
+      <created>1688360608866</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1688360608866</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -220,6 +236,7 @@
     <MESSAGE value="CRUD BARANG" />
     <MESSAGE value="Baru di ganti" />
     <MESSAGE value="Dikit lagi laporan" />
-    <option name="LAST_COMMIT_MESSAGE" value="Dikit lagi laporan" />
+    <MESSAGE value="Nambah jasper" />
+    <option name="LAST_COMMIT_MESSAGE" value="Nambah jasper" />
   </component>
 </project>

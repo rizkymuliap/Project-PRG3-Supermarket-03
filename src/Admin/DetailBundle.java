@@ -90,16 +90,19 @@ public class DetailBundle {
                 String idBundle, NamaBundle;
                 idBundle = txtIDBundle.getText();
                 NamaBundle = txtNamaBundle.getText();
+                int j = tblBundle.getModel().getRowCount();
 
                 try
                 {
-                    String sql = "INSERT INTO tblDetailBundle VALUES (?, ?)";
-                    connect.pstat = connect.conn.prepareStatement(sql);
-                    connect.pstat.setString(1, idBundle);
-                    connect.pstat.setString(2, NamaBundle);
-                    connect.pstat.executeUpdate();
+                    for(int i = 0; i < j; i++) {
+                        String sql = "INSERT INTO tblDetailBundle VALUES (?, ?)";
+                        connect.pstat = connect.conn.prepareStatement(sql);
+                        connect.pstat.setString(1, idBundle);
+                        connect.pstat.setString(2, model.getValueAt(i, 0).toString());
+                        connect.pstat.executeUpdate();
 
-                    connect.pstat.close();
+                        connect.pstat.close();
+                    }
                     JOptionPane.showMessageDialog(null, "Insert Data Berhasil !!");
                 }
                 catch (Exception ex)

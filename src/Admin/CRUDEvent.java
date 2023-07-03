@@ -54,7 +54,7 @@ public class CRUDEvent extends JFrame {
         frame.setContentPane(new CRUDEvent().JPEvent);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setSize(500, 500);
+        frame.setSize(700, 700);
         frame.setVisible(true);
     }
 
@@ -97,6 +97,8 @@ public class CRUDEvent extends JFrame {
                     tanggalselesai = format.format(chooser1.getDate());
 
                     try {
+                        if(jenis.equals("Bundle"))
+                        {
                         DBConnect connect = new DBConnect();
                         String query = "EXEC sp_InsertEvent ?, ?, ?, ?, ?, ?, ?, ?, ?, ?";
                         connect.pstat = connect.conn.prepareStatement(query);
@@ -116,6 +118,30 @@ public class CRUDEvent extends JFrame {
 
                         JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
                         loadData();
+                        clear();
+                        }
+                        else
+                        {
+                            DBConnect connect = new DBConnect();
+                            String query = "EXEC sp_InsertEvent @id_event = ?, @nama_event = ?, @tanggal_mulai = ?, @tanggal_berakhir = ?, @jenis_promo = ?, @diskon = ?, @minimal_belanja = ?, @status_tersedia = ?, @status = ?";
+                            connect.pstat = connect.conn.prepareStatement(query);
+                            connect.pstat.setString(1, generateNextEventID());
+                            connect.pstat.setString(2, txtNama.getText());
+                            connect.pstat.setString(3, format.format(chooser.getDate()));
+                            connect.pstat.setString(4, format.format(chooser1.getDate()));
+                            connect.pstat.setString(5, jenis);
+                            connect.pstat.setDouble(6, Diskon);
+                            connect.pstat.setString(7, txtMinBelanja.getText());
+                            connect.pstat.setString(8, "1");
+                            connect.pstat.setInt(9, 1);
+
+                            connect.pstat.executeUpdate();
+                            connect.pstat.close();
+
+                            JOptionPane.showMessageDialog(null, "Data Berhasil ditambahkan!!");
+                            loadData();
+                            clear();
+                        }
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Eror saat Menyimpan ke dalam database." + ex);
 
@@ -185,12 +211,24 @@ public class CRUDEvent extends JFrame {
                 if (jenisEvent.equals("Bundle")) {
                     rbBundle.setSelected(true);
                     rbDiskon.setSelected(false);
+                    cbBundle.setEnabled(true);
+                    txtDiskon.setEnabled(false);
                 } else {
                     rbBundle.setSelected(false);
                     rbDiskon.setSelected(true);
+                    cbBundle.setEnabled(false);
+                    txtDiskon.setEnabled(true);
                 }
 
-                cbBundle.setSelectedItem(Model.getValueAt(selectedRow, 5).toString());
+                if(Model.getValueAt(selectedRow, 5) != null)
+                {
+                    cbBundle.setSelectedItem(Model.getValueAt(selectedRow, 5).toString());
+
+                }
+                else
+                {
+                    cbBundle.setSelectedIndex(0);
+                }
                 txtDiskon.setText(String.valueOf(Model.getValueAt(selectedRow, 6)));
                 txtMinBelanja.setText((String) Model.getValueAt(selectedRow, 7));
 
