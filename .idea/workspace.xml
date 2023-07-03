@@ -4,11 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="60 % Transaksi Penjualan">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_23_06_2023_19_23__Changes_.xml" beforeDir="false" />
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Selesai">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_06_2023_16_32_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_06_2023_16_32__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_21_2023_4_01_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_21_2023_4_01_PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kasir/TransaksiPenjualan.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/kasir/TransaksiPenjualan.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/kasir/TransaksiPenjualan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/kasir/TransaksiPenjualan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDKaryawan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDRak.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDRak.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDBarang.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDJenisBarang.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/CRUDSupplier.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,19 +40,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="1bb1aaac-efe4-422a-a8b4-eeae335185f1" />
-        <option name="url" value="https://github.com/rizkymuliap/Project-PRG3-Supermarket-03.git" />
-      </UrlAndAccount>
-    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -77,13 +75,39 @@
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.TransaksiPenjualan">
+  <component name="RunManager" selected="Application.CRUDBarang (1)">
     <configuration name="CRUDBarang (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDBarang" />
       <module name="Project" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="orangGudang.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CRUDBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDBarang" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="orangGudang.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CRUDEvent (3)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Admin.CRUDEvent" />
+      <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Admin.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -117,39 +141,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="DBConnect" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="connection.DBConnect" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="connection.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TransaksiPenjualan" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="kasir.TransaksiPenjualan" />
-      <module name="Project" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="kasir.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.TransaksiPenjualan" />
-        <item itemvalue="Application.DBConnect" />
         <item itemvalue="Application.CRUDBarang (1)" />
         <item itemvalue="Application.CRUDKaryawan" />
         <item itemvalue="Application.CRUDRak" />
+        <item itemvalue="Application.CRUDBarang" />
+        <item itemvalue="Application.CRUDEvent (3)" />
       </list>
     </recent_temporary>
   </component>
@@ -173,7 +171,6 @@
       <workItem from="1687913500670" duration="34475000" />
       <workItem from="1688038975810" duration="9312000" />
       <workItem from="1688085984961" duration="340000" />
-      <workItem from="1688345330616" duration="29804000" />
     </task>
     <task id="LOCAL-00001" summary="Connection DB sql">
       <created>1687135875572</created>

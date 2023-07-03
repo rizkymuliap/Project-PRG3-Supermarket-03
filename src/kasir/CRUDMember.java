@@ -80,7 +80,7 @@ public class CRUDMember extends JFrame{
                 }else{
                     if (txtNamaMember.getText().equals("") || txtPoint.getText().equals("") ||  txtNotelp.getText().equals("")) //Mengecek apakah txtbox kosong agar tidak ada data kosong
                     {
-                        JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!"
+                        JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong!!", "Warning!"
                                 , JOptionPane.WARNING_MESSAGE); //Jika kosong maka akan menampilkan pesan data tidak boleh kosong
 
                     } else {
@@ -112,7 +112,7 @@ public class CRUDMember extends JFrame{
 
                             clear(); //Mengosongkan semua textbox
 
-                            JOptionPane.showMessageDialog(null, "Data Member berhasil disimpan!", "Informasi",
+                            JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan!", "Informasi",
                                     JOptionPane.INFORMATION_MESSAGE); //Menampilkan pesan berhasil input data Supplier
                             loadData();
                         } catch (SQLException ex) {
@@ -133,12 +133,12 @@ public class CRUDMember extends JFrame{
 
 
                 if(found) {
-                    JOptionPane.showMessageDialog(null, "Data Member sudah ada!", "Information"
+                    JOptionPane.showMessageDialog(null, "Data Sudah Ada !!", "Information"
                             , JOptionPane.INFORMATION_MESSAGE); //Jika Sudah diinput
                 } else{
                     try {
                         if (txtNamaMember.getText().equals("") || txtNotelp.getText().equals("") || txtPoint.getText().equals(""))
-                            JOptionPane.showMessageDialog(null, "Tolong, isikan semua data!", "Warning!",
+                            JOptionPane.showMessageDialog(null, "Data Tidak Boleh Kosong !!", "Warning!",
                                     JOptionPane.WARNING_MESSAGE);
                         else {
                             try {
@@ -152,7 +152,7 @@ public class CRUDMember extends JFrame{
                                 //validasi inputan no telp
                                 Boolean valid_no_telp = validateInput(notelp);
                                 if(!valid_no_telp){  //Melakukan cek apakah inputan no_telp valid
-                                    JOptionPane.showMessageDialog(null, "Nomor telepon harus dalam format 628xxx"
+                                    JOptionPane.showMessageDialog(null, "Nomor telepon harus dalam format 62xxx"
                                             , "Warning!", JOptionPane.WARNING_MESSAGE);
                                     txtNotelp.setText("");
                                     txtNotelp.requestFocus();
@@ -174,7 +174,7 @@ public class CRUDMember extends JFrame{
                                 connection.pstat.close();
 
                                 clear();
-                                JOptionPane.showMessageDialog(null, "Update data member berhasil!", "Informasi"
+                                JOptionPane.showMessageDialog(null, "Data Berhasil Di-Update!", "Informasi"
                                 , JOptionPane.INFORMATION_MESSAGE);
 
                                 loadData();
@@ -243,7 +243,7 @@ public class CRUDMember extends JFrame{
                         connection.pstat.close();
 
                         clear();
-                        JOptionPane.showMessageDialog(null, "Hapus Member Berhasil!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus!", "Informasi", JOptionPane.INFORMATION_MESSAGE);
                         loadData();
 
                         btnUpdate.setEnabled(false);
@@ -377,7 +377,7 @@ public class CRUDMember extends JFrame{
                 return "MBR001";
             }
         } catch (Exception e) {
-            System.out.println("Terjadi error saat memeriksa id_supplier terakhir: " + e);
+            System.out.println("Terjadi error saat memeriksa id_member terakhir: " + e);
         } finally {
             try {
                 if (connection.result != null) {
@@ -399,7 +399,7 @@ public class CRUDMember extends JFrame{
 
     public static boolean validateInput(String input) { //Digunakan untuk validasi inputan agar berformat 628
         // Regex pattern untuk memvalidasi format input
-        String regexPattern = "^628\\d{1,14}$";
+        String regexPattern = "^62\\d{1,14}$";
 
         // Membuat objek Pattern dari regex pattern
         Pattern pattern = Pattern.compile(regexPattern);
