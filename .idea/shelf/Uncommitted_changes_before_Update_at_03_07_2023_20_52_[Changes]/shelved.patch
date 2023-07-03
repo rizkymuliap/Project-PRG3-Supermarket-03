@@ -1,0 +1,333 @@
+Index: src/orangGudang/TransaksiPengadaan.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package orangGudang;\r\n\r\nimport com.toedter.calendar.JDateChooser;\r\nimport connection.DBConnect;\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.table.DefaultTableModel;\r\nimport java.awt.event.*;\r\nimport java.text.Format;\r\nimport java.text.SimpleDateFormat;\r\n\r\npublic class TransaksiPengadaan extends JFrame {\r\n    private JPanel TransaksiPengdaan;\r\n    private JTextField txtIDTransaksi;\r\n    private JButton simpanButton;\r\n    private JButton tambahPembelianButton;\r\n    private JTable tblPengadaan;\r\n    private JButton cancelButton;\r\n    private JTextField txtTotal;\r\n    private JPanel JPtglDatang;\r\n    private JTextField txtIDKaryawan;\r\n    private JTextField txtIDSupllier;\r\n    private JPanel JPtglKembali;\r\n    private JButton btnBatal;\r\n\r\n    JDateChooser chooser = new JDateChooser();\r\n    JDateChooser chooser1 = new JDateChooser();\r\n\r\n    DBConnect connect = new DBConnect();\r\n\r\n    DefaultTableModel model = new DefaultTableModel();\r\n\r\n    String id_Transaksi, id_Karyawan, tglDatang, tglKembali, idSupplier;\r\n\r\n    double total, totalakhir;\r\n\r\n    public static void main(String[] args) {\r\n        JFrame frame = new JFrame(\"Transaksi Pengadaan\");\r\n        frame.setContentPane(new TransaksiPengadaan().TransaksiPengdaan);\r\n        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        frame.pack();\r\n        frame.setVisible(true);\r\n        frame.setSize(600, 600);\r\n    }\r\n\r\n    public TransaksiPengadaan()\r\n    {\r\n        tblPengadaan.setModel(model);\r\n        JPtglDatang.add(chooser);\r\n        JPtglKembali.add(chooser1);\r\n        model.addColumn(\"ID Barang\");\r\n        model.addColumn(\"Nama Barang\");\r\n        model.addColumn(\"QTY\");\r\n        model.addColumn(\"Harga\");\r\n        model.addColumn(\"Total Akhir\");\r\n\r\n        tambahPembelianButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                model.addRow(new Object[]{\"\", \"\", \"\", \"\", \"\", \"\"});\r\n            }\r\n        });\r\n        tblPengadaan.addKeyListener(new KeyAdapter() {\r\n            @Override\r\n            public void keyTyped(KeyEvent e) {\r\n                super.keyTyped(e);\r\n                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {  // Pengecekan tombol ESC pada keyboard\r\n                    int i = tblPengadaan.getSelectedRow();\r\n                    if (i == -1) {\r\n                        return;\r\n                    }\r\n                    // Menghapus baris dari tabel\r\n                    ((DefaultTableModel) tblPengadaan.getModel()).removeRow(i);\r\n                } else {\r\n                    String idbarang, nama;\r\n                    int qty, harga, total;\r\n                    int i = tblPengadaan.getSelectedRow();\r\n                    if (i == -1) {\r\n                        return;\r\n                    }\r\n                    idbarang = (String) model.getValueAt(i, 0);\r\n                    try {\r\n                        connect.stat = connect.conn.createStatement();\r\n                        String sql = \"SELECT nama_barang, harga_beli FROM tblBarang WHERE id_barang = '\" + idbarang + \"'\";\r\n                        connect.result = connect.stat.executeQuery(sql);\r\n                        while (connect.result.next()) {\r\n                            nama = connect.result.getString(\"nama_barang\");\r\n                            harga = connect.result.getInt(\"harga_beli\");\r\n                            model.setValueAt(nama, i, 1);\r\n                            model.setValueAt(model.getValueAt(i, 2).toString().equals(\"\") ? 1 : Integer.parseInt(model.getValueAt(i, 2).toString()), i, 2);\r\n                            model.setValueAt(harga, i, 3);\r\n                            model.setValueAt(harga * Integer.parseInt(model.getValueAt(i, 2).toString()), i, 4);\r\n                        }\r\n                        connect.stat.close();\r\n                        connect.result.close();\r\n                    } catch (Exception ex) {\r\n                        System.out.println(\"Terjadi eror saat mengambil data nama dan harga barang: \" + ex);\r\n                    }\r\n                }\r\n            }\r\n        });\r\n        txtTotal.addMouseListener(new MouseAdapter() {\r\n            @Override\r\n            public void mouseClicked(MouseEvent e) {\r\n                super.mouseClicked(e);\r\n                int temp = 0, total = 0;\r\n                int  i = tblPengadaan.getSelectedRow();\r\n                if(i == -1)\r\n                {\r\n                    return;\r\n                }\r\n                int j = tblPengadaan.getModel().getRowCount();\r\n                for (int k = 0; k < j; k++)\r\n                {\r\n                    temp = Integer.parseInt(model.getValueAt(k, 4).toString());\r\n                    total = total + temp;\r\n                }\r\n                txtTotal.setText(String.valueOf(total));\r\n            }\r\n        });\r\n        simpanButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                String idtrsPengadaan, IdKaryawan, tglDatang, tglKembali, stock, hargajual;\r\n                double totalakhir;\r\n                Format formatter = new SimpleDateFormat(\"yyyy-MM-dd hh:mm:ss\");\r\n                int j = tblPengadaan.getModel().getRowCount();\r\n                idtrsPengadaan = txtIDTransaksi.getText();\r\n                IdKaryawan = txtIDKaryawan.getText();\r\n                tglDatang = formatter.format(chooser.getDate());\r\n                tglKembali = formatter.format(chooser1.getDate());\r\n                totalakhir = Double.parseDouble(txtTotal.getText());\r\n                try\r\n                {\r\n                    String sql = \"INSERT INTO tblTrsPengadaan VALUES (?, ?, ?, ?, ?)\";\r\n                    connect.pstat = connect.conn.prepareStatement(sql);\r\n                    connect.pstat.setString(1, idtrsPengadaan);\r\n                    connect.pstat.setString(2, IdKaryawan);\r\n                    connect.pstat.setString(3, tglDatang);\r\n                    connect.pstat.setString(4, tglKembali);\r\n                    connect.pstat.setDouble(5, totalakhir);\r\n                    connect.pstat.executeUpdate();\r\n\r\n                    for(int i = 0; i < j; i++)\r\n                    {\r\n                        String sql1 = \"INSERT INTO tblDetailPengadaan VALUES (?, ?, ?, ?)\";\r\n                        connect.pstat = connect.conn.prepareStatement(sql1);\r\n                        connect.pstat.setString(1, idtrsPengadaan);\r\n                        connect.pstat.setString(2, model.getValueAt(i, 0).toString());\r\n                        connect.pstat.setString(3, model.getValueAt(i, 2).toString());\r\n                        connect.pstat.setString(4, \"0\");\r\n\r\n                        connect.pstat.executeUpdate();\r\n\r\n                        DBConnect connection = new DBConnect();\r\n                        String sql2 = \"UPDATE tblBarang SET stock = ?, harga_jual = ? WHERE id_barang = ?\";\r\n                        connection.pstat = connect.conn.prepareStatement(sql2);\r\n                        connection.pstat.setString(1, model.getValueAt(i, 2).toString());\r\n                        connection.pstat.setString(2, model.getValueAt(i, 3).toString());\r\n                        connection.pstat.executeUpdate();\r\n\r\n                        connection.pstat.close();\r\n                    }\r\n                    connect.pstat.close();\r\n                    JOptionPane.showMessageDialog(null, \"Insert Data Berhasil !!\");\r\n\r\n                }\r\n                catch (Exception ex)\r\n                {\r\n                    System.out.println(\"Terjadi eror : \" + ex);\r\n                }\r\n            }\r\n        });\r\n        btnBatal.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                int i = tblPengadaan.getSelectedRow();\r\n                if (i == -1) {\r\n                    return;\r\n                }\r\n                // Menghapus baris dari tabel\r\n                ((DefaultTableModel) tblPengadaan.getModel()).removeRow(i);\r\n            }\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/orangGudang/TransaksiPengadaan.java b/src/orangGudang/TransaksiPengadaan.java
+--- a/src/orangGudang/TransaksiPengadaan.java	(revision 5421761f9d08afb353fb37b0b570fbcebe20b064)
++++ b/src/orangGudang/TransaksiPengadaan.java	(date 1688387423478)
+@@ -123,7 +123,7 @@
+             public void actionPerformed(ActionEvent e) {
+                 String idtrsPengadaan, IdKaryawan, tglDatang, tglKembali, stock, hargajual;
+                 double totalakhir;
+-                Format formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
++                Format formatter = new SimpleDateFormat("yyyy-MM-dd");
+                 int j = tblPengadaan.getModel().getRowCount();
+                 idtrsPengadaan = txtIDTransaksi.getText();
+                 IdKaryawan = txtIDKaryawan.getText();
+Index: src/Admin/DetailBundle.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package Admin;\r\n\r\nimport connection.DBConnect;\r\n\r\nimport javax.swing.*;\r\nimport javax.swing.table.DefaultTableModel;\r\nimport java.awt.event.ActionEvent;\r\nimport java.awt.event.ActionListener;\r\nimport java.awt.event.KeyAdapter;\r\nimport java.awt.event.KeyEvent;\r\n\r\npublic class DetailBundle {\r\n    private JPanel DetailBundle;\r\n    private JTextField txtNamaBundle;\r\n    private JTextField txtIDBundle;\r\n    private JButton tambahBundleButton;\r\n    private JTable tblBundle;\r\n    private JButton cancelButton;\r\n    private JButton simpanButton;\r\n    private JButton btnBatal;\r\n\r\n    DBConnect connect = new DBConnect();\r\n\r\n    DefaultTableModel model = new DefaultTableModel();\r\n\r\n    public static void main(String[] args) {\r\n        JFrame frame = new JFrame(\"Transaksi Pengadaan\");\r\n        frame.setContentPane(new DetailBundle().DetailBundle);\r\n        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n        frame.pack();\r\n        frame.setVisible(true);\r\n        frame.setSize(600, 600);\r\n    }\r\n\r\n    public DetailBundle()\r\n    {\r\n        tblBundle.setModel(model);\r\n        model.addColumn(\"ID Barang\");\r\n        model.addColumn(\"Nama Barang\");\r\n        model.addColumn(\"Harga Beli\");\r\n        txtNamaBundle.setEnabled(false);\r\n        tambahBundleButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                model.addRow(new Object[]{\"\", \"\", \"\"});\r\n            }\r\n        });\r\n        tblBundle.addKeyListener(new KeyAdapter() {\r\n            @Override\r\n            public void keyTyped(KeyEvent e) {\r\n                super.keyTyped(e);\r\n                super.keyTyped(e);\r\n                if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {  // Pengecekan tombol ESC pada keyboard\r\n                    int i = tblBundle.getSelectedRow();\r\n                    if (i == -1) {\r\n                        return;\r\n                    }\r\n                    // Menghapus baris dari tabel\r\n                    ((DefaultTableModel) tblBundle.getModel()).removeRow(i);\r\n                } else {\r\n                    String idbarang, nama;\r\n                    int qty, harga, total;\r\n                    int i = tblBundle.getSelectedRow();\r\n                    if (i == -1) {\r\n                        return;\r\n                    }\r\n                    idbarang = (String) model.getValueAt(i, 0);\r\n                    try {\r\n                        connect.stat = connect.conn.createStatement();\r\n                        String sql = \"SELECT nama_barang, harga_beli FROM tblBarang WHERE id_barang = '\" + idbarang + \"'\";\r\n                        connect.result = connect.stat.executeQuery(sql);\r\n                        while (connect.result.next()) {\r\n                            nama = connect.result.getString(\"nama_barang\");\r\n                            harga = connect.result.getInt(\"harga_beli\");\r\n                            model.setValueAt(nama, i, 1);\r\n                            //model.setValueAt(model.getValueAt(i, 2).toString().equals(\"\") ? 1 : Integer.parseInt(model.getValueAt(i, 2).toString()), i, 2);\r\n                            model.setValueAt(harga, i, 2);\r\n                        }\r\n                        connect.stat.close();\r\n                        connect.result.close();\r\n                    } catch (Exception ex) {\r\n                        System.out.println(\"Terjadi eror saat mengambil data nama dan harga barang: \" + ex);\r\n                    }\r\n                }\r\n            }\r\n        });\r\n        simpanButton.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                String idBundle, NamaBundle;\r\n                idBundle = txtIDBundle.getText();\r\n                NamaBundle = txtNamaBundle.getText();\r\n                int j = tblBundle.getModel().getRowCount();\r\n\r\n                try\r\n                {\r\n                    for(int i = 0; i < j; i++) {\r\n                        String sql = \"INSERT INTO tblDetailBundle VALUES (?, ?)\";\r\n                        connect.pstat = connect.conn.prepareStatement(sql);\r\n                        connect.pstat.setString(1, idBundle);\r\n                        connect.pstat.setString(2, model.getValueAt(i, 0).toString());\r\n                        connect.pstat.executeUpdate();\r\n\r\n                        connect.pstat.close();\r\n                    }\r\n                    JOptionPane.showMessageDialog(null, \"Insert Data Berhasil !!\");\r\n                }\r\n                catch (Exception ex)\r\n                {\r\n                    System.out.println(\"Terjadi Error Pada Bagian Simpan : \" + ex);\r\n                }\r\n            }\r\n        });\r\n\r\n        btnBatal.addActionListener(new ActionListener() {\r\n            @Override\r\n            public void actionPerformed(ActionEvent e) {\r\n                int i = tblBundle.getSelectedRow();\r\n                if (i == -1) {\r\n                    return;\r\n                }\r\n                // Menghapus baris dari tabel\r\n                ((DefaultTableModel) tblBundle.getModel()).removeRow(i);\r\n            }\r\n        });\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Admin/DetailBundle.java b/src/Admin/DetailBundle.java
+--- a/src/Admin/DetailBundle.java	(revision 5421761f9d08afb353fb37b0b570fbcebe20b064)
++++ b/src/Admin/DetailBundle.java	(date 1688392063309)
+@@ -18,6 +18,8 @@
+     private JButton cancelButton;
+     private JButton simpanButton;
+     private JButton btnBatal;
++    private JButton btnUbah;
++    private JButton btnCari;
+ 
+     DBConnect connect = new DBConnect();
+ 
+@@ -101,6 +103,15 @@
+                         connect.pstat.setString(2, model.getValueAt(i, 0).toString());
+                         connect.pstat.executeUpdate();
+ 
++                        DBConnect connect1 = new DBConnect();
++
++                        String sql1 = "UPDATE tblBarang SET harga_jual = ? WHERE id_barang = ?";
++                        connect1.pstat = connect1.conn.prepareStatement(sql1);
++                        connect1.pstat.setString(1, model.getValueAt(i, 2).toString()); // Menggunakan setString untuk kolom harga jual
++                        connect1.pstat.setString(2, model.getValueAt(i, 0).toString()); // Menggunakan setString untuk kolom id_barang
++                        connect1.pstat.executeUpdate();
++
++
+                         connect.pstat.close();
+                     }
+                     JOptionPane.showMessageDialog(null, "Insert Data Berhasil !!");
+@@ -119,9 +130,39 @@
+                 if (i == -1) {
+                     return;
+                 }
+-                // Menghapus baris dari tabel
++                // Menghapus baris   dari tabel
+                 ((DefaultTableModel) tblBundle.getModel()).removeRow(i);
+             }
+         });
++        btnCari.addActionListener(new ActionListener() {
++            @Override
++            public void actionPerformed(ActionEvent e) {
++                String idBundle = txtIDBundle.getText();
++                String NamaBundle = txtNamaBundle.getText();
++
++                try {
++                    DBConnect connect = new DBConnect();
++                    String sql = "SELECT nama_bundle FROM tblBundle WHERE id_bundle = ?";
++                    connect.pstat = connect.conn.prepareStatement(sql);
++                    connect.pstat.setString(1, idBundle);
++                    connect.result = connect.pstat.executeQuery();
++
++                    if (connect.result.next()) {
++                        String namaBundle = connect.result.getString("nama_bundle");
++                        txtNamaBundle.setText(namaBundle);
++                    } else {
++                        // Tidak ada hasil yang ditemukan
++                        JOptionPane.showMessageDialog(null, "Bundle dengan ID tersebut tidak ditemukan");
++                    }
++
++                    connect.result.close();
++                    connect.pstat.close();
++                    connect.conn.close();
++                } catch (Exception ex) {
++                    System.out.println("Terjadi Error Pada Bagian Cari : " + ex);
++                }
++            }
++        });
++
+     }
+ }
+Index: src/Admin/DetailBundle.form
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<form xmlns=\"http://www.intellij.com/uidesigner/form/\" version=\"1\" bind-to-class=\"Admin.DetailBundle\">\r\n  <grid id=\"27dc6\" binding=\"DetailBundle\" layout-manager=\"GridLayoutManager\" row-count=\"4\" column-count=\"5\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n    <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n    <constraints>\r\n      <xy x=\"20\" y=\"20\" width=\"550\" height=\"400\"/>\r\n    </constraints>\r\n    <properties>\r\n      <background color=\"-14146253\"/>\r\n    </properties>\r\n    <border type=\"none\"/>\r\n    <children>\r\n      <grid id=\"14d72\" layout-manager=\"GridLayoutManager\" row-count=\"4\" column-count=\"4\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n        <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n        <constraints>\r\n          <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"5\" vsize-policy=\"3\" hsize-policy=\"3\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <background color=\"-14146253\"/>\r\n        </properties>\r\n        <border type=\"none\"/>\r\n        <children>\r\n          <component id=\"ce5e1\" class=\"javax.swing.JLabel\">\r\n            <constraints>\r\n              <grid row=\"1\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties>\r\n              <background color=\"-1\"/>\r\n              <foreground color=\"-1\"/>\r\n              <text value=\"ID Bundle\"/>\r\n            </properties>\r\n          </component>\r\n          <vspacer id=\"3ac99\">\r\n            <constraints>\r\n              <grid row=\"3\" column=\"0\" row-span=\"1\" col-span=\"2\" vsize-policy=\"6\" hsize-policy=\"1\" anchor=\"0\" fill=\"2\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n          </vspacer>\r\n          <component id=\"6f2b8\" class=\"javax.swing.JLabel\">\r\n            <constraints>\r\n              <grid row=\"2\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"8\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties>\r\n              <background color=\"-1\"/>\r\n              <foreground color=\"-1\"/>\r\n              <text value=\"Nama Bundle\"/>\r\n            </properties>\r\n          </component>\r\n          <component id=\"103fb\" class=\"javax.swing.JLabel\">\r\n            <constraints>\r\n              <grid row=\"0\" column=\"1\" row-span=\"1\" col-span=\"3\" vsize-policy=\"0\" hsize-policy=\"0\" anchor=\"1\" fill=\"0\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties>\r\n              <background color=\"-1\"/>\r\n              <font size=\"16\" style=\"1\"/>\r\n              <foreground color=\"-1\"/>\r\n              <text value=\"Detail Bundle\"/>\r\n            </properties>\r\n          </component>\r\n          <component id=\"cda36\" class=\"javax.swing.JTextField\" binding=\"txtIDBundle\">\r\n            <constraints>\r\n              <grid row=\"1\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n                <preferred-size width=\"150\" height=\"-1\"/>\r\n              </grid>\r\n            </constraints>\r\n            <properties/>\r\n          </component>\r\n          <component id=\"aa3e1\" class=\"javax.swing.JTextField\" binding=\"txtNamaBundle\">\r\n            <constraints>\r\n              <grid row=\"2\" column=\"1\" row-span=\"1\" col-span=\"2\" vsize-policy=\"0\" hsize-policy=\"6\" anchor=\"8\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\">\r\n                <preferred-size width=\"150\" height=\"-1\"/>\r\n              </grid>\r\n            </constraints>\r\n            <properties/>\r\n          </component>\r\n        </children>\r\n      </grid>\r\n      <component id=\"2055b\" class=\"javax.swing.JButton\" binding=\"tambahBundleButton\" default-binding=\"true\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Tambah Bundle\"/>\r\n        </properties>\r\n      </component>\r\n      <grid id=\"7b8f6\" layout-manager=\"GridLayoutManager\" row-count=\"1\" column-count=\"1\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n        <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n        <constraints>\r\n          <grid row=\"2\" column=\"0\" row-span=\"1\" col-span=\"5\" vsize-policy=\"3\" hsize-policy=\"3\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties/>\r\n        <border type=\"none\"/>\r\n        <children>\r\n          <scrollpane id=\"bf9b9\">\r\n            <constraints>\r\n              <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"7\" hsize-policy=\"7\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties/>\r\n            <border type=\"none\"/>\r\n            <children>\r\n              <component id=\"461f7\" class=\"javax.swing.JTable\" binding=\"tblBundle\">\r\n                <constraints/>\r\n                <properties/>\r\n              </component>\r\n            </children>\r\n          </scrollpane>\r\n        </children>\r\n      </grid>\r\n      <component id=\"d3bb4\" class=\"javax.swing.JButton\" binding=\"cancelButton\" default-binding=\"true\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Cancel\"/>\r\n        </properties>\r\n      </component>\r\n      <component id=\"2e74b\" class=\"javax.swing.JButton\" binding=\"simpanButton\" default-binding=\"true\">\r\n        <constraints>\r\n          <grid row=\"3\" column=\"1\" row-span=\"1\" col-span=\"4\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties>\r\n          <text value=\"Simpan\"/>\r\n        </properties>\r\n      </component>\r\n      <grid id=\"f2b89\" layout-manager=\"GridLayoutManager\" row-count=\"1\" column-count=\"1\" same-size-horizontally=\"false\" same-size-vertically=\"false\" hgap=\"-1\" vgap=\"-1\">\r\n        <margin top=\"0\" left=\"0\" bottom=\"0\" right=\"0\"/>\r\n        <constraints>\r\n          <grid row=\"1\" column=\"4\" row-span=\"1\" col-span=\"1\" vsize-policy=\"3\" hsize-policy=\"3\" anchor=\"0\" fill=\"3\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n        <properties/>\r\n        <border type=\"none\"/>\r\n        <children>\r\n          <component id=\"cde61\" class=\"javax.swing.JButton\" binding=\"btnBatal\">\r\n            <constraints>\r\n              <grid row=\"0\" column=\"0\" row-span=\"1\" col-span=\"1\" vsize-policy=\"0\" hsize-policy=\"3\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n            </constraints>\r\n            <properties>\r\n              <text value=\"Batal\"/>\r\n            </properties>\r\n          </component>\r\n        </children>\r\n      </grid>\r\n      <hspacer id=\"973ba\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"1\" row-span=\"1\" col-span=\"1\" vsize-policy=\"1\" hsize-policy=\"6\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n      </hspacer>\r\n      <hspacer id=\"6cb08\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"2\" row-span=\"1\" col-span=\"1\" vsize-policy=\"1\" hsize-policy=\"6\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n      </hspacer>\r\n      <hspacer id=\"f590e\">\r\n        <constraints>\r\n          <grid row=\"1\" column=\"3\" row-span=\"1\" col-span=\"1\" vsize-policy=\"1\" hsize-policy=\"6\" anchor=\"0\" fill=\"1\" indent=\"0\" use-parent-layout=\"false\"/>\r\n        </constraints>\r\n      </hspacer>\r\n    </children>\r\n  </grid>\r\n</form>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Admin/DetailBundle.form b/src/Admin/DetailBundle.form
+--- a/src/Admin/DetailBundle.form	(revision 5421761f9d08afb353fb37b0b570fbcebe20b064)
++++ b/src/Admin/DetailBundle.form	(date 1688391060574)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Admin.DetailBundle">
+-  <grid id="27dc6" binding="DetailBundle" layout-manager="GridLayoutManager" row-count="4" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
++  <grid id="27dc6" binding="DetailBundle" layout-manager="GridLayoutManager" row-count="4" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+     <margin top="0" left="0" bottom="0" right="0"/>
+     <constraints>
+       <xy x="20" y="20" width="550" height="400"/>
+@@ -13,7 +13,7 @@
+       <grid id="14d72" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+         <margin top="0" left="0" bottom="0" right="0"/>
+         <constraints>
+-          <grid row="0" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++          <grid row="0" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <background color="-14146253"/>
+@@ -43,17 +43,6 @@
+               <background color="-1"/>
+               <foreground color="-1"/>
+               <text value="Nama Bundle"/>
+-            </properties>
+-          </component>
+-          <component id="103fb" class="javax.swing.JLabel">
+-            <constraints>
+-              <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+-            </constraints>
+-            <properties>
+-              <background color="-1"/>
+-              <font size="16" style="1"/>
+-              <foreground color="-1"/>
+-              <text value="Detail Bundle"/>
+             </properties>
+           </component>
+           <component id="cda36" class="javax.swing.JTextField" binding="txtIDBundle">
+@@ -71,6 +60,25 @@
+               </grid>
+             </constraints>
+             <properties/>
++          </component>
++          <component id="15604" class="javax.swing.JButton" binding="btnCari">
++            <constraints>
++              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <text value="Cari"/>
++            </properties>
++          </component>
++          <component id="103fb" class="javax.swing.JLabel">
++            <constraints>
++              <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
++            </constraints>
++            <properties>
++              <background color="-1"/>
++              <font size="16" style="1"/>
++              <foreground color="-1"/>
++              <text value="Detail Bundle"/>
++            </properties>
+           </component>
+         </children>
+       </grid>
+@@ -85,7 +93,7 @@
+       <grid id="7b8f6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+         <margin top="0" left="0" bottom="0" right="0"/>
+         <constraints>
+-          <grid row="2" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++          <grid row="2" column="0" row-span="1" col-span="6" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties/>
+         <border type="none"/>
+@@ -115,7 +123,7 @@
+       </component>
+       <component id="2e74b" class="javax.swing.JButton" binding="simpanButton" default-binding="true">
+         <constraints>
+-          <grid row="3" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++          <grid row="3" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties>
+           <text value="Simpan"/>
+@@ -124,7 +132,7 @@
+       <grid id="f2b89" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+         <margin top="0" left="0" bottom="0" right="0"/>
+         <constraints>
+-          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
++          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+         </constraints>
+         <properties/>
+         <border type="none"/>
+@@ -154,6 +162,14 @@
+           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+         </constraints>
+       </hspacer>
++      <component id="e532e" class="javax.swing.JButton" binding="btnUbah">
++        <constraints>
++          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
++        </constraints>
++        <properties>
++          <text value="Ubah"/>
++        </properties>
++      </component>
+     </children>
+   </grid>
+ </form>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2\" name=\"Changes\" comment=\"Nambah jasper\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/Admin/CRUDEvent.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Admin/CRUDEvent.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/Admin/DetailBundle.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/Admin/DetailBundle.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PUSH_TAGS\">\r\n      <GitPushTagMode>\r\n        <option name=\"argument\" value=\"--tags\" />\r\n        <option name=\"title\" value=\"All\" />\r\n      </GitPushTagMode>\r\n    </option>\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2Qwjbch1gT8YerdhsllLZQLmkJu\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"last_opened_file_path\": \"F:/MJ/Kampus/Semester 2/TerraQuest_Repo\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"project.structure.last.edited\": \"Modules\",\r\n    \"project.structure.proportion\": \"0.15\",\r\n    \"project.structure.side.proportion\": \"0.2\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CreateClassDialog.RecentsKey\">\r\n      <recent name=\"Admin\" />\r\n    </key>\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"F:\\MJ\\Kampus\\Semester 2\\Project-PRG3-Supermarket-03\\src\\Admin\" />\r\n      <recent name=\"F:\\Projekan\\Project-Semester2\\PRG3\\Project-PRG3-Supermarket-03\\Library\" />\r\n      <recent name=\"D:\\SEMESTER 2\\Project-Akhir-Semester\\PRG3\\Project\\src\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.CRUDEvent\">\r\n    <configuration name=\"CRUDEvent\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Admin.CRUDEvent\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"Admin.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"CRUDJenisBarang\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"orangGudang.CRUDJenisBarang\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"orangGudang.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"CRUDRak\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Admin.CRUDRak\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"Admin.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"DetailBundle\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Admin.DetailBundle\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"Admin.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"TransaksiPenjualan\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"kasir.TransaksiPenjualan\" />\r\n      <module name=\"Project\" />\r\n      <extension name=\"coverage\">\r\n        <pattern>\r\n          <option name=\"PATTERN\" value=\"kasir.*\" />\r\n          <option name=\"ENABLED\" value=\"true\" />\r\n        </pattern>\r\n      </extension>\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.CRUDEvent\" />\r\n        <item itemvalue=\"Application.DetailBundle\" />\r\n        <item itemvalue=\"Application.TransaksiPenjualan\" />\r\n        <item itemvalue=\"Application.CRUDRak\" />\r\n        <item itemvalue=\"Application.CRUDJenisBarang\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2\" name=\"Changes\" comment=\"\" />\r\n      <created>1686271614569</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1686271614569</updated>\r\n      <workItem from=\"1686271615920\" duration=\"1432000\" />\r\n      <workItem from=\"1686464420546\" duration=\"1802000\" />\r\n      <workItem from=\"1686485994578\" duration=\"179000\" />\r\n      <workItem from=\"1687135743360\" duration=\"482000\" />\r\n      <workItem from=\"1687139525595\" duration=\"57000\" />\r\n      <workItem from=\"1687154561891\" duration=\"679000\" />\r\n      <workItem from=\"1688361570804\" duration=\"8387000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Connection DB sql\">\r\n      <created>1687135875572</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687135875572</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\" Anggun nyoba\">\r\n      <created>1687154821833</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687154821833</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\" Anggun nyoba2\">\r\n      <created>1687155007488</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687155007488</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Load data rak\">\r\n      <created>1687338151360</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687338151360</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"CRUD BARANG\">\r\n      <created>1687509557706</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1687509557706</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"Dikit lagi laporan\">\r\n      <created>1688354741874</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1688354741874</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"Nambah jasper\">\r\n      <created>1688360608866</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1688360608866</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"8\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Connection DB sql\" />\r\n    <MESSAGE value=\" Anggun nyoba\" />\r\n    <MESSAGE value=\" Anggun nyoba2\" />\r\n    <MESSAGE value=\"Load data rak\" />\r\n    <MESSAGE value=\"CRUD BARANG\" />\r\n    <MESSAGE value=\"Baru di ganti\" />\r\n    <MESSAGE value=\"Dikit lagi laporan\" />\r\n    <MESSAGE value=\"Nambah jasper\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Nambah jasper\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 5421761f9d08afb353fb37b0b570fbcebe20b064)
++++ b/.idea/workspace.xml	(date 1688392346701)
+@@ -4,10 +4,11 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Nambah jasper">
++    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Kurang Jasper">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDEvent.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Admin/DetailBundle.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.form" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/Admin/DetailBundle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/orangGudang/TransaksiPengadaan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/orangGudang/TransaksiPengadaan.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -70,7 +71,7 @@
+       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
+     </key>
+   </component>
+-  <component name="RunManager" selected="Application.CRUDEvent">
++  <component name="RunManager" selected="Application.DetailBundle">
+     <configuration name="CRUDEvent" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+       <option name="MAIN_CLASS_NAME" value="Admin.CRUDEvent" />
+       <module name="Project" />
+@@ -84,12 +85,12 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="CRUDJenisBarang" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+-      <option name="MAIN_CLASS_NAME" value="orangGudang.CRUDJenisBarang" />
++    <configuration name="CRUDRak" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="Admin.CRUDRak" />
+       <module name="Project" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="orangGudang.*" />
++          <option name="PATTERN" value="Admin.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+@@ -97,8 +98,8 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="CRUDRak" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+-      <option name="MAIN_CLASS_NAME" value="Admin.CRUDRak" />
++    <configuration name="DetailBundle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="Admin.DetailBundle" />
+       <module name="Project" />
+       <extension name="coverage">
+         <pattern>
+@@ -110,12 +111,12 @@
+         <option name="Make" enabled="true" />
+       </method>
+     </configuration>
+-    <configuration name="DetailBundle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+-      <option name="MAIN_CLASS_NAME" value="Admin.DetailBundle" />
++    <configuration name="TransaksiPengadaan" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="orangGudang.TransaksiPengadaan" />
+       <module name="Project" />
+       <extension name="coverage">
+         <pattern>
+-          <option name="PATTERN" value="Admin.*" />
++          <option name="PATTERN" value="orangGudang.*" />
+           <option name="ENABLED" value="true" />
+         </pattern>
+       </extension>
+@@ -138,11 +139,11 @@
+     </configuration>
+     <recent_temporary>
+       <list>
+-        <item itemvalue="Application.CRUDEvent" />
+         <item itemvalue="Application.DetailBundle" />
++        <item itemvalue="Application.TransaksiPengadaan" />
++        <item itemvalue="Application.CRUDEvent" />
+         <item itemvalue="Application.TransaksiPenjualan" />
+         <item itemvalue="Application.CRUDRak" />
+-        <item itemvalue="Application.CRUDJenisBarang" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -160,7 +161,7 @@
+       <workItem from="1687135743360" duration="482000" />
+       <workItem from="1687139525595" duration="57000" />
+       <workItem from="1687154561891" duration="679000" />
+-      <workItem from="1688361570804" duration="8387000" />
++      <workItem from="1688361570804" duration="13348000" />
+     </task>
+     <task id="LOCAL-00001" summary="Connection DB sql">
+       <created>1687135875572</created>
+@@ -211,7 +212,14 @@
+       <option name="project" value="LOCAL" />
+       <updated>1688360608866</updated>
+     </task>
+-    <option name="localTasksCounter" value="8" />
++    <task id="LOCAL-00008" summary="Kurang Jasper">
++      <created>1688386863795</created>
++      <option name="number" value="00008" />
++      <option name="presentableId" value="LOCAL-00008" />
++      <option name="project" value="LOCAL" />
++      <updated>1688386863795</updated>
++    </task>
++    <option name="localTasksCounter" value="9" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -237,6 +245,7 @@
+     <MESSAGE value="Baru di ganti" />
+     <MESSAGE value="Dikit lagi laporan" />
+     <MESSAGE value="Nambah jasper" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Nambah jasper" />
++    <MESSAGE value="Kurang Jasper" />
++    <option name="LAST_COMMIT_MESSAGE" value="Kurang Jasper" />
+   </component>
+ </project>
+\ No newline at end of file
