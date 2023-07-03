@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="Baru di ganti">
+    <list default="true" id="194c9bdc-fdd5-4d6b-b2bc-70809ba6d4d2" name="Changes" comment="hampir 100% transaksi pengadaan">
+      <change afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.form" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Admin/DetailBundle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDBundle.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDBundle.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDBundle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDBundle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDEvent.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDEvent.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Admin/CRUDEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Admin/CRUDEvent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,29 +38,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;F:/Projekan/Project-Semester2/PRG3/Project-PRG3-Supermarket-03/library/sqljdbc4.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "F:/MJ/Kampus/Semester 2/Project-PRG3-Supermarket-03/src/Admin",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="Admin" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\MJ\Kampus\Semester 2\Project-PRG3-Supermarket-03\src\Admin" />
       <recent name="F:\Projekan\Project-Semester2\PRG3\Project-PRG3-Supermarket-03\Library" />
       <recent name="D:\SEMESTER 2\Project-Akhir-Semester\PRG3\Project\src" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CRUDEvent">
+  <component name="RunManager" selected="Application.DetailBundle">
     <configuration name="CRUDEvent" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Admin.CRUDEvent" />
       <module name="Project" />
@@ -102,12 +104,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="DBConnect" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="connection.DBConnect" />
+    <configuration name="DetailBundle" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Admin.DetailBundle" />
       <module name="Project" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="connection.*" />
+          <option name="PATTERN" value="Admin.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -115,20 +117,26 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
+    <configuration name="TransaksiPenjualan" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="kasir.TransaksiPenjualan" />
       <module name="Project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="kasir.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.DetailBundle" />
+        <item itemvalue="Application.TransaksiPenjualan" />
         <item itemvalue="Application.CRUDEvent" />
         <item itemvalue="Application.CRUDRak" />
         <item itemvalue="Application.CRUDJenisBarang" />
-        <item itemvalue="Application.DBConnect" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
