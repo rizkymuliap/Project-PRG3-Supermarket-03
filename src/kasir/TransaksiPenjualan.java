@@ -3,6 +3,8 @@ package kasir;
 import connection.DBConnect;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,8 +13,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 public class TransaksiPenjualan {
@@ -55,28 +60,37 @@ public class TransaksiPenjualan {
     private JPanel Panel_Tabel2;
     private JLabel Label_Tanggal;
     private JComboBox cmbPaymentMethod;
-    private JTextField Textbox_Tunai;
-    private JTextField Textbox_Kembalian;
-    private JTextField Label_Total;
-    private JTextField Label_TotalPay;
-    private JTextField Label_MemberDisc;
+    private JTextField txtTunai;
+    private JTextField txtKembalian;
+    private JTextField txtSubTotal;
+    private JTextField txtTotalBayar;
+    private JTextField txtDiskonMember;
     private JRadioButton rbYes;
     private JRadioButton rbNo;
     private JTextField txtSearchMemberID;
     private JButton btSearchIdMember;
-    private JTextField txtIdCustomer;
     private JButton Tombol_Batalkan;
     private JButton Tombol_Bayar;
     private JScrollPane ScrollBarang;
     private JTable tbBarang;
+    private JButton btSearchBundleID;
+    private JTextField txtSearchBundleID;
+    private JTextField txtDiskon;
     private DefaultTableModel model;
     private DefaultTableModel model2;
 
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    String tanggalFormat = dateFormat.format(new Date());
     byte[] imageBytes;
     int i;
-    DecimalFormat decimalFormat = new DecimalFormat("#,###");
+    int total = 0;
 
+    SimpleDateFormat sdfInput = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat sdfOutput = new SimpleDateFormat("dd/MM/yyyy");
+
+    DecimalFormat decimalFormat = new DecimalFormat("#,###");
+    NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
     public TransaksiPenjualan() {
         txtSearchMemberID.setEnabled(false);
         btSearchIdMember.setEnabled(false);
@@ -95,6 +109,15 @@ public class TransaksiPenjualan {
         addColumn2();
 
         loadData();
+
+        txtSubTotal.setText("0");
+        txtDiskonMember.setText("0");
+        txtTotalBayar.setText("0");
+        txtTunai.setText("0");
+        txtKembalian.setText("0");
+        txtDiskon.setText("0");
+
+        Label_Tanggal.setText(tanggalFormat);
 
 
 
@@ -193,27 +216,57 @@ public class TransaksiPenjualan {
         Tombol_Tambah_Pesanan.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean ketemu = false;
-                for(int i = 0; i < model2.getRowCount() ; i++){
-                    if(model2.getValueAt(i, 0).equals(txtIDBarang.getText())){
-                        ketemu = true;
-                        int jumlah = Integer.parseInt(model2.getValueAt(i, 2).toString());
-                        jumlah++;
+                if(!txtIDBarang.getText().equals("")) {
+                    boolean ketemu = false;
+                    for (int i = 0; i < model2.getRowCount(); i++) {
+                        if (model2.getValueAt(i, 0).equals(txtIDBarang.getText())) {
+                            ketemu = true;
+                            int jumlah = Integer.parseInt(model2.getValueAt(i, 2).toString());
+                            jumlah++;
 
-                        model2.setValueAt(jumlah, i, 2);
-                        model2.setValueAt((jumlah * Integer.parseInt(model2.getValueAt(i, 3).toString().replaceAll(",",""))), i, 4);
+                            model2.setValueAt(jumlah, i, 2);
+
+                            // Mengambil hargaAngkaTanpaTerakhir
+                            String hargaAngka = model2.getValueAt(i, 3).toString().replaceAll("[^0-9]", "");
+                            String hargaAngkaTanpaTitik = hargaAngka.replace(".", ""); // Menghapus tanda titik
+
+                            int total = jumlah * Integer.parseInt(hargaAngkaTanpaTitik.substring(0, hargaAngkaTanpaTitik.length()-2));
+
+                            NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+                            String totalFormat = formatRupiah.format(total);
+
+                            model2.setValueAt(totalFormat, i, 4);
+                        }
                     }
+                    if (!ketemu) {
+                        Object[] obj = new Object[5];
+                        obj[0] = txtIDBarang.getText();
+                        obj[1] = txtNamaBarang.getText();
+                        obj[2] = "1";
+
+                        String hargaText = txtHarga.getText(); // Mengambil teks dari TextBox
+                        String harga = hargaText.replace(",", ""); // Menghapus tanda koma dari teks
+                        double hargaDouble = Double.parseDouble(harga); // Mengubah teks menjadi angka
+                        // Membuat objek NumberFormat dengan locale ID
+                        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+
+                        // Mengubah angka menjadi format mata uang lokal ID
+                        String hargaFormat = formatRupiah.format(hargaDouble);
+
+
+                        obj[3] = hargaFormat;
+
+                        int total = Integer.parseInt(obj[2].toString()) * Integer.parseInt(txtHarga.getText().replaceAll(",", ""));
+
+                        String jumlahFormat = formatRupiah.format(total);
+                        obj[4] = jumlahFormat;
+                        model2.addRow(obj);
+                    }
+                    clearDatabarang();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Pilih Barang!", "Peringatan!", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
-                if(!ketemu){
-                    Object[] obj = new Object[5];
-                    obj[0] = txtIDBarang.getText();
-                    obj[1] = txtNamaBarang.getText();
-                    obj[2] = "1";
-                    obj[3] = txtHarga.getText();
-                    obj[4] =  Integer.parseInt(obj[2].toString()) * Integer.parseInt(txtHarga.getText().replaceAll(",",""));
-                    model2.addRow(obj);
-                }
-                clearDatabarang();
             }
         });
 
@@ -228,8 +281,13 @@ public class TransaksiPenjualan {
                     if(model2.getValueAt(row, 2) == null){
                         model2.setValueAt(0, row, 4);
                     }else{
-                        int jumlah = Integer.parseInt(model2.getValueAt(row, 2).toString()) * Integer.parseInt(model2.getValueAt(row, 3).toString().replaceAll(",",""));
-                        model2.setValueAt(String.valueOf(jumlah), row, 4);
+                        double harga = Double.parseDouble(model2.getValueAt(row, 3).toString().substring(2).replaceAll(",", ""));
+                        int jumlah = (int) (Integer.parseInt(model2.getValueAt(row, 2).toString()) * harga * 1000);
+
+
+                        String jumlahFormat = formatRupiah.format(jumlah);
+
+                        model2.setValueAt(jumlahFormat, row, 4);
                     }
 
             }
@@ -246,21 +304,231 @@ public class TransaksiPenjualan {
             public void actionPerformed(ActionEvent e) {
                 txtSearchMemberID.setEnabled(false);
                 btSearchIdMember.setEnabled(false);
+                txtSearchMemberID.setText("");
+                txtDiskonMember.setText("0");
             }
         });
         btCheckOut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                int temp  = 0, total = 0;
-               for(int i = 0; i < tbItem.getRowCount(); i++){
-                   temp = Integer.parseInt(model2.getValueAt(i, 4).toString());
-                   total = total + temp;
+
+               if(!rbNo.isSelected() && !rbYes.isSelected()){
+                   JOptionPane.showMessageDialog(null, "Pilih kepemilikan member!",
+                           "Peringatan!", JOptionPane.WARNING_MESSAGE);
+                   return;
                }
 
-               Label_Total.setText(String.valueOf(total));
+               for(int i = 0; i < tbItem.getRowCount(); i++){
+                   double harga = Double.parseDouble(model2.getValueAt(i, 4).toString().substring(2).replaceAll(",", ""));
+                   int hargaInt = (int)  (harga * 1000);
+
+                   temp = hargaInt;
+                   total = total + temp;
+               }
+                String jumlahFormat = formatRupiah.format(total);
+               txtSubTotal.setText(jumlahFormat.substring(2));
+               btCheckOut.setEnabled(false);
+               btSearchBundleID.setEnabled(false);
+               Tombol_Tambah_Pesanan.setEnabled(false);
+
             }
         });
 
+        txtSubTotal.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                DBConnect connection = new DBConnect();
+                try {
+                    connection.pstat = connection.conn.prepareStatement("SELECT * FROM tblEvent WHERE jenis_promo = 'Diskon'");
+                    connection.result = connection.pstat.executeQuery();
+                    while (connection.result.next()) {
+                        if (connection.result.getString("status_tersedia").equals("1") && connection.result.getString("status").equals("1")) {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                            Date tanggalMulai = dateFormat.parse(connection.result.getString("tanggal_mulai"));
+                            Date tanggalBerakhir = dateFormat.parse(connection.result.getString("tanggal_berakhir"));
+                            Date tanggalHariIni = new Date(); // Mendapatkan tanggal hari ini
+
+                            if (tanggalMulai.compareTo(tanggalHariIni) <= 0 && tanggalBerakhir.compareTo(tanggalHariIni) >= 0) {
+                                int minimalBelanja = (int) Math.round(connection.result.getDouble("minimal_belanja"));
+                                String intsubtotalAwal = txtSubTotal.getText().replaceAll("[^\\d]", "");
+                                intsubtotalAwal = intsubtotalAwal.substring(0, intsubtotalAwal.length()-2);
+                                int subtotalValue = Integer.parseInt(intsubtotalAwal);
+                                if (subtotalValue >= minimalBelanja) {
+                                    double diskonValue = subtotalValue * connection.result.getDouble("diskon") / 100;
+                                    double totalPotonganValue = subtotalValue - diskonValue;
+
+                                    int totalPotonganValue_Int = (int) totalPotonganValue;
+                                    String totalPotonganvalueRupiah = formatRupiah.format(totalPotonganValue_Int);
+
+                                    txtDiskon.setText(totalPotonganvalueRupiah.substring(2));
+
+
+                                    double diskonMember = Double.parseDouble(txtDiskonMember.getText().substring(0, txtDiskonMember.getText().length()-3));
+                                    System.out.println(diskonMember);
+
+                                    int total_akhir = subtotalValue - (int) diskonValue - ((int) diskonMember * 1000);
+                                    String total_akhir_String = formatRupiah.format(total_akhir);
+                                    txtTotalBayar.setText(total_akhir_String.substring(2));
+                                }
+                            }
+                        }
+
+                    }
+
+                    connection.pstat.close();
+                    connection.result.close();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error while loading data: " + ex);
+                }
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // Implementasi yang sama seperti insertUpdate
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Implementasi yang sama seperti insertUpdate
+            }
+        });
+
+        txtDiskon.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // Implementasi yang sama seperti insertUpdate
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Implementasi yang sama seperti insertUpdate
+                //Mengambil nilai subtotal
+                String subTotal = txtSubTotal.getText().replaceAll("[^\\d]","");
+                int subTotal_int = Integer.parseInt(subTotal);
+
+
+
+
+
+            }
+        });
+
+        txtDiskonMember.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                // Implementasi yang sama seperti insertUpdate
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                // Implementasi yang sama seperti insertUpdate
+            }
+        });
+
+
+        btSearchIdMember.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DBConnect connection =  new DBConnect();
+                try {
+                    connection.stat = connection.conn.createStatement();
+                    String query = "SELECT point, status FROM tblMember WHERE id_member LIKE '%" + txtSearchMemberID.getText() + "%'";
+                    connection.result = connection.stat.executeQuery(query);
+
+                    boolean found = false;
+
+                    while (connection.result.next()) {
+                        if (connection.result.getInt("status") == 1 ) {
+                            found = true;
+                            int diskonMember = connection.result.getInt("point") * 10;
+                            String diskonMemberRupiah = formatRupiah.format(diskonMember);
+                            txtDiskonMember.setText(diskonMemberRupiah.substring(2));
+                        }
+                    }
+
+                    if(!found)
+                    {
+                        JOptionPane.showMessageDialog(null, "Member tidak ditemukan!",
+                                "Informasi!", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                    connection.result.close();
+                    connection.stat.close();
+
+                } catch (Exception ex) {
+                    System.out.println("Terjadi error saat load data item: " + ex);
+                }
+            }
+        });
+        btSearchBundleID.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DBConnect connection =  new DBConnect();
+                try {
+                    connection.stat = connection.conn.createStatement();
+                    String query = "SELECT id_barang FROM tblDetailBundle WHERE id_bundle LIKE '%" + txtSearchBundleID.getText() + "%'";
+                    connection.result = connection.stat.executeQuery(query);
+
+                    boolean found = false;
+
+                    while (connection.result.next()) {
+
+
+
+                            found = true;
+                            connection.result.getString("id_barang");
+                            Object[] kosongan = {"", "", "", "", ""};
+                            model2.addRow(kosongan);
+                            model2.setValueAt(connection.result.getString("id_barang"), model2.getRowCount()-1,0);
+
+                            //Mencari data barang
+                            DBConnect connect = new DBConnect();
+                            connect.stat = connect.conn.createStatement();
+                            String sql = "SELECT * FROM tblBarang WHERE id_barang  = '" + connection.result.getString("id_barang") + "'";
+                            connect.result = connect.stat.executeQuery(sql);
+
+                            while (connect.result.next()){
+                                model2.setValueAt(connect.result.getString("nama_barang"), model2.getRowCount() - 1, 1);
+                                model2.setValueAt("1", model2.getRowCount() - 1, 2);
+
+                                String hargaJual = connect.result.getString("harga_jual");
+                                String hargaJualFormat = formatRupiah.format(Double.parseDouble(hargaJual));
+                                model2.setValueAt(hargaJualFormat, model2.getRowCount() - 1, 3);
+
+                                model2.setValueAt(hargaJualFormat, model2.getRowCount() - 1, 4);
+                            }
+
+
+                    }
+
+                    if(!found)
+                    {
+                        JOptionPane.showMessageDialog(null, "Member tidak ditemukan!",
+                                "Informasi!", JOptionPane.INFORMATION_MESSAGE);
+                    }
+
+                    txtSearchBundleID.setText("");
+
+                    connection.result.close();
+                    connection.stat.close();
+
+                } catch (Exception ex) {
+                    System.out.println("Terjadi error saat load data item: " + ex);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
